@@ -9,7 +9,7 @@ int main()
     char a[15];
     char b[15];
     int i=0;
-    scanf("%s %s",a,b);
+    scanf("%s %s ",a,b);
     cal (a,b);
     return 0;
 }
