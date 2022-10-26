@@ -17,7 +17,7 @@ int Test(int row[],int col[],int num)
 }
 int BestValue(int row[],int col[],int num)
 {	
-	if(Test(row[],col[],num))
+	if(Test(row,col,num))
 	{
 		cout<<"error";
 		return -1;
