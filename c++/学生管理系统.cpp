@@ -11,7 +11,7 @@ typedef struct score
 	float chinese;
 	float math;
 	float english;
-    float score;
+    float sco;
 }score;
 FILE* open(void);
 void nopass(void);
@@ -63,15 +63,15 @@ void nopass(void)
     while(!feof(fp))
     {
         fscanf(fp,"%d %s %f %f %f",&list[i].id,list[i].name,&list[i].chinese,&list[i].math,&list[i].english);
-        list[i].score=list[i].chinese+list[i].math+list[i].english;
-        all=all+list[i].score;
+        list[i].sco=list[i].chinese+list[i].math+list[i].english;
+        all=all+list[i].sco;
         i++;
     }
     ave=all/i;
     all=0;
     for(int j=0;j<i;j++)
     {
-        if(list[i].score<ave) 
+        if(list[i].sco<ave) 
         {
             cout<<list[i].id<<"    "<<list[i].name<<endl;
             all++;
@@ -88,8 +88,8 @@ void rank_list(void)
     while(!feof(fp))
     {
         fscanf(fp,"%d %s %f %f %f",&list[i].id,list[i].name,&list[i].chinese,&list[i].math,&list[i].english);
-        list[i].score=list[i].chinese+list[i].math+list[i].english;
-        all=all+list[i].score;
+        list[i].sco=list[i].chinese+list[i].math+list[i].english;
+        all=all+list[i].sco;
         i++;
     }
     int k=0;
@@ -98,7 +98,7 @@ void rank_list(void)
     {
         for(k=0;k<i-j-1;k++)
         {
-            if(list[k].score<list[k+1].score)
+            if(list[k].sco<list[k+1].sco)
             {
                 tem=list[k];
                 list[k]=list[k+1];
@@ -109,7 +109,7 @@ void rank_list(void)
     for(int j=0;j<i;j++)
     {
         cout<<"第"<<i+1<<"名为";
-    	cout<<list[i].id<<"  "<<list[i].name<<"  "<<list[i].score;
+    	cout<<list[i].id<<"  "<<list[i].name<<"  "<<list[i].sco;
         cout<<endl;
     }
 }
