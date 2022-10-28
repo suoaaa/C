@@ -9,13 +9,14 @@ User类的使用示意如下所示，在你的代码中除了实现User类以外
 using namespace std;
 class User{
     public:
-    User(char name[10],char pass[10]);
+    User(char name[10],char pass[10]);    
+    int num;
     void AddUser(char name[10],char pass[10]);
     int login(char name[10],char pass[10]);
     private:
     char user_name[10][10];
     char user_pass[10][10];
-    int num;
+
 };
 User::User(char name[10],char pass[10])
 {
@@ -76,11 +77,11 @@ int User::login(char name[10],char pass[10])
     return -1;
 }
 int main(){
-	char name[10],name1[10],pass[10],pass1[10];
-    cout<<num;
+	char name[10],name1[10],pass[10],pass1[10];	
+    User user("LiWei","liwei101");
+    cout<<user.num;
     scanf("%s %s %s %s",name,pass,name1,pass1);
-    cout<<num;
-	User user("LiWei","liwei101");
+    cout<<user.num;
 //cout<<num;
 //	user.AddUser(name,pass);
 //	if (user.login(name1,pass1) >=0)
