@@ -1,15 +1,16 @@
-#include<iostream>
-#include<cstring>
-using namespace std;
-int main()
-{
-    char s1[20];
-    int i=0;
-    scanf("%s ",s1);
-    // while(s1[i]!='\0')
-    // {
-    //     cout<<s1[i];
-    //     i++;
-    // }
-    return 0;
-}
+while(user_name[i][j]==name[i][j])
+    {
+        j++;
+    }
+    while(user_name[i]==name[i])
+    {
+        i++;
+    }
+    while(user_pass[j]=pass[j])
+    {
+        j++;
+    }
+    if(user_name[i]=='\0'&&user_pass[j]=='\0'&&name[i]=='\0'&&pass[j]=='\0'&&)
+    {
+        return 0;
+    } else return -1;
