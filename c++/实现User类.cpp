@@ -9,52 +9,62 @@ User类的使用示意如下所示，在你的代码中除了实现User类以外
 using namespace std;
 class User{
     public:
-    User(char name[10],char pass[10]);    
-    int num;
-    void AddUser(char name[10],char pass[10]);
-    int login(char name[10],char pass[10]);
+    User(const char *name,const char *pass);    
+    int getnum();
+    void AddUser(char *name,char *pass);
+    int login(char *name,char *pass);
     private:
+    static int num;
     char user_name[10][10];
     char user_pass[10][10];
 
 };
-User::User(char name[10],char pass[10])
+User::User(const char *name,const char *pass)
 {
-    num=0;
     int i=0;
     while(name[i]!='\0')
     {
         user_name[num][i]=name[i];
+        i++;
     }
     user_name[num][i]='\0';
     i=0;
     while(pass[i]!='\0')
     {
         user_pass[num][i]=pass[i];
+        i++;
     }
     user_pass[num][i]='\0';
     num++;
 }
-void User::AddUser(char name[10],char pass[10])
+int User::num=0;
+int User::getnum()
+{
+    return num;
+}
+void User::AddUser(char *name,char *pass)
 {
     int i=0;
     while(name[i]!='\0')
     {
         user_name[num][i]=name[i];
+        i++;
     }
     user_name[num][i]='\0';
     i=0;
     while(pass[i]!='\0')
     {
         user_pass[num][i]=pass[i];
+        i++;
     }
     user_pass[num][i]='\0';
     num++;
 }
-int User::login(char name[10],char pass[10])
+int User::login(char *name,char *pass)
 {
     int k=0,j=0,i=0;
-    while(k<num)
+    int find=-1;
+    while(k<num&&find!=1)
     {
         while(user_name[k][i]==name[i]&&user_name[k][i]!='\0'&&name[i]!='\0')
         {
@@ -68,35 +78,26 @@ int User::login(char name[10],char pass[10])
             }
             if(user_pass[k][j]=='\0'&&pass[j]=='\0')
             {
-                return 0;
+                find=1;
+                break;
             }
-            else return -1;
         }
         k++;
+        i=0;j=0;
     }
-    return -1;
+    return find;
 }
-int main(){
-	char name[10],name1[10],pass[10],pass1[10];	
-    User user("LiWei","liwei101");
-    cout<<user.num;
-    scanf("%s %s %s %s",name,pass,name1,pass1);
-    cout<<user.num;
-//cout<<num;
-//	user.AddUser(name,pass);
-//	if (user.login(name1,pass1) >=0)
-//	{
-//		cout<<"Success Login!"<<endl;
-//	}
-//	else{
-//		cout<<"Login failed!"<<endl;
-//	}
-	  return 0;
+int main() {
+	char name[10], name1[10], pass[10], pass1[10];
+	cin >> name >> pass >> name1 >> pass1;
+	User user("LiWei", "liwei101");
+	user.AddUser(name, pass);
+	if (user.login(name1, pass1) >= 0)
+	{
+		cout << "Success Login!" << endl;
+	}
+	else {
+		cout << "Login failed!" << endl;
+	}
+	return 0;
 }
-
-
-/*例如输入：
-test 1234567 test 123456回车
-输出：
-Login failed!
-*/
