@@ -10,49 +10,100 @@
 // 再调用 d.display()
 // 输出：
 // 1993-1-1
+#include<iostream>
+using namespace std;
 class Date{
 public:
-      Date(int y ,int m,int d)
-      {
-            year=y;
-            if(m<0||m>12) month=1;
-            else month=m;
-            if(d>)
-      };
-      int days(int year,int month){};
-      void NewDay();
+      Date(int y ,int m,int d);//构造
+      int days(int y,int m);//返回指定年月有多少天。
+      void NewDay();//将当前Date表示的日期增加一天。
 	void display()
  	{
-    	cout<<year<<"-"<<moth<<"-"<<day<<endl;
+    	cout<<year<<"-"<<month<<"-"<<day<<endl;
  	}
 private:
       int year; //年
       int month; //月
       int day;  // 日
+};
+Date::Date(int y,int m,int d)
+{
+      year=y;
+      if(m<0||m>12) month=1;
+      else month=m;
+      switch(month)
+      {
+            case 1:day=31;break;
+            case 2:
+                  if(!(year%100))
+                  {
+                        if(!(year%400)) day=29;
+                        else day=28;
+                  }
+                  else
+                  {
+                        if(!(year%4)) day=29;
+                        else day=28;
+                  }
+                  break;
+            case 3:day=31;break;
+            case 4:day=30;break;
+            case 5:day=31;break;
+            case 6:day=30;break;
+            case 7:day=31;break;
+            case 8:day=31;break;
+            case 9:day=30;break;
+            case 10:day=31;break;
+            case 11:day=30;break;
+            case 12:day=31;break;
+            default:break;
+      }
 }
 
-
-
-设计一个NewDay()成员函数，将当前Date表示的日期增加一天。
-例如：Date d(1991,1,1);
-      d.NewDay();
-      d.display();
-输出：
-1991-1-2
-
-设计一个days(int year, int month)成员函数,返回指定年月有多少天。
-例如 d.days(1991,1)
-返回：
-31
-
-在你的代码中必须实现以上三个方法，例如：
-#include "CDate.h"
-Date::Date(int y=1996,int m=1 ,int d=1){
-    ...
+int  Date::days(int y,int m)
+{
+      int d=0;
+      switch(m)
+      {
+            case 1:d=31;break;
+            case 2:
+                  if(!(y%100))
+                  {
+                        if(!(y%400)) d=29;
+                        else d=28;
+                  }
+                  else
+                  {
+                        if(!(y%4)) d=29;
+                        else d=28;
+                  }
+                  break;
+            case 3:d=31;break;
+            case 4:d=30;break;
+            case 5:d=31;break;
+            case 6:d=30;break;
+            case 7:d=31;break;
+            case 8:d=31;break;
+            case 9:d=30;break;
+            case 10:d=31;break;
+            case 11:d=30;break;
+            case 12:d=31;break;
+            default:break;
+      }
+      return d;
 }
-int  Date::days(int year,int month){
-    ...
-}
-void Date::NewDay(){
-  ...
+void Date::NewDay()
+{
+      day++;
+      int this_day=days(year,month);
+      if(day>this_day) 
+      {
+            day=1;
+            month++;
+            if(month>12)
+            {
+                  month=1;
+                  year++;
+            }
+      }
 }
