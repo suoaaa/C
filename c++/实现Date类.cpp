@@ -29,7 +29,11 @@ private:
 Date::Date(int y,int m,int d)
 {
       year=y;
-      if(m<0||m>12) month=1;
+      if(m<0||m>12) 
+      {
+            month=1;
+            cout<<"Invalid month!"<<endl;
+      }
       else month=m;
       switch(month)
       {
@@ -58,6 +62,11 @@ Date::Date(int y,int m,int d)
             case 12:day=31;break;
             default:break;
       }
+      if(d>day)
+      {
+            day=1;
+            cout<<"Invalid day!"<<endl;
+      } else day=d;
 }
 
 int  Date::days(int y,int m)
@@ -94,9 +103,7 @@ int  Date::days(int y,int m)
 }
 void Date::NewDay()
 {
-      day++;
-      int this_day=days(year,month);
-      if(day>this_day) 
+      if(day=days(year,month)) 
       {
             day=1;
             month++;
