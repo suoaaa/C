@@ -72,7 +72,7 @@ int *solve(int A,int M,int L)//A M L为乘客数，间隔数(interval),剩余人
 			cout<<' '<<leaved[killed]<<" 0 "<<r->data<<endl;
 			p->next=r->next; 
 			p=p->next;
-			delete(r);
+			// delete(r);
 			r=p->next;
 			killed++;			
 			 cout<<p->data<<' '<<r->data;
