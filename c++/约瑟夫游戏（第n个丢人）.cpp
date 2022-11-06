@@ -13,9 +13,6 @@
 5 10 3 9 4 12*/
 #include <iostream>
 using namespace std;
-int length=0; 
-int killed=0;
-int leaved[100]={0};	
 typedef struct Node
 {
 	int data;
@@ -25,72 +22,77 @@ Node* CreateList(int n)//n是长度
 {
 	Node* first = new Node(); // 	 
 	first->next=NULL;
-	Node* r=NULL;	//节点one 
-	Node* p=NULL;	//节点two 
-	r=first;
-	r->data=1;	
-	for(int i=1;i<n;i++){
+	Node* r=NULL;	
+	Node* p=NULL;
+	r=first;	
+	for(int i=1;i<=n;i++){
 		p=new Node();
-		p->data=i+1;
+		p->data=i;
 		p->next=NULL;
 		r->next=p; 			
-		r=p;				//r现在指向p那么r就可以代表原来的p了，从而实现循环创建！！ 
+		r=p;
 	} 
 	if(n==1)
 	{
-		first->next=first;
+		first->next=first->next;
 	}
-	else {p->next=first;}
+	else {r->next=first->next;}
 	return first; 
 }
-
-Node* DeleteData(Node* first,int x,int a)//传入头节点指针和要删除的链表序号 
-{	
-	Node*p=first;
-	Node*r=NULL;		
-	int cnt=1; 	
-	while(cnt!=x-1)//删掉x，得在x-1处动手 
-	{
-		p=p->next;
-		cnt++;			//cnt就是查 到第几个节点了了，从1开始 
-	}
-	r=p->next;
-	p->next=r->next;			//r就这样被踢出队伍了qwq 
-	leaved[killed]=r->data;
-	killed++;
-	length--;
-	return r->next;
-} 
 int *solve(int A,int M,int L)//A M L为乘客数，间隔数(interval),剩余人数
 {	
-	length=A; 
-	Node* mytable=NULL;	 
-	mytable=CreateList(A);	
-	if(M==1){
-	for(int a=A-L;a>0;a--)
+	int killed=0;
+	int *leaved=new int(A-L);	
+	int i=1;
+	Node *q=CreateList(A);
+	Node*p=q->next;
+	Node *r=p->next;
+	if(M==1)
 	{
-	leaved[a-1]=a;
-	}
-	return leaved;
-	}
-	while(length!=L)
+		while(L!=A)
+		{
+			leaved[killed++]=p->data;
+			p=p->next;
+			A--;
+			//cout<<leaved[killed-1]<<' ';
+		}
+	}	
+	else
 	{
-	mytable=DeleteData(mytable,M,A);			
+		while(killed!=A-L)
+		{
+			i=1;
+			while(i<M-1)
+			{
+				i++;
+				p=p->next;
+				r=r->next;
+			}
+			leaved[killed]=r->data; 
+			cout<<' '<<leaved[killed]<<" 0 "<<r->data<<endl;
+			p->next=r->next; 
+			p=p->next;
+			delete(r);
+			r=p->next;
+			killed++;			
+			 cout<<p->data<<' '<<r->data;
+		}
+	}
+	for(i=0;i<A;i++)
+	{
+		cout<<p->data<<' ';
+		p=p->next;
 	}
 	return leaved;
 }
-//我发现我好像没有对整个流程有一个概念，我是每个步骤框架写完后去验证是否完成目标 
-// int main ()
-// {
-// 	int N=0,M=0;int K=0;
-// 	int n=scanf("%d %d %d",&N,&K,&M);//总人数
-// 	Node* list=yourself(N,K,M);
-// 	cout<<list->data;
-// 	list=list->next;
-// 	for(int i=1;i<K;i++)
-// 	{
-// 		cout<<','<<list->data;
-// 		list=list->next;
-// 	}
-// 	return 0;
-// }
+int main ()
+{
+	int N=0,M=0,K=0;
+	scanf("%d %d %d",&N,&K,&M);//总人数
+	int *leaved=solve(N,K,M);
+	// for(int i=0;i<N-M;i++)
+	// {
+	// cout<<leaved[i]<<' ';
+	// }
+	return 0;
+}
