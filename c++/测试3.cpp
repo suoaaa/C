@@ -52,33 +52,94 @@ public:
 			return true;
 		return  false;
 	}
-	Set & operator +=(Set a,int e);    // 向集合中增元素e
+	bool operator <=(const Set &s)const;//this <= s判断当前集合是否包于集合s
+	bool operator ==(const Set &s)const; //判断集合是否相等
+	friend Set & operator +=(Set &a,int e);    // 向集合中增减元素e
+	friend Set & operator -=(Set &a,int e);    //删除集合中的元素e
+
+	Set operator |(const Set &s)const;  //集合并
+	Set operator &(const Set &s)const;//集合交
+	Set operator -(const Set &s)const; //集合差
 };
-Set::Set & operator +=(Set a,int e)    // 向集合中增加元素e
+bool Set::operator <=(const Set &s)const//this <= s判断当前集合是否包于集合s
+{
+	if(n<=s.n)
+	{
+		int i=1;
+		while(i<=n)
+		{
+			if(!s.IsElement(pS[i++])) return false;
+		}
+		return true;
+	}else return false;
+}
+bool Set::operator ==(const Set &s)const //判断集合是否相等
+{
+	if(n==s.n)
+	{
+		int i=1;
+		while(i<=n)
+		{
+			if(!IsElement(s.pS[i++])) return false;
+		}
+		return true;
+	}else return false;
+}
+Set & operator +=(Set &a,int e)    // 向集合中增加元素e
 {
     int i=1;
-    int n=this->n
-    Set out;
-	if(IsElement(e))
+	int n=a.n;
+	int *temp=a.pS;
+	if(a.IsElement(e))
 	{
-		out.pS=new int (n);
+		a.pS=new int (n+1);
 		for(i=1;i<=n;i++)
-			out.pS[i]=this->pS[i];
-		return out;
+			a.pS[i]=temp[i];
+		return a;
 	}else{
-		out.pS=new int (n+1);
+		a.pS=new int (n+1);
 		for(i=1;i<=n;i++)
-			out.pS[i]=this->pS[i];
-		out.pS[i]=e;
-		out.n=n+1;
-		return out; 
+			a.pS[i]=temp[i];
+		a.pS[i]=e;
+		a.n=n+1;
+		return a;
 	}
 }
+Set & operator -=(Set &a,int e)    // 向集合中增加元素e
+{
+    int i=1;
+	int n=a.n;
+	int *temp=a.pS;
+	if(a.IsElement(e))
+	{
+		int j=1;
+		a.pS=new int (n-1);
+		for(;i<=n;)
+			if(temp[i]!=e)
+			a.pS[j++]=temp[i++];
+		a.n--;
+		return a;
+	}else{
+		return a;
+	}
+}
+Set Set::operator |(const Set &s)const//集合并
+{}
+Set Set::operator &(const Set &s)const//集合交
+{}
+Set Set::operator -(const Set &s)const//集合差
+{}
 int main()
 {
     Set a;
+	Set b;
+	b+=2;
     a +=2;
+	a+=3;
     a.ShowElement();
+	if(b<=a) cout<<" 111"<<endl;
+	b+=3;
+	if(b==a) cout<<"222"<<endl;
     return 0;
 }
 /*完成Set类，实现运算符的重载。
