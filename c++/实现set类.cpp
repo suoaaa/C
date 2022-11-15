@@ -52,35 +52,81 @@ public:
 			return true;
 		return  false;
 	}
-	Set & operator +=(Set a,int e);    // 向集合中增元素e
+	bool operator <=(const Set &s)const;//this <= s判断当前集合是否包于集合s
+	bool operator ==(const Set &s)const; //判断集合是否相等
+	Set & operator +=(int e);    // 向集合中增减元素e
+	Set & operator -=(int e);    //删除集合中的元素e
+
+	Set operator |(const Set &s)const;  //集合并
+	Set operator &(const Set &s)const;//集合交
+	Set operator -(const Set &s)const; //集合差
 };
-Set::Set & operator +=(Set a,int e)    // 向集合中增加元素e
+bool operator <=(const Set &s)const//this <= s判断当前集合是否包于集合s
 {
-    int i=1;
-    int n=this->n
-    Set out;
+	if(n<=s.n)
+	{
+		int i=1;
+		while(i++<=n)
+		{
+			if(!s.IsElement(pS[i])) return false;
+		}
+		return true;
+	}else return false;
+}
+bool operator ==(const Set &s)const //判断集合是否相等
+{
+	if(n==s.n)
+	{
+		int i=1;
+		while(i++<=n)
+		{
+			if(!IsElement(s.pS[i])) return false;
+		}
+		return true;
+	}else return false;
+}
+Set & operator +=(int e)    // 向集合中增加元素e
+{
 	if(IsElement(e))
 	{
+		Set out();
 		out.pS=new int (n);
-		for(i=1;i<=n;i++)
-			out.pS[i]=this->pS[i];
-		return out;
+		for(int i=1;i<=n;i++)
+			out.pS[i]=pS[i];
+		return this;
 	}else{
+		Set out();
 		out.pS=new int (n+1);
-		for(i=1;i<=n;i++)
-			out.pS[i]=this->pS[i];
-		out.pS[i]=e;
+		for(int i=1;i<=n;i++)
+			out.pS[i]=pS[i];
+		pS[i]=e;
 		out.n=n+1;
 		return out; 
 	}
 }
-int main()
+Set & operator -=(int e)    //删除集合中的元素e
 {
-    Set a;
-    a +=2;
-    a.ShowElement();
-    return 0;
+	Set out();
+	out.pS=new int(n-1);
+	out.n=n-1;
+	for(int i=1,j=1;j<=n;)
+		if(pS[j]!=e)
+		pS[i++]=temp[j++];
+	return out;
 }
+
+Set operator |(const Set &s)const 	//集合并
+Set operator &(const Set &s)const	//集合交
+Set operator -(const Set &s)const	//集合差
+{
+	int i=1,j=1;
+	Set out(*this)
+	while(i++<s.n)
+	{
+		for(j=1;j<=n)
+	}
+}
+
 /*完成Set类，实现运算符的重载。
 重载操作符+=,向集合中增减元素e,例如:
 Set s;
