@@ -54,12 +54,12 @@ public:
 	}
 	bool operator <=(const Set &s)const;//this <= s判断当前集合是否包于集合s
 	bool operator ==(const Set &s)const; //判断集合是否相等
-	friend Set & operator +=(Set &a,int e);    // 向集合中增减元素e
-	friend Set & operator -=(Set &a,int e);    //删除集合中的元素e
+	Set & operator +=(int e);    // 向集合中增减元素e
+	Set & operator -=(int e);    //删除集合中的元素e
 
-	Set operator |(const Set &s)const;  //集合并
-	Set operator &(const Set &s)const;//集合交
-	Set operator -(const Set &s)const; //集合差
+	Set operator |(const Set &s)const;	//集合并
+	Set operator &(const Set &s)const;	//集合交
+	Set operator -(const Set &s)const;	//集合差
 };
 bool Set::operator <=(const Set &s)const//this <= s判断当前集合是否包于集合s
 {
@@ -85,61 +85,110 @@ bool Set::operator ==(const Set &s)const //判断集合是否相等
 		return true;
 	}else return false;
 }
-Set & operator +=(Set &a,int e)    // 向集合中增加元素e
+Set & Set::operator +=(int e)    // 向集合中增加元素e
 {
     int i=1;
-	int n=a.n;
-	int *temp=a.pS;
-	if(a.IsElement(e))
+	int *temp=pS;
+	if(IsElement(e))
 	{
-		a.pS=new int (n+1);
-		for(i=1;i<=n;i++)
-			a.pS[i]=temp[i];
-		return a;
+		return *this;
 	}else{
-		a.pS=new int (n+1);
+		pS=new int (n+2);
 		for(i=1;i<=n;i++)
-			a.pS[i]=temp[i];
-		a.pS[i]=e;
-		a.n=n+1;
-		return a;
+			pS[i]=temp[i];
+		pS[i]=e;
+		n=n+1;
+		return *this;
 	}
 }
-Set & operator -=(Set &a,int e)    // 向集合中增加元素e
+Set & Set::operator -=(int e)    // 向集合中删除元素e
 {
     int i=1;
-	int n=a.n;
-	int *temp=a.pS;
-	if(a.IsElement(e))
+	int *temp=pS;
+	if(IsElement(e))
 	{
 		int j=1;
-		a.pS=new int (n-1);
-		for(;i<=n;)
+		pS=new int (n);
+		for(;i<=n;i++)
 			if(temp[i]!=e)
-			a.pS[j++]=temp[i++];
-		a.n--;
-		return a;
+			{pS[j]=temp[i];j++;}
+		n-=1;
+		return *this;
 	}else{
-		return a;
+		return *this;
 	}
 }
 Set Set::operator |(const Set &s)const//集合并
-{}
+{
+	int *temp=new int (s.n+n+1);
+	int i=1,j=1;
+	for(;i<=n;i++)
+		temp[i]=pS[i];
+		i=n;
+	for(;j<=s.n;j++)
+		if(!IsElement(s.pS[j]))
+			temp[i+j]=s.pS[j];
+		else i--;
+	j--;
+	Set out;
+	out.n=i+j;
+	out.pS=temp;
+	//out.pS=new int (out.n+1);
+	// for(j=1;j<=out.n;j++)
+	// 	out.pS[j]=temp[j];
+	return out;
+}
 Set Set::operator &(const Set &s)const//集合交
-{}
+{
+	int *temp=new int (s.n+n);
+	Set out;
+	int i=1,j=1;
+	for(;i<=n;i++)
+	{
+		if(s.IsElement(pS[i]))
+		{temp[j]=pS[i];j++;}
+	}
+	// out.pS=new int (j);
+	out.n=j-1;
+	out.pS=temp;
+	// for(j=1;j<=out.n;j++)
+	// 	out.pS[j]=temp[j];
+	return out;
+}
 Set Set::operator -(const Set &s)const//集合差
-{}
+{
+	int *temp=new int (s.n+n);
+	Set out;
+	int i=1,j=1;
+	for(;i<=n;i++)
+	{
+		if(!s.IsElement(pS[i]))
+			temp[j++]=pS[i];
+	}
+	// out.pS=new int (j);
+	out.n=j-1;
+	out.pS=temp;
+	// for(j=1;j<=out.n;j++)
+	// 	out.pS[j]=temp[j];
+	return out;
+}
 int main()
 {
     Set a;
-	Set b;
-	b+=2;
-    a +=2;
+	Set b;	
+	b+=1;
+	a+=1;	
+	a+=2;
+	b+=2;	
+	b+=4;
 	a+=3;
-    a.ShowElement();
-	if(b<=a) cout<<" 111"<<endl;
-	b+=3;
-	if(b==a) cout<<"222"<<endl;
+	a+=5;
+	b+=6;
+	a.ShowElement();
+	b.ShowElement();
+	(a|b).ShowElement();
+	(a&b).ShowElement();
+	(a-b).ShowElement();
     return 0;
 }
 /*完成Set类，实现运算符的重载。
@@ -153,7 +202,7 @@ Set s;
 s +=1,s+=2;
 s.ShowElement();//{1,2}
 s -=1;
-s.showElement();//{2}
+s.ShowElement();//{2}
 
 重载操作符<=,判断当前集合是否包于另一个集合，例如:
 Set s1,s2,s3;
