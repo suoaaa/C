@@ -161,7 +161,7 @@ Set Set::operator -(const Set &s)const//集合差
 			{out.pS[j]=pS[i];j++;}
 	}
 	out.n=j-1;
-	return out;
+	return out;    
 }
 int main()
 {
