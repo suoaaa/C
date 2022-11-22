@@ -1,15 +1,15 @@
 #include<iostream>
 using namespace std;
-// ç”¨å…ˆåºåºåˆ—å’Œä¸­åºåºåˆ—æ„å»ºäºŒå‰æ ‘ï¼Œé‡‡ç”¨äºŒå‰é“¾è¡¨å­˜å‚¨ã€‚ç¼–å†™é€’å½’ç®—æ³•ï¼Œäº¤æ¢äºŒå‰æ ‘çš„å·¦å³å­æ ‘ï¼Œ
-// è¾“å‡ºæ–°äºŒå‰æ ‘æŒ‰å…ˆåºéå†å¾—åˆ°çš„ç»“æœã€‚
+// ÓÃÏÈĞòĞòÁĞºÍÖĞĞòĞòÁĞ¹¹½¨¶ş²æÊ÷£¬²ÉÓÃ¶ş²æÁ´±í´æ´¢¡£±àĞ´µİ¹éËã·¨£¬½»»»¶ş²æÊ÷µÄ×óÓÒ×ÓÊ÷£¬
+// Êä³öĞÂ¶ş²æÊ÷°´ÏÈĞò±éÀúµÃµ½µÄ½á¹û¡£
 
-// æäº¤æ ¼å¼ï¼šå®ç°void solve(int n, int *preOrder, int *inOrder, int *outOrder)å‡½æ•°ã€‚
-// å‡½æ•°å‚æ•°ä¸ºåºåˆ—é•¿åº¦nã€å…ˆåºåºåˆ—preOrderã€ä¸­åºåºåˆ—inOrderå’Œè¾“å‡ºåºåˆ—outOrderã€‚1<=n<=1000000ï¼Œæ ‘çš„æ·±åº¦<=2000ã€‚
-// è¯·ä¸è¦printfè¾“å‡ºä»»ä½•å†…å®¹ã€‚
+// Ìá½»¸ñÊ½£ºÊµÏÖvoid solve(int n, int *preOrder, int *inOrder, int *outOrder)º¯Êı¡£
+// º¯Êı²ÎÊıÎªĞòÁĞ³¤¶Èn¡¢ÏÈĞòĞòÁĞpreOrder¡¢ÖĞĞòĞòÁĞinOrderºÍÊä³öĞòÁĞoutOrder¡£1<=n<=1000000£¬Ê÷µÄÉî¶È<=2000¡£
+// Çë²»ÒªprintfÊä³öÈÎºÎÄÚÈİ¡£
 
-// è¾“å…¥æ ·ä¾‹1ï¼š
+// ÊäÈëÑùÀı1£º
 // n=5,preOrder={1,2,3,4,5},inOrder={3,2,4,1,5}
-// è¾“å‡ºæ ·ä¾‹1ï¼š
+// Êä³öÑùÀı1£º
 // outOrder={1,5,2,4,3}
 int c=1;
 int p=0;
@@ -23,7 +23,7 @@ typedef struct Tree
 }Tree;
 Tree *creattree(int n)
 {
-	Tree *root = new Tree;	//äºŒå‰æ ‘çš„æ ¹ç»“ç‚¹
+	Tree *root = new Tree;	//¶ş²æÊ÷µÄ¸ù½áµã
 	if (n <= 0)	return NULL;
 	else {
 		root->data = c++;
@@ -31,7 +31,7 @@ Tree *creattree(int n)
         if(m%2) m+=1;
 		root->left = creattree(m);	
 		root->right = creattree(n - 1 - m);	
-		return root;	//è¿”å›äºŒå‰æ ‘çš„æ ¹
+		return root;	//·µ»Ø¶ş²æÊ÷µÄ¸ù
 	}
 }
 void Pre(Tree *head,int *preOrder)
@@ -78,13 +78,10 @@ void solve(int n, int *preOrder, int *inOrder, int *outOrder)
 int main ()
 {
     int n=5;
-    int *preOrder=new int (n);
-    int *inOrder=new int (n);
-    int *outOrder=new int (n);
+    int *preOrder=new int [n];
+    int *inOrder=new int [n];
+    int *outOrder=new int [n];
     solve( n, preOrder, inOrder, outOrder);
-    for(int j=0; j<n;j++)
-    {
-        cout<<preOrder[j]<<' '<<inOrder[j]<<' '<<outOrder[j]<<endl;
-    }
+    cout<<n;
     return 0;
 }
