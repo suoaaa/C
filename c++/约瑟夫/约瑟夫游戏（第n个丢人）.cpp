@@ -72,7 +72,6 @@ int *solve(int A,int M,int L)//A M L为乘客数，间隔数(interval),剩余人
 			cout<<' '<<leaved[killed]<<" 0 "<<r->data<<endl;
 			p->next=r->next; 
 			p=p->next;
-			// delete(r);
 			r=p->next;
 			killed++;			
 			 cout<<p->data<<' '<<r->data;
@@ -90,9 +89,10 @@ int main ()
 	int N=0,M=0,K=0;
 	scanf("%d %d %d",&N,&K,&M);//总人数
 	int *leaved=solve(N,K,M);
-	// for(int i=0;i<N-M;i++)
-	// {
-	// cout<<leaved[i]<<' ';
-	// }
+	cout<<endl; 
+	 for(int i=0;i<N-M;i++)
+	 {
+	 cout<<leaved[i]<<' ';
+	 }
 	return 0;
 }
