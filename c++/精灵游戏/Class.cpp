@@ -11,5 +11,6 @@ public:
 
 	void move(rect r);
 	int getScore();
+	int a;
 };
 
