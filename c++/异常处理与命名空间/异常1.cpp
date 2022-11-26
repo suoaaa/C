@@ -1,17 +1,17 @@
-/*ä¸‹åˆ—ç¨‹åºçš„åŠŸèƒ½æ˜¯ï¼šè¾“å…¥æ•°ç»„ä¸‹æ ‡å’Œé™¤æ•°ï¼Œä»Žæ•°ç»„ä¸­å–å‡ºä¸‹æ ‡å¯¹åº”çš„æ•°ç»„å…ƒç´ ä½œä¸ºè¢«é™¤æ•°ï¼Œè¾“å‡ºé™¤æ³•è¿ç®—çš„ç»“æžœã€‚ä¾‹å¦‚ï¼Œ
-è¾“å…¥ï¼š9 5
-è¾“å‡ºï¼š2
+/*ÏÂÁÐ³ÌÐòµÄ¹¦ÄÜÊÇ£ºÊäÈëÊý×éÏÂ±êºÍ³ýÊý£¬´ÓÊý×éÖÐÈ¡³öÏÂ±ê¶ÔÓ¦µÄÊý×éÔªËØ×÷Îª±»³ýÊý£¬Êä³ö³ý·¨ÔËËãµÄ½á¹û¡£ÀýÈç£¬
+ÊäÈë£º9 5
+Êä³ö£º2
 
-æ•èŽ·ç¨‹åºæ•°ç»„ä¸‹æ ‡è¶Šç•Œé”™è¯¯ï¼Œç»™å‡ºç›¸åº”çš„æç¤ºï¼Œä¾‹å¦‚ï¼Œ
-è¾“å…¥ï¼š10 5
-è¾“å‡ºï¼š10 out of bound
+²¶»ñ³ÌÐòÊý×éÏÂ±êÔ½½ç´íÎó£¬¸ø³öÏàÓ¦µÄÌáÊ¾£¬ÀýÈç£¬
+ÊäÈë£º10 5
+Êä³ö£º10 out of bound
 
-è¾“å…¥ï¼š-1 5
-è¾“å‡ºï¼š-1 out of bound
+ÊäÈë£º-1 5
+Êä³ö£º-1 out of bound
 
-æ•èŽ·ç¨‹åºæ•°ç»„ä¸‹æ ‡é™¤é›¶é”™è¯¯ï¼Œç»™å‡ºç›¸åº”çš„æç¤ºï¼Œä¾‹å¦‚ï¼Œ
-è¾“å…¥ï¼š9 0
-è¾“å‡ºï¼šdivide by 0*/
+²¶»ñ³ÌÐòÊý×éÏÂ±ê³ýÁã´íÎó£¬¸ø³öÏàÓ¦µÄÌáÊ¾£¬ÀýÈç£¬
+ÊäÈë£º9 0
+Êä³ö£ºdivide by 0*/
 #include <iostream>
 using namespace std;
 class A : public exception

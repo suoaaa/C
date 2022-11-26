@@ -5,8 +5,8 @@ typedef struct Node
 	int data;
 	struct Node* next;
 }Node;
-Node* CreateList(int N);//äººæ•°N
-Node* yourself(int N,int K,int M);//æ€»äººæ•°Nï¼Œå‰©ä½™äººæ•°Kï¼Œé—´éš”äººæ•°M
+Node* CreateList(int N);//ÈËÊýN
+Node* yourself(int N,int K,int M);//×ÜÈËÊýN£¬Ê£ÓàÈËÊýK£¬¼ä¸ôÈËÊýM
 int main()
 {
 	int N=0,M=0;int K=0;
@@ -36,7 +36,7 @@ int main()
 	}
 	return 0;
 }
-Node* yourself(int N,int K,int M)//æ€»äººæ•°Nï¼Œå‰©ä½™äººæ•°Kï¼Œé—´éš”äººæ•°M
+Node* yourself(int N,int K,int M)//×ÜÈËÊýN£¬Ê£ÓàÈËÊýK£¬¼ä¸ôÈËÊýM
 {
 	Node *list=CreateList(N);
 	Node *p=list->next;
@@ -71,7 +71,7 @@ Node* yourself(int N,int K,int M)//æ€»äººæ•°Nï¼Œå‰©ä½™äººæ•°Kï¼Œé—´éš”äººæ•°M
 	}
 	return p;
 }
-Node* CreateList(int N)//äººæ•°N
+Node* CreateList(int N)//ÈËÊýN
 {
 	Node* first = new Node(); 
 	first->next=NULL;
