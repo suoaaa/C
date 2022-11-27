@@ -6,8 +6,5 @@ mygame.exe
 
 del MyGame.o
 
-del class.o
+del Class.o
 
-
-
-cmd

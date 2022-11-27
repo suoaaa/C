@@ -16,16 +16,16 @@ void User::move(int key)
 };
 void User::hit(int desx,int desy,ACL_Image *fire_img)//¹¥»÷£¬Ô¶³Ì
 {	
-	if(cd_hit==0) 
+	if(cd_hit==0)
 	{
 		int i=0;
-		while(f[i]==NULL) i++;
+		while(rem[i]==NULL) i++;
 		cd_hit=4;
-		f[i]=new fire(fire_img,this,desx,desy);
+		rem[i]=new fire(fire_img,this,desx,desy);
 	}
 };
 
-void enemy1::collide(User* usr,fire **f)
+void enemy1::collide(User* usr,remote **re)
 {
 	bool x_=0;bool y_=0;
 	if(usr->skill)
@@ -36,9 +36,9 @@ void enemy1::collide(User* usr,fire **f)
 	if(x_&&y_)	usr->health=0;
 	else	for(int i=0;i<n_remote;i++)
 				{
-					x_=(x+(fire_width+picwidth)/2>=usr->getx()&&x<usr->getx())||(x-(fire_width+picwidth)/2<=usr->getx()&&x>usr->getx());
-					y_=(y+(fire_high+pichigh)/2>=usr->gety()&&y<usr->gety())||(y-(fire_high+pichigh)/2<=usr->gety()&&y>usr->gety());
-					if(x_&&y_)	{health=0;f[i]->exist=0;usr->score+=score;break;}
+					x_=(x+(fire_width+picwidth)/2>=re[i]->getx()&&x<re[i]->getx())||(x-(fire_width+picwidth)/2<=re[i]->getx()&&x>re[i]->getx());
+					y_=(y+(fire_high+pichigh)/2>=re[i]->gety()&&y<re[i]->gety())||(y-(fire_high+pichigh)/2<=re[i]->gety()&&y>re[i]->gety());
+					if(x_&&y_)	{health=0;re[i]->exist=0;usr->score+=score;break;}
 				}
 }; 
 void enemy1::change(User *usr)
@@ -50,16 +50,17 @@ void enemy1::change(User *usr)
     dx=V_enemy*ddx/sqrt(d);
     dy=int(sqrt(V_enemy*V_enemy-dx*dx));
 };
-void enemy1::move(User *usr)
+void enemy1::move(User *usr,remote **re)
 {
 	x+=dx;y+=dy;
 	if(x>=Winwidth||x<=0)	{dx=-dx;}
 	if(y>=Winhigh||y<=0)	{dy=-dy;}
 	cd_change--;
 	if(cd_change==0)	change(usr);
+	collide(usr,re);
 };
 
-void enemy2::collide(User* usr,fire **f)
+void enemy2::collide(User* usr,remote **re)
 {
 	bool x_=0;bool y_=0;
 	if(usr->skill)
@@ -70,9 +71,9 @@ void enemy2::collide(User* usr,fire **f)
 	if(x_&&y_)	usr->health=0;
 	else	for(int i=0;i<n_remote;i++)
 				{
-					x_=(x+(fire_width+picwidth)/2>=usr->getx()&&x<usr->getx())||(x-(fire_width+picwidth)/2<=usr->getx()&&x>usr->getx());
-					y_=(y+(fire_high+pichigh)/2>=usr->gety()&&y<usr->gety())||(y-(fire_high+pichigh)/2<=usr->gety()&&y>usr->gety());
-					if(x_&&y_)	{health=0;usr->score+=score;f[i]->exist=0;break;}
+					x_=(x+(fire_width+picwidth)/2>=re[i]->getx()&&x<re[i]->getx())||(x-(fire_width+picwidth)/2<=re[i]->getx()&&x>re[i]->getx());
+					y_=(y+(fire_high+pichigh)/2>=re[i]->gety()&&y<re[i]->gety())||(y-(fire_high+pichigh)/2<=re[i]->gety()&&y>re[i]->gety());
+					if(x_&&y_)	{health=0;re[i]->exist=0;usr->score+=score;break;}
 				}
 };
 void enemy2::hit(ACL_Image *img,User *usr)
@@ -81,40 +82,41 @@ void enemy2::hit(ACL_Image *img,User *usr)
 		{
 			cd_hit=CD;
 			for(int i=0;i<n_remote;i++)
-			if(arr[i]!=NULL)
+			if(rem[i]!=NULL)
 			{
-				arr[i]=new arrow(img,x,y,usr);
+				rem[i]=new arrow(img,x,y,usr);
 				break;
 			}
 		}
 };
-void enemy2::move(User *usr,ACL_Image *img)
+void enemy2::move(User *usr,remote **re,ACL_Image *img)
 {
 	cd_hit--;
 	x+=dx;y+=dy;
 	if(x>=Winwidth||x<=0)	{x-=dx;dx=-dx;}
 	if(y>=Winhigh||y<=0)	{y-=dy;dy=-dy;}
 	if(cd_hit==0) hit(img,usr);
+	collide(usr,re);
 };
 
-void enemy3::collide(User* usr,fire **f)
+void enemy3::collide(User* usr,remote **re)
 {
 	bool x_=(x+picwidth>=usr->getx()&&x<usr->getx())||(x-picwidth<=usr->getx()&&x>usr->getx());
 	bool y_=(y+pichigh>=usr->gety()&&y<usr->gety())||(y-pichigh<=usr->gety()&&y>usr->gety());
-	if(x_&&y_)	{health=0;usr->score+=score;}
+	if(x_&&y_)	usr->score+=score;
 	else	for(int i=0;i<n_remote;i++)
 				{
-					x_=(x+(fire_width+picwidth)/2>=usr->getx()&&x<usr->getx())||(x-(fire_width+picwidth)/2<=usr->getx()&&x>usr->getx());
-					y_=(y+(fire_high+pichigh)/2>=usr->gety()&&y<usr->gety())||(y-(fire_high+pichigh)/2<=usr->gety()&&y>usr->gety());
-					if(x_&&y_)	{health=0;f[i]->exist=0;usr->score+=score;break;}
+					x_=(x+(fire_width+picwidth)/2>=re[i]->getx()&&x<re[i]->getx())||(x-(fire_width+picwidth)/2<=re[i]->getx()&&x>re[i]->getx());
+					y_=(y+(fire_high+pichigh)/2>=re[i]->gety()&&y<re[i]->gety())||(y-(fire_high+pichigh)/2<=re[i]->gety()&&y>re[i]->gety());
+					if(x_&&y_)	{health=0;re[i]->exist=0;usr->score+=score;break;}
 				}
 };
-void enemy3::move(User* usr,fire **f)
+void enemy3::move(User* usr,remote **re)
 {
 	x+=dx;y+=dy;
 	if(x>=Winwidth||x<=0)	{dx=-dx;}
 	if(y>=Winhigh||y<=0)	{dy=-dy;}
-	collide(usr,f);
+	collide(usr,re);
 };
 
 void arrow::collide(User* usr)
