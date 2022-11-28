@@ -6,13 +6,13 @@
 #include <math.h>
 #include<stdlib.h>
 
-#define V_user 50       //定义玩家移动速度为50
-#define V_enemy 40      //定义敌对移动速度为40
-#define V_remote 60     //定义远程攻击的移动速度为60
+#define V_user 6        //定义玩家移动速度
+#define V_enemy 5       //定义敌对移动速度
+#define V_remote 10      //定义远程攻击的移动速度
 #define Winwidth 1200   //窗口宽
 #define Winhigh 800     //窗口高
-#define picwidth 70     //角色及敌人贴图宽
-#define pichigh 70      //角色及敌人贴图高
+#define picwidth 60     //角色及敌人贴图宽
+#define pichigh 60      //角色及敌人贴图高
 #define arrow_width 48  //敌人2类射出弓箭贴图的宽
 #define arrow_high 27   //敌人2类射出弓箭贴图的高
 #define fire_width 30   //玩家发射火球贴图的宽
@@ -21,7 +21,8 @@
 #define n_enemy2 3      //敌人2的最大数量
 #define n_enemy3 7      //敌人3的最大数量
 #define n_remote 6      //火球及箭的各自最大在场数量
-#define CD 3            //设置远程攻击cd
+#define CD 40           //设置远程攻击cd为1.6s（0.04s为一个单位时间）
+#define CD_skill 140    //设置角色技能cd为6s（0.04s为一个单位时间）
 
 class Base;         //角色（玩家及敌人）基础类
 class User;         //玩家类
@@ -53,18 +54,18 @@ ACL_Image *img;     //图片指针
 
 class User:public Base//玩家类
 {
-protected:
-    int cd_hit;             //人物远程攻击技能cd
-    int cd_skill;           //人物角色技能cd
 public:
     User(ACL_Image *picture)
         {img=picture;score=0;cd_hit=0;cd_skill=0;x=Winwidth/2;y=Winhigh/2;skill=0;health=1;dx=V_user;dy=V_user;for(int i=0;i<n_remote;i++)rem[i]=NULL;};
     ~User(){img=NULL;score=0;cd_hit=0;cd_skill=0;x=0;y=0;dx=0;dy=0;health=0;};
     //fire *(f[n_remote]);    //发射出的火球
-    bool skill;             //技能：暂时无敌2s，免疫弓箭手（敌人2）及近战（敌人1）的攻击,skill为真则发动技能，为假未发动技能
+    bool skill;             //技能：暂时无敌2s，免疫弓箭手（敌人2）及近战（敌人1）的攻击,skill为真则发动技能，为假未发动技能    
+    int cd_skill;           //人物角色技能cd    
+    int cd_hit;             //人物远程攻击技能cd
     void hit(int desx,int desy,ACL_Image *fire_img);//攻击，远程
     void move(int key);     
-    void collide(User *usr,remote **re){};       
+    void collide(User *usr,remote **re){};     
+    void des_cd_skill(){cd_skill--;};   //调用函数减少一个单位时间的技能cd  
     //以下四个类需要玩家数据使用collide（碰撞）函数判断是否攻击到
     friend enemy1;
     friend enemy2;
@@ -75,14 +76,11 @@ public:
 
 class enemy1:public Base//敌人1类（近战）
 {
-protected:
-    int cd_change;      //改变方向的cd,默认是2s改变一次（cd_change=4）
 public:
     enemy1(ACL_Image *picture,User *usr)
     {   
         //srand(time(NULL));
         health=1;
-        cd_change=4;
         img=picture;score=2;
         x=rand()%(Winwidth-2*picwidth)+picwidth;
         y=rand()%(Winhigh-2*pichigh)+pichigh;
@@ -95,6 +93,7 @@ public:
         double d=ddy*ddy+ddx*ddx;
         dx=V_enemy*ddx/sqrt(d);
         dy=int(sqrt(V_enemy*V_enemy-dx*dx));
+        if(usr->gety()<y)   dy*=-1;
     };
     enemy1(){};
     ~enemy1(){img=NULL;score=0;x=0;y=0;dx=0;dy=0;health=0;};
@@ -163,6 +162,7 @@ public:
     int getx(){return x;};
     int gety(){return y;};
     virtual void collide(User* usr)=0;
+    virtual void move(User *usr)=0;
 };
 
 class arrow:public remote
@@ -177,8 +177,9 @@ public:
         int ddx=usr->getx()-x;
         int ddy=usr->gety()-y;
         double d=ddy*ddy+ddx*ddx;
-        dx=V_enemy*ddx/sqrt(d);
-        dy=int(sqrt(V_enemy*V_enemy-dx*dx));
+        dx=V_remote*ddx/sqrt(d);
+        dy=int(sqrt(V_remote*V_remote-dx*dx));
+        if(usr->gety()<y)   dy*=-1;
     }
     ~arrow()
     {
@@ -195,6 +196,7 @@ public:
     fire(){}
     fire(ACL_Image *picture,User *usr,int desx,int desy)
     {
+        exist=1;
         img=picture;
         x=usr->getx();
         y=usr->gety();
@@ -203,12 +205,13 @@ public:
         double d=ddy*ddy+ddx*ddx;
         dx=V_remote*ddx/sqrt(d);
         dy=int(sqrt(V_remote*V_remote-dx*dx));
+        if(ddy<0)   dy*=-1;
     }
     ~fire()
     {
         x=0;y=0;dx=0;dy=0;
     }
-    void move();
+    void move(User *usr);
     void collide(User* usr){};
 };
 

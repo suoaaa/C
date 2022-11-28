@@ -19,24 +19,19 @@ void initimage();					//加载图片指针
 void timerEvent(int id);								//计时器
 void keyEvent(int key,int event);						//键盘事件
 void mouseEvent(int x, int y, int button, int event);	//鼠标事件
-void paint();											//绘图
-void move();											//所有单位移动一次
-void lost();											//失败后使用
+void paintgame();										//绘图
+void enmu();											//开始界面以及菜单
+
 int Setup()
 {
 	srand(time(NULL));
 	initWindow("The Sprite game----made by wangke-2021080909008",0,0,1200,800);
 	initimage();
-	// ACL_Sound pSound;
-	// loadSound("_mymusic1.mp3",&pSound);
-	// playSound(pSound,0);
-	// paint();
+	paintgame();
 	registerTimerEvent(timerEvent);
 	registerKeyboardEvent(keyEvent);
 	registerMouseEvent(mouseEvent);
 	startTimer(0, 30);
-	startTimer(1, 3000);
-	startTimer(2, 500);
 	return 0;
 }
 void initimage()
@@ -62,26 +57,37 @@ void initimage()
 	for(int i=0;i<n_enemy3;i++)
 	 	en3[i]=new enemy3(enemy3_image);
 }
-void paint()
+void paintgame()
 {
-	beginPaint();
-	if(usr->health)
-	{
-		putImageScale(usr->img,usr->getx(),usr->gety(),picwidth,pichigh);
+	if(usr->health)			//当玩家存活打印游戏界面
+	{	
+		beginPaint();
+		clearDevice();
+		putImageTransparent(usr->img,usr->getx(),usr->gety(),picwidth,pichigh,WHITE);
 		for(int i=0;i<n_enemy1;i++)
-			if(en1[i]!=NULL)	putImageScale(en1[i]->img,en1[i]->getx(),en1[i]->gety(),picwidth,pichigh);
+			if(en1[i]!=NULL)	putImageTransparent(en1[i]->img,en1[i]->getx(),en1[i]->gety(),picwidth,pichigh,WHITE);
 		for(int i=0;i<n_enemy3;i++)
-			if(en3[i]!=NULL)	putImageScale(en3[i]->img,en3[i]->getx(),en3[i]->gety(),picwidth,pichigh);
+			if(en3[i]!=NULL)	putImageTransparent(en3[i]->img,en3[i]->getx(),en3[i]->gety(),picwidth,pichigh,WHITE);
 		for(int i=0;i<n_enemy2;i++)	
 		{
-			if(en2[i]!=NULL)	putImageScale(en2[i]->img,en2[i]->getx(),en2[i]->gety(),picwidth,pichigh);
-			for(int j=0;j<n_remote;j++)
-				if(en2[i]->rem[j]!=NULL)	putImageScale(en2[i]->rem[j]->img,en2[i]->rem[j]->getx(),en2[i]->rem[j]->gety(),arrow_width,arrow_high);
+			if(en2[i]!=NULL)	
+			{
+				putImageTransparent(en2[i]->img,en2[i]->getx(),en2[i]->gety(),picwidth,pichigh,WHITE);
+				for(int j=0;j<n_remote;j++)
+					if(en2[i]->rem[j]!=NULL)	
+						putImageTransparent(en2[i]->rem[j]->img,en2[i]->rem[j]->getx(),en2[i]->rem[j]->gety(),arrow_width,arrow_high,WHITE);}
 		}
 		for(int i=0;i<n_remote;i++)
-			if(usr->rem[i]!=NULL)	putImageScale(usr->rem[i]->img,usr->rem[i]->getx(),usr->rem[i]->gety(),fire_width,fire_high);
+			if(usr->rem[i]!=NULL)	if(usr->rem[i]->exist!=0)	
+				putImageTransparent(usr->rem[i]->img,usr->rem[i]->getx(),usr->rem[i]->gety(),fire_width,fire_high,WHITE);
+				else {delete usr->rem[i];usr->rem[i]=NULL;}			
+		endPaint();
 	}
-	endPaint();
+	else
+	{
+
+	}
+
 }
 void timerEvent(int id)           	 //计时器
 {	//计时器规定：
@@ -91,61 +97,87 @@ void timerEvent(int id)           	 //计时器
 	//	id=3：
 	switch (id)
 	{
-	case 0:
-		for(int i=0;i<n_enemy1;i++)
-			if(en1[i]!=NULL)	en1[i]->collide(usr,usr->rem);
+	case 0:														//进行移动
+		// for(int i=0;i<n_enemy1;i++)
+		// 	if(en1[i]!=NULL&&en1[i]->health)	
+		// 		{en1[i]->move(usr,usr->rem);
+		// 		if(en1[i]->health==0){delete en1[i];en1[i]=NULL;}}
 		for(int i=0;i<n_enemy3;i++)
-			if(en3[i]!=NULL)	en3[i]->collide(usr,usr->rem);
+			if(en3[i]!=NULL&&en3[i]->health)
+			{en3[i]->move(usr,usr->rem);
+				if(en3[i]->health==0){delete en3[i];en3[i]=NULL;}}
 		for(int i=0;i<n_enemy2;i++)	
 		{
-			if(en2[i]!=NULL)	en2[i]->collide(usr,usr->rem);
-			for(int j=0;j<n_remote;j++)
-				if(en2[i]->rem[j]!=NULL)	en2[i]->rem[j]->collide(usr);
+			if(en2[i]!=NULL&&en2[i]->health)
+			{en2[i]->move(usr,usr->rem,arrow_image);
+				if(en2[i]->health==0){delete en2[i];en2[i]=NULL;}
+				// else for(int j=0;j<n_remote;j++)
+				// 	if(en2[i]->rem[j]!=NULL)	en2[i]->rem[j]->collide(usr);
+			}
 		}
-		if(usr->health)	paint();
-			else lost();
+		for(int i=0;i<n_remote;i++)
+			if(usr->rem[i]!=NULL)	
+			{
+				if(usr->rem[i]->exist!=0)	
+					usr->rem[i]->move(usr);
+				else {delete usr->rem[i];usr->rem[i]=NULL;}
+			}
+		if(usr->cd_skill>=0)	usr->cd_skill--;
+		if(usr->cd_hit>=0)	usr->cd_hit--;
+		paintgame();
 		break;
 	case 1:
 		for(int i=0;i<n_enemy1;i++)
-			if(en1[i]==NULL)	en1[i]->collide(usr,usr->rem);
+			if(en1[i]==NULL)	en1[i]=new enemy1(enemy1_image,usr);
 		for(int i=0;i<n_enemy3;i++)
-			if(en3[i]!=NULL)	en3[i]->collide(usr,usr->rem);
+			if(en3[i]==NULL)	en3[i]=new enemy3(enemy3_image);
 		for(int i=0;i<n_enemy2;i++)	
 		{
-			if(en2[i]!=NULL)	en2[i]->collide(usr,usr->rem);
-			for(int j=0;j<n_remote;j++)
-				if(en2[i]->rem[j]!=NULL)	en2[i]->rem[j]->collide(usr);
+			if(en2[i]==NULL)	en2[i]=new enemy2(enemy1_image,usr);
 		}
 		break;
 	case 2:
-		/* code */
-		break;
-	case 3:
-		/* code */
-		break;
-	case 4:
-		/* code */
-		break;
-	case 5:
 		/* code */
 		break;
 	default:
 		break;
 	}
 }
-void keyEvent(int key, int event) 	 //键盘输入
+void keyEvent(int key,int event)						//键盘事件
 {
-
+	if (event != KEY_DOWN)return;
+	if(usr)	usr->move(key);
+	for(int i=0;i<n_enemy1;i++)
+		if(en1[i]!=NULL&&en1[i]->health)	
+			{en1[i]->collide(usr,usr->rem);
+			if(en1[i]->health==0){delete en1[i];en1[i]=NULL;}}
+		for(int i=0;i<n_enemy3;i++)
+			if(en3[i]!=NULL&&en3[i]->health)
+			{en3[i]->collide(usr,usr->rem);
+				if(en3[i]->health==0){delete en3[i];en3[i]=NULL;}}
+		for(int i=0;i<n_enemy2;i++)
+			if(en2[i]!=NULL&&en2[i]->health)
+			{en2[i]->collide(usr,usr->rem);
+				if(en2[i]->health==0){delete en2[i];en2[i]=NULL;}
+				else for(int j=0;j<n_remote;j++)
+					if(en2[i]->rem[j]!=NULL)	en2[i]->rem[j]->collide(usr);
+			}
+	paintgame();
 }
-void mouseEvent(int key)	         //鼠标输入
+void mouseEvent(int x, int y, int button, int event)	//鼠标事件
 {
-
-}
-void move()							//所有单位移动一次
-{
-
-}
-void lost()							//失败后使用
-{
-
+	if(button == LEFT_BUTTON && event == BUTTON_DOWN&&usr->cd_hit<=0)
+	{
+		int i=0;
+		for(;i<n_remote;i++)
+		{
+			if(usr->rem[i]==NULL) usr->rem[i]=new fire(fire_image,usr,x,y);
+			usr->cd_hit=CD;
+		}
+	beginPaint();
+	initConsole ();
+	printf("hello");
+	endPaint();
+	}
+	
 }

@@ -7,4 +7,4 @@ mygame.exe
 del MyGame.o
 
 del Class.o
-
+cmd
