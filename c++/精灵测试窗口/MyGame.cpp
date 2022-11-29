@@ -1,6 +1,6 @@
 #include 	"Class.h"
 #include 	<iostream>
-#include	"acllib.h"
+#include	"acllib1.h"
 using namespace std;
 
 User *usr;
@@ -24,8 +24,14 @@ void paintgame();										//绘图
 int Setup()
 {
 	srand(time(NULL));
-	initWindow("The Sprite game----made by wangke-2021080909008",0,0,Winwidth,Winhigh);
+	HWND g_1=initWindow("The Sprite game----made by wangke-2021080909008",0,0,Winwidth,Winhigh);
+	HWND g_2=initWindow("2",0,0,Winwidth,Winhigh);
+	if(IsWindow(g_1))	DestroyWindow(g_1);
 	initimage();
+	// beginPaint();
+	// putImageTransparent(arrow_image,600,400,arrow_width,arrow_high,WHITE);
+	// endPaint();
+	// paintgame();
 	registerTimerEvent(timerEvent);
 	registerKeyboardEvent(keyEvent);
 	registerMouseEvent(mouseEvent);
@@ -83,12 +89,13 @@ void paintgame()
 			if(usr->rem[i]!=NULL)	if(usr->rem[i]->exist!=0)	
 				putImageTransparent(usr->rem[i]->img,usr->rem[i]->getx(),usr->rem[i]->gety(),fire_width,fire_high,WHITE);
 				else {delete usr->rem[i];usr->rem[i]=NULL;}		
-		
+				cancelTimer(0);
 		endPaint();
 	}
 	else
 	{
 
+		cancelTimer(1);
 	}
 	beginPaint();
 	setBrushColor(WHITE);
@@ -99,15 +106,20 @@ void paintgame()
 	sprintf(txt, "%d", usr->getscore());	
 	paintText(50, 50, "你的得分目前为：   ");
 	paintText(220, 50, txt);
+	paintText(50, 50, "你的得分目前为：   ");
+	paintText(220, 50, txt);
+	//rectangle(0, 0, 500, 300);
 	endPaint();
 }
 void timerEvent(int id)           	 //计时器
-{	//	id=0：所有单位移动并判断碰撞，减少攻击及技能cd，间隔0.03s
+{	//计时器规定：
+	//	id=0：所有单位移动并判断碰撞，减少攻击及技能cd，间隔0.03s
 	//	id=1：补充被击败的敌对单位，间隔5s
 	//	id=2：所有enemy2单位判断能否释放远程攻击，间隔0.5s
+	//	id=3：
 	switch (id)
 	{
-	case 0:	
+	case 0:														//进行移动
 		for(int i=0;i<n_enemy1;i++)
 			if(en1[i]!=NULL&&en1[i]->health)	
 				{en1[i]->move(usr,usr->rem);

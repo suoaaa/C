@@ -136,7 +136,7 @@ extern "C" {
 	int Setup(void);
 
 	// 
-	void initWindow(const char title[], int left, int top, int width, int height);
+	HWND initWindow(const char title[], int left, int top, int width, int height);
 	void msgBox(const char title[], const char text[], int flag);
 
 	void registerKeyboardEvent(KeyboardEventCallback callback);

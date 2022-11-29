@@ -1,10 +1,10 @@
 #ifndef Class_h
 #define Class_h
 
-#include "acllib.h"
+#include "acllib1.h"
 #include <time.h>
 #include <math.h>
-#include<stdlib.h>
+#include <stdlib.h>
 
 #define V_user 6        //定义玩家移动速度
 #define V_enemy 5       //定义敌对移动速度
@@ -39,8 +39,8 @@ class Base          //角色（玩家及敌人）基础类
 {
 protected:
     int score;      //对于敌人：击杀获得分数  对于玩家：当前获得分数
-    float x,y;      //当前位置
-    float dx,dy;    //将要向下一个位置的差
+    float x,y;        //当前位置
+    float dx,dy;      //将要向下一个位置的差
 public:
 ACL_Image *img;     //图片指针
     bool health;    //判断是否死亡，死亡为假，存活为真
@@ -49,6 +49,7 @@ ACL_Image *img;     //图片指针
     ~Base(){};
     int getscore(){return score;};  //展示分数
     virtual void collide(User *usr,remote **re)=0;       //碰撞（攻击判定以及获得分数）
+                                  //需要注意只有敌人类以及敌人远程攻击arrow类有碰撞判定
     int getx(){return x;};
     int gety(){return y;};
 };
@@ -59,12 +60,14 @@ public:
     User(ACL_Image *picture)
         {img=picture;score=0;cd_hit=0;cd_skill=0;x=Winwidth/2;y=Winhigh/2;skill=CD_inskill;health=1;dx=V_user;dy=V_user;for(int i=0;i<n_remote;i++)rem[i]=NULL;};
     ~User(){img=NULL;score=0;cd_hit=0;cd_skill=0;x=0;y=0;dx=0;dy=0;health=0;};
+    //fire *(f[n_remote]);    //发射出的火球
     int skill;              //技能：暂时无敌2s，免疫弓箭手（敌人2）及近战（敌人1）的攻击,skill为剩余时间，为0表示未在技能状态    
     int cd_skill;           //人物角色技能cd    
     int cd_hit;             //人物远程攻击技能cd
     void hit(int desx,int desy,ACL_Image *fire_img);//攻击，远程
     void move(int key);     
     void collide(User *usr,remote **re){};
+    //以下四个类需要玩家数据使用collide（碰撞）函数判断是否攻击到
     friend enemy1;
     friend enemy2;
     friend enemy3;
@@ -77,6 +80,7 @@ class enemy1:public Base//敌人1类（近战）
 public:
     enemy1(ACL_Image *picture,User *usr)
     {   
+        //srand(time(NULL));
         health=1;
         img=picture;score=2;
         x=rand()%(Winwidth-2*picwidth)+picwidth;
@@ -103,8 +107,10 @@ class enemy2:public Base    //敌人2类（远程）相比敌人1多了远程攻击手段
 protected:
     int cd_hit;             //攻击cd
 public:
+    //arrow *(arr[n_remote]); //发出的弓箭
     enemy2(ACL_Image *picture,User *usr)
     {   
+    	//srand(time(NULL));
         health=1;
         for(int i=0;i<n_remote;i++)
             rem[i]=NULL;
@@ -130,7 +136,7 @@ class enemy3:public Base    //敌人3类，无攻击手段，击杀或者被玩家抓住可获得得分
 {
 public:
     enemy3(ACL_Image *picture)
-    {   
+    {
     	//srand(time(NULL));
         health=1;
         img=picture;score=4;

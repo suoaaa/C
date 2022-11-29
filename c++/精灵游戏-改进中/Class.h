@@ -4,27 +4,8 @@
 #include "acllib.h"
 #include <time.h>
 #include <math.h>
-#include<stdlib.h>
-
-#define V_user 6        //定义玩家移动速度
-#define V_enemy 5       //定义敌对移动速度
-#define V_remote 15     //定义远程攻击的移动速度
-#define Winwidth 1600   //窗口宽
-#define Winhigh 900     //窗口高
-#define picwidth 60     //角色及敌人贴图宽
-#define pichigh 60      //角色及敌人贴图高
-#define arrow_width 48  //敌人2类射出弓箭贴图的宽
-#define arrow_high 48   //敌人2类射出弓箭贴图的高
-#define fire_width 30   //玩家发射火球贴图的宽
-#define fire_high 30    //玩家发射火球贴图的高
-#define n_enemy1 4      //敌人1的最大数量  
-#define n_enemy2 2      //敌人2的最大数量
-#define n_enemy3 7      //敌人3的最大数量
-#define n_remote 5      //火球及箭的各自最大在场数量
-#define CD 30           //设置玩家远程攻击cd为1.5s（0.05s为一个单位时间）
-#define CD_arrow 90     //设置每个敌人2远程攻击cd为4.5s（0.05s为一个单位时间）
-#define CD_skill 120    //设置角色技能cd为6s（0.05s为一个单位时间）
-#define CD_inskill 40   //设置角色技能持续时间2s
+#include <stdlib.h>
+#include "config.h"
 
 class Base;         //角色（玩家及敌人）基础类
 class User;         //玩家类
@@ -39,8 +20,8 @@ class Base          //角色（玩家及敌人）基础类
 {
 protected:
     int score;      //对于敌人：击杀获得分数  对于玩家：当前获得分数
-    float x,y;        //当前位置
-    float dx,dy;      //将要向下一个位置的差
+    float x,y;      //当前位置
+    float dx,dy;    //将要向下一个位置的差
 public:
 ACL_Image *img;     //图片指针
     bool health;    //判断是否死亡，死亡为假，存活为真
@@ -83,12 +64,12 @@ public:
         //srand(time(NULL));
         health=1;
         img=picture;score=2;
-        x=rand()%(Winwidth-2*picwidth)+picwidth;
-        y=rand()%(Winhigh-2*pichigh)+pichigh;
-        while(x<usr->getx()+2*picwidth&&x>usr->getx()-2*picwidth)
-            x=rand()%(Winwidth-2*picwidth)+picwidth;
-        while(y<usr->gety()+2*pichigh&&y>usr->gety()-2*pichigh)
-            y=rand()%(Winhigh-2*pichigh)+pichigh;
+        x=rand()%(Winwidth-2*pica)+pica;
+        y=rand()%(Winhigh-2*pica)+pica;
+        while(x<usr->getx()+2*pica&&x>usr->getx()-2*pica)
+            x=rand()%(Winwidth-2*pica)+pica;
+        while(y<usr->gety()+2*pica&&y>usr->gety()-2*pica)
+            y=rand()%(Winhigh-2*pica)+pica;
         int ddx=usr->getx()-x;
         int ddy=usr->gety()-y;
         double d=ddy*ddy+ddx*ddx;
@@ -116,12 +97,12 @@ public:
             rem[i]=NULL;
         img=picture;score=3;
         cd_hit=90;
-        x=rand()%(Winwidth-2*picwidth)+picwidth;
-        y=rand()%(Winhigh-2*pichigh)+pichigh;
-        while(x<usr->getx()+4*picwidth&&x>usr->getx()-4*picwidth)
-            x=rand()%(Winwidth-2*picwidth)+picwidth;
-        while(y<usr->gety()+4*pichigh&&y>usr->gety()-4*pichigh)
-            y=rand()%(Winhigh-2*pichigh)+pichigh;
+        x=rand()%(Winwidth-2*pica)+pica;
+        y=rand()%(Winhigh-2*pica)+pica;
+        while(x<usr->getx()+4*pica&&x>usr->getx()-4*pica)
+            x=rand()%(Winwidth-2*pica)+pica;
+        while(y<usr->gety()+4*pica&&y>usr->gety()-4*pica)
+            y=rand()%(Winhigh-2*pica)+pica;
         dx=rand()%(V_enemy-1)+1;
         dy=int(sqrt(V_enemy*V_enemy-dx*dx));
     };
@@ -136,12 +117,12 @@ class enemy3:public Base    //敌人3类，无攻击手段，击杀或者被玩家抓住可获得得分
 {
 public:
     enemy3(ACL_Image *picture)
-    {   
+    {
     	//srand(time(NULL));
         health=1;
         img=picture;score=4;
-        x=rand()%(Winwidth-2*picwidth)+picwidth;
-        y=rand()%(Winhigh-2*pichigh)+pichigh;
+        x=rand()%(Winwidth-2*pica)+pica;
+        y=rand()%(Winhigh-2*pica)+pica;
         dx=rand()%(V_enemy-1)+1;
         dy=int(sqrt(V_enemy*V_enemy-dx*dx));
     };

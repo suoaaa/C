@@ -35,7 +35,7 @@
 #undef UNICODE
 #endif
 
-#include "acllib.h"
+#include "acllib1.h"
 
 #include <windows.h>
 #include <olectl.h>
@@ -289,7 +289,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 //
-void initWindow(const char *wndName, int x, int y, int width, int height)
+HWND initWindow(const char *wndName, int x, int y, int width, int height)
 {
 	RECT rect;
 
@@ -320,6 +320,7 @@ void initWindow(const char *wndName, int x, int y, int width, int height)
 
 	ShowWindow (g_hWnd,1);
 	UpdateWindow (g_hWnd);
+	return g_hWnd;
 }
 
 void initConsole(void)
