@@ -1,0 +1,6 @@
+MUSIC 1
+Winwidth 1280
+Winhigh 720
+n_enemy1 7
+n_enemy2 5
+n_enemy3 10

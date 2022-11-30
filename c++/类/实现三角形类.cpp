@@ -1,10 +1,10 @@
-/*å®ç°ä¸€ä¸ªä¸‰è§’å½¢ç±» Ctriangle 
-è¯¥ç±»æœ‰ä¸€ä¸ªGetPerimeteræ–¹æ³•è¿”å›ä¸‰è§’å½¢çš„å‘¨é•¿;
-GetAreaæ–¹æ³•è¿”å›ä¸‰è§’è¡Œçš„é¢ç§¯;
-è¯¥ç±»è¿˜æä¾›ä¸€ä¸ªdisplayæ–¹æ³•æ˜¾ç¤ºä¸‰è§’å½¢çš„ä¸‰è¾¹é•¿åº¦;
-è¾“å…¥ä¸‰æ¡è¾¹çš„é•¿åº¦ï¼ˆä¸ç”¨è€ƒè™‘ä¸‰æ¡è¾¹ä¸èƒ½æ„æˆä¸‰è§’å½¢çš„æƒ…å†µï¼‰;
-å±•ç¤ºä¸‰è§’å½¢çš„ä¸‰è¾¹é•¿åº¦ä»¥åŠå‘¨é•¿å’Œé¢ç§¯
-Ctriangleç±»çš„ä½¿ç”¨å¦‚ä¸‹ï¼Œåœ¨ä½ çš„ä»£ç ä¸­é™¤äº†å®ç°Ctriangleç±»è¿˜éœ€å¼•å…¥ä¸€ä¸‹ä»£ç ã€‚*/
+/*ÊµÏÖÒ»¸öÈı½ÇĞÎÀà Ctriangle 
+¸ÃÀàÓĞÒ»¸öGetPerimeter·½·¨·µ»ØÈı½ÇĞÎµÄÖÜ³¤;
+GetArea·½·¨·µ»ØÈı½ÇĞĞµÄÃæ»ı;
+¸ÃÀà»¹Ìá¹©Ò»¸ödisplay·½·¨ÏÔÊ¾Èı½ÇĞÎµÄÈı±ß³¤¶È;
+ÊäÈëÈıÌõ±ßµÄ³¤¶È£¨²»ÓÃ¿¼ÂÇÈıÌõ±ß²»ÄÜ¹¹³ÉÈı½ÇĞÎµÄÇé¿ö£©;
+Õ¹Ê¾Èı½ÇĞÎµÄÈı±ß³¤¶ÈÒÔ¼°ÖÜ³¤ºÍÃæ»ı
+CtriangleÀàµÄÊ¹ÓÃÈçÏÂ£¬ÔÚÄãµÄ´úÂëÖĞ³ıÁËÊµÏÖCtriangleÀà»¹ĞèÒıÈëÒ»ÏÂ´úÂë¡£*/
 #include<iostream>
 #include<cmath>
 using namespace std;
@@ -12,9 +12,9 @@ class Ctriangle
 {
     public:
     Ctriangle(int o,int p,int q);
-    int GetPerimeter();//å‘¨é•¿
-    double GetArea();//é¢ç§¯
-    void display();//å±•ç¤ºå‘¨é•¿
+    int GetPerimeter();//ÖÜ³¤
+    double GetArea();//Ãæ»ı
+    void display();//Õ¹Ê¾ÖÜ³¤
     private:
     int a;int b;int c;
 };
@@ -24,17 +24,17 @@ Ctriangle::Ctriangle(int o,int p,int q)
     b=p;
     c=q;
 }
-int Ctriangle::GetPerimeter()//è¿”å›å‘¨é•¿
+int Ctriangle::GetPerimeter()//·µ»ØÖÜ³¤
 {
     return a+b+c;
 }
-double Ctriangle::GetArea()//è¿”å›é¢ç§¯
+double Ctriangle::GetArea()//·µ»ØÃæ»ı
 {
     double p=(a+b+c)/2.0;
     double area=sqrt(p*(p-a)*(p-b)*(p-c));
     return area;
 }
-void Ctriangle::display()//å±•ç¤ºè¾¹é•¿
+void Ctriangle::display()//Õ¹Ê¾±ß³¤
 {
     cout<<"Ctriangle:a="<<a<<",b="<<b<<",c="<<c<<endl;
 }
@@ -47,10 +47,10 @@ int main(){
 	cout<<"Area:"<<T.GetArea()<<endl;
 	return 0;	 
 }
-/*è¾“å‡ºæ ¼å¼
-è¾“å…¥ï¼š3 4 5å›è½¦
-è¾“å‡ºï¼š
-Ctriangle:a=3,b=4,c=5å›è½¦
-Perimeter:12å›è½¦
-Area:6å›è½¦
+/*Êä³ö¸ñÊ½
+ÊäÈë£º3 4 5»Ø³µ
+Êä³ö£º
+Ctriangle:a=3,b=4,c=5»Ø³µ
+Perimeter:12»Ø³µ
+Area:6»Ø³µ
 */
