@@ -15,9 +15,9 @@
 #define arrow_high  24      //敌人2类射出弓箭贴图的高
 #define n_remote    5       //火球及箭的各自最大在场数量（默认5）
 #define CD          30      //设置玩家远程攻击cd为1.5s（0.05s为一个单位时间）
-#define CD_arrow    90      //设置每个敌人2远程攻击cd为4.5s（0.05s为一个单位时间）
+#define CD_arrow    80      //设置每个敌人2远程攻击cd为4s（0.05s为一个单位时间）
 #define CD_skill    120     //设置角色技能cd为6s（0.05s为一个单位时间）
-#define CD_inskill  40      //设置角色技能持续时间2s
+#define CD_inskill  30      //设置角色技能持续时间1.5s
 
 
 class Base;         //角色（玩家及敌人）基础类
@@ -45,21 +45,7 @@ ACL_Image *img;     //图片指针
     Base(){};
     ~Base(){};
     int getscore(){return score;};  //展示分数                         
-    virtual void collide(Base *usr,remote **re)//碰撞（攻击判定以及获得分数）,需要注意只有敌人类以及敌人远程攻击arrow类有碰撞判定
-    {
-        double x_=x-usr->getx(),y_=usr->gety();
-	    double l=x_*x_+y_*y_;
-	    double s=pica*pica;
-	    if(s>=l)	{usr->score+=score;health=0;}
-	    else	for(int i=0;i<n_remote;i++)
-				{
-					if(re[i]!=NULL)
-					{	x_=x-re[i]->getx();y_=y-re[i]->gety();
-						l=x_*x_;
-						s=(pica+fire_a)*(pica+fire_a)/2;
-					if(s>=l)	{health=0;re[i]->exist--;usr->score+=score;break;}}
-				}
-    };
+    virtual void collide(User *usr,remote **re){};//碰撞（攻击判定以及获得分数）,需要注意只有敌人类以及敌人远程攻击arrow类有碰撞判定
     int getx(){return x;};
     int gety(){return y;};
 };
@@ -76,11 +62,11 @@ public:
     void hit(int desx,int desy,ACL_Image *fire_img);//攻击，远程
     void move(int key,int *config_code); 
     //以下四个类需要玩家数据使用collide（碰撞）函数判断是否攻击到
-    // friend enemy1;
-    // friend enemy2;
-    // friend enemy3;
-    // friend arrow;
-    // friend fire;
+    friend enemy1;
+    friend enemy2;
+    friend enemy3;
+    friend arrow;
+    friend fire;
 };
 
 class enemy1:public Base//敌人1类（近战）
@@ -133,6 +119,7 @@ public:
     ~enemy2(){img=NULL;score=0;x=0;y=0;dx=0;dy=0;cd_hit=0;health=0;};
     void hit(ACL_Image *img,User *usr);
     void move(User *usr,remote **re,ACL_Image *arrimg,int *config_code);
+    void collide(User *usr,remote **re);
     friend fire;
 };
 
@@ -150,6 +137,7 @@ public:
     };
     ~enemy3(){img=NULL;score=0;x=0;y=0;dx=0;dy=0;health=0;};
     void move(User* usr,remote **re,int *config_code);
+    void collide(User *usr,remote **re);
 };
 
 class remote//玩家以及enemy2（远程）的远程攻击类

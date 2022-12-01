@@ -8,10 +8,11 @@ User *usr;
 enemy1 *(en1[7]);
 enemy2 *(en2[5]);
 enemy3 *(en3[10]);
-ACL_Image *usr_image,*enemy1_image;
+ACL_Image *usr_image,*enemy1_image,*howtoplay;
 ACL_Image *enemy2_image,*enemy3_image;
 ACL_Image *fire_image,*arrow_image,*back_image;
 ACL_Sound mymusic;
+
 FILE *fpr,*fpw;
 
 int config_code[3]={0,0,1};
@@ -71,10 +72,11 @@ bool initgame()
 	    srand(time(NULL));
 	    usr_image=new ACL_Image;    enemy1_image=new ACL_Image; enemy2_image=new ACL_Image;
 	    enemy3_image=new ACL_Image; fire_image=new ACL_Image;   arrow_image=new ACL_Image;
-	    back_image=new ACL_Image;   loadImage("./源资源/_usr.bmp", usr_image);  
+	    back_image=new ACL_Image;   loadImage("./源资源/_usr.bmp", usr_image);  howtoplay=new ACL_Image;
         loadImage("./源资源/_enemy1.bmp", enemy1_image);    loadImage("./源资源/_enemy2.bmp", enemy2_image);
 	    loadImage("./源资源/_enemy3.bmp", enemy3_image);    loadImage("./源资源/_fire.bmp", fire_image);
 	    loadImage("./源资源/_arrow.bmp", arrow_image);      loadImage("./源资源/_back.bmp",back_image);
+		loadImage("./源资源/_playway.bmp",howtoplay);		loadSound("./源资源/_mymusic.mp3",&mymusic);
     }else{
 		fpr=fopen("./源资源/config.txt","r");
         if(!fpr)    
@@ -135,7 +137,6 @@ void game_menu()        //开始菜单
 void Begingame()		//开始游戏
 {
 	initWindow("The Sprite Game----made by wangke-2021080909008",DEFAULT/2,DEFAULT,winwidth[config_code[1]],winhigh[config_code[1]]);
-	loadSound("./源资源/_mymusic.mp3",&mymusic);
 	if(!music[config_code[0]])	stopSound (mymusic);
 	startTimer(0,50);
 	startTimer(1,5000);
@@ -277,7 +278,18 @@ void config_change(int *config_code)   //实现更改设置
 		fclose(fpw);
 }
 void play_way()     //玩法介绍
-{}
+{
+	beginPaint();
+	clearDevice();
+	putImageScale(back_image,DEFAULT/2,DEFAULT/2,winwidth[1],winhigh[1]);
+	putImageScale(howtoplay,DEFAULT/2,DEFAULT,winwidth[1],winhigh[1]);
+	setPenColor(GREEN);    setPenWidth(0);    setBrushColor(RGB(238,18,137));      
+	rectangle(winwidth[1]/32.0*27, winhigh[1]*3/100, winwidth[1]/24.0*23, winhigh[1]/12.5);	
+	setTextSize(winwidth[1]*3/160);    setTextBkColor(EMPTY); setTextColor(GREEN);
+	paintText(winwidth[1]*27/32,winhigh[1]/25, "返回主菜单");
+	endPaint();
+	
+}
 void mouseEvent(int x, int y, int button, int event)	//鼠标事件
 {
 	switch (Init)
@@ -285,6 +297,7 @@ void mouseEvent(int x, int y, int button, int event)	//鼠标事件
 	case 0:
 		if(button == LEFT_BUTTON && event == BUTTON_DOWN&&x>=winwidth[1]/32*13&&x<=winwidth[1]/32*19)
 		{
+			initConsole();
 			if(y>=winhigh[1]/18*7&&y<=winhigh[1]/18*9)		{Init=1;	if(!music[config_code[0]])	playSound(mymusic,10);	Begingame();}
 			if(y>=winhigh[1]/18*10&&y<=winhigh[1]/18*12)	{Init=2;	config_menu();	}
 			if(y>=winhigh[1]/18*13&&y<=winhigh[1]/18*15)	{Init=3;	play_way();		}
@@ -338,6 +351,8 @@ void mouseEvent(int x, int y, int button, int event)	//鼠标事件
 					Init=0;	if(initgame())	{game_menu();}
 				}
 			}break;
+	case 3:if(button == LEFT_BUTTON && event == BUTTON_DOWN&&x>=winwidth[1]/32.0*27&&y>=winhigh[1]*3/100&&x<=winwidth[1]/24.0*23&&y<=winhigh[1]/12.5)
+				{game_menu();Init=0;break;}
 	case 4:if(button == LEFT_BUTTON && event == BUTTON_DOWN)
 		{
 			if(x>=90&&y>=160&&x<=210&&y<=200)
@@ -359,16 +374,16 @@ void timerEvent(int id)           	 //计时器
 	case 0:														//进行移动
 		for(int i=0;i<n_ene1[config_code[2]];i++)
 			if(en1[i]!=NULL&&en1[i]->health)	
-				{en1[i]->move(usr,usr->rem);
+				{en1[i]->move(usr,usr->rem );
 				if(en1[i]->health==0){delete en1[i];en1[i]=NULL;}}
 		for(int i=0;i<n_ene3[config_code[2]];i++)
 			if(en3[i]!=NULL&&en3[i]->health)
-			{en3[i]->move(usr,usr->rem,config_code);
+			{en3[i]->move(usr,usr->rem,config_code );
 				if(en3[i]->health==0){delete en3[i];en3[i]=NULL;}}
 		for(int i=0;i<n_ene2[config_code[2]];i++)	
 		{
 			if(en2[i]!=NULL&&en2[i]->health)
-			{	en2[i]->move(usr,usr->rem,arrow_image,config_code);
+			{	en2[i]->move(usr,usr->rem,arrow_image,config_code );
 				if(en2[i]->health!=0)
 					for(int j=0;j<n_remote;j++)
 				 		if(en2[i]->rem[j]!=NULL)	en2[i]->rem[j]->move(usr,config_code);
@@ -385,7 +400,7 @@ void timerEvent(int id)           	 //计时器
 			}
 		if(usr->cd_skill>=0)	usr->cd_skill--;
 		if(usr->cd_hit>=0)	usr->cd_hit--;
-		if(usr->skill>0)	usr->skill--;
+		if(usr->skill>=0)	usr->skill--;
 		paintgame();
 		break;
 	case 1:
@@ -405,15 +420,15 @@ void keyEvent(int key,int event)						//键盘事件
 	case 1:	if (event != KEY_DOWN)return;
 			if(usr)	usr->move(key,config_code);
 			for(int i=0;i<n_ene1[config_code[2]];i++)
-				if(en1[i]!=NULL&&en1[i]->health)	{en1[i]->collide(usr,usr->rem);
+				if(en1[i]!=NULL&&en1[i]->health)	{en1[i]->collide(usr,usr->rem );
 			if(en1[i]->health==0){delete en1[i];en1[i]=NULL;}}
 			for(int i=0;i<n_ene3[config_code[2]];i++)
-				if(en3[i]!=NULL&&en3[i]->health)	{en3[i]->collide(usr,usr->rem);
+				if(en3[i]!=NULL&&en3[i]->health)	{en3[i]->collide(usr,usr->rem );
 			if(en3[i]->health==0){delete en3[i];en3[i]=NULL;}}
 			for(int i=0;i<n_ene2[config_code[2]];i++)
 				if(en2[i]!=NULL&&en2[i]->health)	
 				{
-					en2[i]->collide(usr,usr->rem);
+					en2[i]->collide(usr,usr->rem );
 					if(en2[i]->health==0)			{delete en2[i];en2[i]=NULL;}
 					else for(int j=0;j<n_remote;j++)
 						if(en2[i]->rem[j]!=NULL)	en2[i]->rem[j]->collide(usr);
