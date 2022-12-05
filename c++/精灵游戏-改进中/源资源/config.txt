@@ -1,6 +1,0 @@
-MUSIC 0
-Winwidth 960
-Winhigh 540
-n_enemy1 7
-n_enemy2 5
-n_enemy3 10
