@@ -17,9 +17,9 @@ template<class T>   bool List_Empty(struct link_list<T> *L);                    
 template<class T>   int List_Size(struct link_list<T> *L);                          //返回链表长度        
 template<class T>   void List_Retrival(struct link_list<T> *L, int pos, T elem);    //pos位置的节点数据更改
 template<class T>   void List_Retrival(struct link_list<T> *L, int pos, T *elem);   //从pos位置节点数据更改为elem中的元素
-template<class T>   int List_Locate(struct link_list<T> *L, T elem);                //定位elem在节点中的位置
-template<class T>   int List_Insert(struct link_list<T> *L, int pos, T elem);       //在pos位置之后插入一个数据为elem的节点
-template<class T>   int List_delete(struct link_list<T> *L, int pos);               //删除pos结点
+template<class T>   link_list<T> *List_Locate(struct link_list<T> *L, T elem);      //定位elem在节点中的位置
+template<class T>   bool List_Insert(struct link_list<T> *L, int pos, T elem);      //在pos位置之后插入一个数据为elem的节点
+template<class T>   bool List_delete(struct link_list<T> *L, int pos);              //删除pos结点
 template<class T>   link_list<T> *List_Prior(struct link_list<T> *L, int pos, T * elem);   //返回pos位置之前的节点地址
 template<class T>   link_list<T> *List_Next(struct link_list<T> *L, int pos, T *elem);     //返回pos位置之后的节点地址
 
@@ -100,33 +100,75 @@ void List_Retrival(struct link_list<T> *L, int pos, T *elem)
     }
 }
 template<class T>
-int List_Locate(struct link_list<T> *L, T elem)
+link_list<T> *List_Locate(struct link_list<T> *L, T elem,int *pos)
 {
-    int pos=0;
+    link_list<T> *re=NULL;
+    pos=0;
+    link_list<T> *p=L->next;
     for(int i=1;i<=L->list_long;i++)
     {
-
+        if(p->data!=elem)
+        	{i++;p=p->next;continue;}
+        else {pos=i;re=p;break;}
     }
+    return re;
 }
 template<class T>
-int List_Insert(struct link_list<T> *L, int pos, T elem)
+bool List_Insert(struct link_list<T> *L, int pos, T elem)
 {
-
+    link_list<T> *p=L->next;
+    bool re=false;
+    if(pos<=L->list_long)
+    {
+        int i=1;
+        while(i<pos){i++;p=p->next;}
+        link_list<T> *q=new link_list<T>;
+        q->next=p->next;
+        p->next=q;
+        q->data=elem;
+        re=true;
+    }
+    return re;
 }
 template<class T>
-int List_delete(struct link_list<T> *L, int pos)
+bool List_delete(struct link_list<T> *L, int pos)
 {
-    
+    link_list<T> *p=L->next;
+    bool re=false;
+    if(pos<=L->list_long)
+    {
+        int i=1;
+        while(i<pos-1){i++;p=p->next;}
+        link_list<T> *q=p->next;
+        p->next=q->next;
+        delete q;
+        re=true;
+    }
+    return re;
 }
 template<class T>
-link_list<T> *List_Prior(struct link_list<T> *L, int pos, T * elem)
+link_list<T> *List_Prior(struct link_list<T> *L, int pos, T *elem)
 {
-
+    if(pos>L->list_long) {return NULL;}
+    else{
+        link_list<T> *p=L->next;
+        int i=1;
+        while(i<pos-1){i++;p=p->next;}
+        *elem=p->data;
+        return p;
+    }
 }
 template<class T>
 link_list<T> *List_Next(struct link_list<T> *L, int pos, T *elem)
 {
-
+    if(pos>=L->list_long) {return NULL;}
+    else{
+        link_list<T> *p=L->next;
+        int i=1;
+        while(i<pos+1){i++;p=p->next;}
+        *elem=p->data;
+        return p;
+    }
 }
 template<class T>
 link_list<T> *List_Init(struct link_list<T> *L,int n,T *data)
@@ -153,8 +195,15 @@ link_list<T> *List_Init(struct link_list<T> *L,int n,T *data)
 int main()
 {
     link_list<int> *L;
+    link_list<int> *p;
+    link_list<int> *q;
+    int *a=new int;
+    int *b=new int;
     int data[5]={1,2,3,4,5};
     L=List_Init(L,5,data);
+    p=List_Prior(L,3,a);
+    q=List_Next(L,3,b);
     List_printf(L);
+    cout<<endl<<*a<<' '<<*b;
     return 0;
 }
