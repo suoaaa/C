@@ -37,18 +37,20 @@ int palin1(int y,int m,int d)
 {
     int month=y%10*10+y%100/10;
     int day=y%1000/100*10+y/1000;
-    if(check(y,month,day)&&y<=9999)
-        {if(m<month||(m==month&&d<day)) {return y*10000+month*100+day;}}
+    if(check(y,month,day)&&y<=9999&&(m<month||(m==month&&d<day)))   return y*10000+month*100+day;
         else if(y>9999) return 0;
-    y++;palin1(y,m,d);
+            else{y++;palin1(y,1,1);}
 }
 int palin2(int y,int m,int d)
 {
     int year=y;
     while(year/100!=year%100) year++;
     int month=year%10*10+year%100/10;
-    int day=year%1000/100*10+year/1000;
-    if(check(year,month,day)&&y<=9999&&(year>y||(year==y&&month>m)||(year==y&&month==m&&day>d))) return year*10000+month*100+day;
+    int day=month;
+    if(check(year,month,day)&&y<=9999&&(year>y||(year==y&&month>m)||(year==y&&month==m&&day>d))) 
+    {
+        cout<<month<<day;
+        return year*10000+month*100+day;}
     else if(y>9999) return 0;
     else {year+=101;palin2(year,1,1);}
 }
