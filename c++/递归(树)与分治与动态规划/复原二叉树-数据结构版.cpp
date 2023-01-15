@@ -20,7 +20,8 @@ int main(){
     cin>>preord>>inord;
     j = strlen(preord);
     h = strlen(inord);
-    T=PreInOrd(preord,inord,0,j-1,0,h-1);
+    try{T=PreInOrd(preord,inord,0,j-1,0,h-1);}
+    catch(int flag) {return 0;}
     LaOrder(T);
     return 0;
 }
@@ -45,6 +46,7 @@ BiTreeNode* PreInOrd(char* preord,char* inord,int i,int j,int k,int h){
     }
     else if (j - i == h - k)
     {
+        int flag=0;
         T = new BiTreeNode;
         T->lchild=NULL;
         T->rchild=NULL;
@@ -53,7 +55,8 @@ BiTreeNode* PreInOrd(char* preord,char* inord,int i,int j,int k,int h){
         int temp;
         for(int m=k;m<=h;m++)
             if(preord[m]==inord[k])
-            {   temp=m;break;   }
+            {   temp=m;flag=1;break;   }
+        if(flag==0){cout<<"error";throw flag;return NULL;}
         if(temp!=k)
            T->lchild=PreInOrd(preord,inord,i+1,i+temp-k,k,temp-1);
         if(temp!=h)

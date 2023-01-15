@@ -1,44 +1,35 @@
-#include<iostream> 
+/*实验要求:实验要求:
+函数声明如下: int BestValue(int[] row,int [] col, int n):
+函数输入:int[]row,存储n个矩阵的行数;int[]col,存储n个矩阵的列数,int n为矩阵个数
+函数输出:函数返回值为计算出的矩阵连乘最小乘法次数，参数错误则输出error*/
+#include <cstring>
+#include <iostream>
 using namespace std;
-int Test(int row[],int col[],int num)
-{
-	if(row==NULL||col==NULL)
-	{
-		return -1;
-	}
-	for(int i=0;i<=num-1;i++)
-	{	
-		if(row[i]<=0||col[i]<=0)
-		{
-		 return -1;
-		}		
-	}
-	return 0;
+int dp[200][200];
+int BestValue(int row[], int col[], int n) {
+    if(row<=0 || col<=0 || n <= 0)
+    {   printf("error");    return 0;   }
+    for (int i = 0; i < n; i++)
+        if(row[i] <= 0 || col[i] <= 0)
+        {   printf("error");    return 0;   }
+    for (int i = 1; i < n; i++)
+        if (col[i - 1] != row[i]) 
+        {   printf("error");    return 0;   }
+    memset(dp, 10000, sizeof(dp));
+    for (int i = 0; i < n; i++)
+        dp[i][i] = 0;
+    for (int l = 1; l < n; l++)
+        for (int i = 0; i + l < n; i++)
+            for (int k = 0; k < l; k++)
+                dp[i][i + l] = min(dp[i][i + l], dp[i][i + k] + dp[i + k + 1][i + l] + row[i] * col[i + k] * col[i + l]);
+    return dp[0][n - 1];
 }
-int BestValue(int row[],int col[],int num)
-{	
-	if(Test(row,col,num))
-	{
-		cout<<"error";
-		return -1;
-	}
-	int m[100][100]={0};
-	int temp;				
-	for(int l=2;l<=num;l++) 	 
-	{
-		for(int i=1;i<=num-l+1;i++) 
-		{
-			int j=i+l-1;
-			m[i][j]=1000;
-			for(int k=i;k<=j-1;k++)   
-			{
-			 	temp=m[i][k]+m[k+1][j]+row[i-1]*row[k]*col[j-1];
-				if(temp<m[i][j]) 
-				{
-					m[i][j]=temp;
-				}					
-			}
-		}
-	}
-	return m[1][num];
+int main()
+{
+    int a[20],b[20],i;
+    cin>>i;
+    for(int j=0;j<i;j++) cin>>a[j]>>b[j];
+    i=BestValue(a,b,i);
+    if(i) cout<<i;
+    return 0;
 }

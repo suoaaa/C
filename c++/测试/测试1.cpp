@@ -19,23 +19,23 @@ BinTree CreateTree_Pre(char* preOrder, char* midOrder, int n)
 	tree->element = preOrder[0];
 	tree->leftchild = NULL;
 	tree->rightchild = NULL;
-	if (n == 1)       //åªå‰©ä¸‹ä¸€ä¸ªç»“ç‚¹æ—¶ï¼Œç›´æ¥è¿”å›
+	if (n == 1)       //Ö»Ê£ÏÂÒ»¸ö½áµãÊ±£¬Ö±½Ó·µ»Ø
 		return tree;
 	
 	int  midPtr, leftLength, rightLength;
 	midPtr = 0;
-	while (midOrder[++midPtr] != preOrder[0])    //æ‰¾å‡ºä¸­åºéå†ä¸­æ ¹èŠ‚ç‚¹çš„ä½ç½®
+	while (midOrder[++midPtr] != preOrder[0])    //ÕÒ³öÖĞĞò±éÀúÖĞ¸ù½ÚµãµÄÎ»ÖÃ
 		;
-	leftLength = midPtr;        //å·¦å­æ ‘ç»“ç‚¹æ•°
-	rightLength = n - leftLength - 1;       //å³å­æ ‘ç»“ç‚¹æ•°
+	leftLength = midPtr;        //×ó×ÓÊ÷½áµãÊı
+	rightLength = n - leftLength - 1;       //ÓÒ×ÓÊ÷½áµãÊı
 	
-	//å·æ‡’èµ·è§ï¼Œæœªåˆ›å»ºæ–°çš„æ•°ç»„
-	tree->leftchild = CreateTree_Pre(&preOrder[1], midOrder, leftLength);     //æ³¨æ„å·¦å³å­æ ‘åœ¨åŸæ•°ç»„ä¸­çš„ä½ç½®
+	//ÍµÀÁÆğ¼û£¬Î´´´½¨ĞÂµÄÊı×é
+	tree->leftchild = CreateTree_Pre(&preOrder[1], midOrder, leftLength);     //×¢Òâ×óÓÒ×ÓÊ÷ÔÚÔ­Êı×éÖĞµÄÎ»ÖÃ
 	tree->rightchild = CreateTree_Pre(&preOrder[leftLength + 1], &midOrder[leftLength + 1], rightLength);
 	return tree;
 }
 
-void PrintPostOrder(BinTree t)  //æ‰“å°ååºéå†ç»“æœ
+void PrintPostOrder(BinTree t)  //´òÓ¡ºóĞò±éÀú½á¹û
 {
 	if (t)
 {
@@ -48,11 +48,11 @@ int main()
 {
 	BinTree t = (BinTree)malloc(sizeof(struct BinTreeNode));
 	char pre[MaxArraySize], mid[MaxArraySize];
-	printf("è¯·è¾“å…¥å…ˆåºéå†ç»“æœï¼š");
+	printf("ÇëÊäÈëÏÈĞò±éÀú½á¹û£º");
 	gets(pre);
-	printf("è¯·è¾“å…¥ä¸­åºéå†ç»“æœï¼š");
+	printf("ÇëÊäÈëÖĞĞò±éÀú½á¹û£º");
 	gets(mid);
-	printf("ååºéå†ç»“æœä¸ºï¼š");
+	printf("ºóĞò±éÀú½á¹ûÎª£º");
 	t = CreateTree_Pre(pre, mid, strlen(pre));
 	PrintPostOrder(t);
 	return 0;

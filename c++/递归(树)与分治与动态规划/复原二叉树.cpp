@@ -1,3 +1,4 @@
+/*输入二叉树的先序和中序遍历结果，生成二叉树，然后后序输出结果，错误输入则输出error。*/
 #include<stdio.h>
 #include<stdlib.h>
 #define MAXNUM 50
@@ -9,7 +10,6 @@ typedef struct BiTreeNode
     struct BiTreeNode *lchild,*rchild;
 }BiTreeNode,*BiTree;
 typedef BiTree* BiTreePtr;
-// void createTree
 void createTree(BiTreePtr T);//先序创建二叉??
 void PreOrder(BiTreePtr T);//先序遍历
 void InOrder(BiTreePtr T);//中序遍历

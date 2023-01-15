@@ -1,10 +1,14 @@
+/*´´½¨»ùÓÚÁ´µØÖ··¨µÄhash±í£¬²¢ÊµÏÖµç»°²¾µÄ¹ÜÀí£¨¼ÇÂ¼²»³¬¹ı20¸ö£©¡£
+µç»°²¾ÖĞµÄ¼ÇÂ¼°üÀ¨ĞÕÃû¡¢µç»°ºÅÂëºÍµØÖ·Èı¸öÊı¾İÏî£¬´´½¨Á½¸öhash±í£¬¹Ø¼ü×Ö·Ö±ğÎªĞÕÃûºÍµç»°ºÅÂë£¬
+Hashº¯Êı×Ô¶¨£¬±ÈÈç¿ÉÒÔÎªĞÕÃû/µç»°ºÅÂë²¿·Ö×Ö·ûÇóºÍÖ®ºó¶Ô17È¡Ä££¬
+Íê³É¼ÇÂ¼µÄ²åÈë¡¢²éÕÒ¡¢ÏÔÊ¾¹¦ÄÜ¡£*/
 #include<iostream>
 #include<cstring>
 using namespace std;
 typedef struct node
 {
-	char name[10] ;
-	char tel[11];
+	char name[12] ;
+	char tel[12];
 	char add[20];
 	struct node* nextname ;
 	struct node* nexttel ;
@@ -13,20 +17,22 @@ typedef struct Hash
 {
 	node* data;
 	Hash* next;
-	int n;
+	int n;	//¼ÇÂ¼±¾hashµÄ¹Ø¼ü×Ökey
 }Hash;
-struct Hash* creatH(Hash *book)//åˆ›å»ºå·ç æœ¬ 
+struct Hash* creatH(Hash *book)//´´½¨ºÅÂë±¾ 
 {
 	int re = 0;
-	Hash* q = new Hash;
-	book->next = q;
+	Hash* q =new Hash;
+	book->data=NULL;book->n=-1;book->next=q;
+	q=book;
 	for (int i = 0; i < 17; i++)
 	{
 		struct Hash* p = new Hash;
 		if (p)
 		{
-
+			p->data=NULL;
 			p->next = NULL;
+			p->n=i;
 			q->next = p;
 			q = p;
 		}
@@ -40,13 +46,12 @@ struct Hash* creatH(Hash *book)//åˆ›å»ºå·ç æœ¬
 	{
 	case 0:return book; break;
 	default:return NULL; break;
-
 	}
 }
-int getkeyname(char name[10])//è·å–åå­—å…³é”®å­— 
+int getkeyname(char *name)//»ñÈ¡Ãû×Ö¹Ø¼ü×Ö 
 {
 	int namekey = 0;
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		if (name[i] != '\0')
 		{
@@ -56,161 +61,237 @@ int getkeyname(char name[10])//è·å–åå­—å…³é”®å­—
 	namekey = namekey % 17;
 	return namekey;
 }
-int getkeytel(char tel[11])//è·å–å·ç å…³é”®å­— 
+int getkeytel(char *tel)//»ñÈ¡ºÅÂë¹Ø¼ü×Ö 
 {
 	int telkey = 0;
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		if (tel[i] != '\0')
 		{
-			telkey = telkey + tel[i] - 48;
+			telkey = telkey + tel[i] +3;
 		}
 	}
 	telkey = telkey % 17;
 	return telkey;
 }
-int Hashfindname(Hash* namebook, char name[10])//æŸ¥æ‰¾åå­—å…³é”®å­— 
+int Hashfindname(Hash* namebook, char *name)//²éÕÒÃû×Ö¹Ø¼ü×Ö 
 {
 	int i = 0;
 	int j = 0;
 	int key = getkeyname(name);
-	if ((namebook + key)->data == NULL)
+	Hash* book=namebook->next;
+	while(book->n!=key) {book=book->next;}
+	if (book->data == NULL)
 	{
-		cout << "æœªæŸ¥æ‰¾åˆ°æ­¤äºº" << endl; return -1;
+		cout << "Î´²éÕÒµ½´ËÈË" << endl; return -1;
 	}
 	else
 	{
-		node* out = (namebook + key)->data;
-		for (; i < (namebook + key)->n; i++)
+		node* out = book->data;
+		while(out->nextname != NULL)
 		{
-			if (!strcmp(name, out->name))//å¦‚æœä¸€æ · 
+			if (!strcmp(name, out->name))//Èç¹ûÒ»Ñù 
 			{
 				cout << out->name << ' ' << out->tel << ' ' << out->add << endl;
 				return 0;
 			}
-			if (out->nextname == NULL)
-			{
-				cout << "æœªæŸ¥æ‰¾åˆ°æ­¤äºº" << endl; return -1;
-			}
 			out = out->nextname;
-		}//forçš„æ‹¬å· 
+		}//whileµÄÀ¨ºÅ 
+		if (!strcmp(name, out->name))//Èç¹ûÒ»Ñù 
+		{
+			cout << out->name << ' ' << out->tel << ' ' << out->add << endl;
+			return 0;
+		}
+		else return -1;
 	}
 	return 0;
 }
-int Hashfindtel(Hash *telbook, char tel[10])//æŸ¥æ‰¾å·ç å…³é”®å­— 
+int Hashfindtel(Hash *telbook, char *tel)//²éÕÒºÅÂë¹Ø¼ü×Ö 
 {
 	int i = 0;
 	int j = 0;
 	int key = getkeytel(tel);
-	if ((telbook + key)->data == NULL)
+	Hash* book=telbook->next;
+	while(book->n!=key) {book=book->next;}
+	if (book->data == NULL)
 	{
-		cout << "æœªæŸ¥æ‰¾åˆ°æ­¤äºº" << endl; return -1;
+		cout << "Î´²éÕÒµ½´ËÈË" << endl; return -1;
 	}
 	else
 	{
-		node* out = (telbook + key)->data;
-		for (; i < (telbook + key)->n; i++)
+		node* out = book->data;
+		while(out->nexttel != NULL)
 		{
-			if (!strcmp(tel, out->tel))//å¦‚æœä¸€æ · 
+			if (!strcmp(tel, out->tel))//Èç¹ûÒ»Ñù 
+			{
+				cout << out->name << ' ' << out->tel << ' ' << out->add << endl;
+				return 0;
+			}
+			out = out->nexttel;
+		}//whileµÄÀ¨ºÅ 
+		if (!strcmp(tel, out->tel))//Èç¹ûÒ»Ñù 
 			{
 				cout << out->tel << ' ' << out->tel << ' ' << out->add << endl;
 				return 0;
 			}
-			if (out->nexttel == NULL)
-			{
-				cout << "æœªæŸ¥æ‰¾åˆ°æ­¤äºº" << endl; return -1;
-			}
-			out = out->nexttel;
-		}//forçš„æ‹¬å· 
 	}return 0;
 }
-void Hashinse(node new_one, Hash *namebook, Hash *telbook)//æ’å…¥å·ç ï¼Œæ’å…¥ä¸¤ç§å…³é”®å­—ç»„æˆçš„å·ç æœ¬ 
+void Hashinse(node *new_one, Hash *namebook, Hash *telbook)//²åÈëºÅÂë£¬²åÈëÁ½ÖÖ¹Ø¼ü×Ö×é³ÉµÄºÅÂë±¾ 
 {
-	node *out;
-	int i = 0;
-	int keyname = getkeyname(new_one.name), keytel = getkeytel(new_one.tel);
-	if ((namebook + keyname)->data == NULL)
+	node *out=NULL;
+	int keyname = getkeyname(new_one->name), keytel = getkeytel(new_one->tel);
+	Hash *tbook=telbook;	Hash *nbook=namebook;
+	while(tbook->n!=keytel) 	tbook=tbook->next;
+	while(nbook->n!=keyname) 	nbook=nbook->next;
+	if (nbook->data == NULL)
 	{
-		(namebook + keyname)->data = &new_one;
-		(namebook + keyname)->n = 1;
+		nbook->data = new_one;
+		new_one->nextname=NULL;
 	}
 	else {
-		out = (namebook + keyname)->data;
-		do
-		{
+		out=nbook->data;
+		while (out->nextname != NULL)
 			out = out->nextname;
-		} while (out->nextname != NULL);
-			(namebook + keyname)->n++;
-		out->nextname = new node;
-		out->nextname = &new_one;
+		out->nextname = new_one;
+		out->nextname->nextname=NULL;
 	}
-	if ((telbook + keytel)->data == NULL)
+	out=NULL;
+	if (tbook->data == NULL)
 	{
-		(telbook + keytel)->data = &new_one;
-		(telbook + keytel)->n = 1;
+		tbook->data = new_one;
+		new_one->nexttel=NULL;
 	}
 	else {
-		out = (telbook + keytel)->data;
-		do
-		{
+		out=tbook->data;
+		while (out->nexttel != NULL)
 			out = out->nexttel;
-		} while (out->nexttel != NULL);
-			(telbook + keytel)->n++;
-		out->nexttel = new node;
-		out->nexttel = &new_one;
+		out->nexttel = new_one;
+		out->nexttel->nexttel=NULL;
 	}
 }
-void nodeinse(Hash *namebook , Hash *telbook)//æ’å…¥å·ç ï¼Œæ’å…¥ä¸¤ç§å…³é”®å­—ç»„æˆçš„å·ç æœ¬ ï¼ˆé…åˆä¸Šä¸ªå‡½æ•°ï¼‰ 
+void nodeinse(Hash *namebook , Hash *telbook)//²åÈëºÅÂë£¬²åÈëÁ½ÖÖ¹Ø¼ü×Ö×é³ÉµÄºÅÂë±¾ £¨ÅäºÏÉÏ¸öº¯Êı£© 
 {
-	node new_one;
-	scanf("%s %s %s", new_one.name, new_one.tel, new_one.add);
+	node *new_one;
+	scanf("%s %s %s", new_one->name, new_one->tel, new_one->add);
 	Hashinse(new_one, namebook, telbook);
 }
-void Hashshowname(Hash *book)//æ‰“å°åå­—å…³é”®å­—å·ç æœ¬ 
+void Hashshowname(Hash *book)//´òÓ¡Ãû×Ö¹Ø¼ü×ÖºÅÂë±¾ 
 {
-	int i = 0, j = 0;
-	node* out = NULL;
+	int i = 0, j = 0,n=0;
+	Hash* p = book->next;
+	node *out=NULL;
 	for (i = 0; i < 17; i++)
 	{
-		out = (book + 1)->data;
-		cout << i << ". ";
-		if ((book + i)->n == 0)
+		out =p->data;
+		if (out!=NULL)
 		{
-			cout << "NULL";
-		}
-		else
-		{
+			cout << i << ". ";
 			do
 			{
-				cout << out->name << ' ';
+				cout <<"\tĞÕÃû:" <<out->name <<"\tµç»°:"<<out->tel<<"\tµØÖ·:"<<out->add<<endl;
+				n++;
 				out = out->nextname;
-			} while (out != NULL);
+			}
+			while (out != NULL);
 		}
-		cout << endl;
+		p=p->next;
 	}
+	if(n==0) cout<<"µç»°±¾Îª¿Õ\n";
 }
-void Hashshowtel(Hash *book)//æ‰“å°å·ç å…³é”®å­—ç”µè¯æœ¬ 
+void Hashshowtel(Hash *book)//´òÓ¡ºÅÂë¹Ø¼ü×Öµç»°±¾ 
 {
-	int i = 0, j = 0;
-	node* out = NULL;
+	int i = 0, j = 0,n=0;
+	Hash *p = book->next;
+	node *out=NULL;
 	for (i = 0; i < 17; i++)
 	{
-		out = (book + 1)->data;
-		cout << i << ". ";
-		if ((book + i)->n == 0)
+		out =p->data;
+		if (out!=NULL)
 		{
-			cout << "NULL";
-		}
-		else
-		{
+			cout << i << ". ";
 			do
 			{
-				cout << out->tel << ' ';
+				cout <<"\tĞÕÃû:" <<out->name <<"\tµç»°:"<<out->tel<<"\tµØÖ·:"<<out->add<<endl;
+				n++;
 				out = out->nexttel;
-			} while (out != NULL);
+			}
+			while (out != NULL);
 		}
-		cout << endl;
+		p=p->next;
 	}
+	if(n==0) cout<<"µç»°±¾Îª¿Õ\n";
+}
+void mymenu()
+{
+	cout<<"ÇëÊäÈë´úºÅ½øĞĞ²Ù×÷"<<endl;
+	cout<<"ÊäÈë0£ºÍË³ö"<<endl;
+	cout<<"ÊäÈë1£º²åÈë"<<endl;
+	cout<<"ÊäÈë2£º²éÕÒ"<<endl;
+	cout<<"ÊäÈë3£ºÏÔÊ¾"<<endl;
 }
 int main() 
-{ 	return 0; }
+{ 	int menu=0,flag=0;
+	char name[12];
+	char tel[12];
+	char add[20];
+	char find[12];
+	node *new_one;
+	Hash *namebook=new Hash;	creatH(namebook);
+	Hash *telbook=new Hash;		creatH(telbook);
+	node *one=new node;	strcpy(one->name,"wka");		strcpy(one->tel,"139284762");	strcpy(one->add,"wdadsadw");
+	node *two=new node;	strcpy(two->name,"ydd");	strcpy(two->tel,"1595635672");	strcpy(two->add,"sfdfsewdw");
+	node *three=new node;	strcpy(three->name,"vx");	strcpy(three->tel,"142546782");	strcpy(three->add,"sdgsdxfew");
+	Hashinse(one, namebook, telbook);	Hashinse(two, namebook, telbook);	Hashinse(three, namebook, telbook);
+	mymenu();
+	cin>>menu;
+	while(menu)
+	{
+		switch (menu)
+		{
+		case 1:
+			cout<<"ÇëÊäÈëĞÕÃû:"<<endl;
+			cin>>name;
+			cout<<"ÇëÊäÈëµç»°ºÅÂë:";
+			cin>>tel;
+			cout<<"ÇëÊäÈëµØÖ·:";
+			cin>>add;
+			new_one=new node;
+			strcpy(new_one->name,name);
+			strcpy(new_one->add,add);
+			strcpy(new_one->tel,tel);
+			Hashinse(new_one, namebook, telbook);
+			break;
+		case 2:
+			cout<<"ÊäÈë1£º²éÕÒĞÕÃû"<<endl;
+			cout<<"ÊäÈë2£º²éÕÒµç»°"<<endl;
+			cin>>flag;
+			cout<<"ÇëÊäÈëĞèÒª²éÑ¯µÄĞÕÃû/µç»°:"<<endl;
+			cin>>find;
+			switch (flag)
+			{
+			case 1:Hashfindname(namebook, find);
+				break;
+			case 2:Hashfindtel(telbook, find);
+				break;
+			}
+			break;
+		case 3:
+			cout<<"ÊäÈë1£º´òÓ¡°´ĞÕÃû´æ´¢µÄµç»°±¾"<<endl;
+			cout<<"ÊäÈë2£º´òÓ¡°´µç»°´æ´¢µÄµç»°±¾"<<endl;
+			cin>>flag;
+			switch (flag)
+			{
+			case 1:Hashshowname(namebook);
+				break;
+			case 2:Hashshowtel(telbook);
+				break;
+			}
+			break;
+		}
+		mymenu();
+		flag=0;menu=0;
+		cout<<"ÇëÊäÈë´úºÅ½øĞĞ²Ù×÷"<<endl;
+		cin>>menu;
+	}
+	return 0; 
+}
