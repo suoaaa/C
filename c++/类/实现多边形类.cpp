@@ -63,7 +63,6 @@ ShapeFactory * ShapeFactory::Create(float a,float b,float c,float d)
 }
 ShapeFactory * ShapeFactory::Create(float r)
 {
-	
 	ShapeFactory *p=new Circle(r);
 	return p;
 }
