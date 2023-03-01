@@ -1,12 +1,13 @@
+
 import java.util.Scanner;
 public class helloworld{
 	public static void main(String[] args){
 		System.out.println("helloworld");
 		System.out.println(555);
 		System.out.println(-1.32);
-		System.out.println("ç”·");
+		System.out.println("ÄĞ");
 		System.out.println(true);
-		System.out.println("å¼ ä¸‰"+'\t'+"å­¦å·");
+		System.out.println("ÕÅÈı"+'\t'+"Ñ§ºÅ");
 		int a=18;
 		System.out.println(a);
 		int b=-5;
@@ -16,7 +17,6 @@ public class helloworld{
 		System.out.println(d);
 		System.out.println(c);
 		Scanner sc =new Scanner(System.in);
-		//a=sc.nextInt();
 		System.out.println(a);
 		sc.close();
 		int f=10;
@@ -26,6 +26,12 @@ public class helloworld{
 		System.out.println("123"+123);
 		System.out.println("123"+"123");
 		System.out.println(1+23+"123"+123);
-		System.out.println("æˆ‘çš„å¹´é¾„æ˜¯"+a);
+		System.out.println("ÎÒµÄÄêÁäÊÇ"+a);
+		a=100;
+		System.out.println(a <<2);
+		System.out.println(a>>2);//25
+		a=-100;
+		System.out.println(a>>2);//¶ÔÔ­Âë½øĞĞÒÆÎ»ÔËËã-25
+
 	}
 }
