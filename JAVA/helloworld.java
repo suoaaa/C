@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
 public class helloworld{
 	public static void main(String[] args){
@@ -27,5 +28,6 @@ public class helloworld{
 		System.out.println("123"+"123");
 		System.out.println(1+23+"123"+123);
 		System.out.println("我的年龄是"+a);
+		System.out.println(123);
 	}
 }
