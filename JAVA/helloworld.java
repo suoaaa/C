@@ -19,10 +19,6 @@ public class helloworld{
 		Scanner sc =new Scanner(System.in);
 		System.out.println(a);
 		sc.close();
-		int f=10;
-		double e=2.3;
-		double g=f+e;
-		System.out.println(g);
 		System.out.println("123"+123);
 		System.out.println("123"+"123");
 		System.out.println(1+23+"123"+123);
