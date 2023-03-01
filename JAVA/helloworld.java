@@ -32,6 +32,13 @@ public class helloworld{
 		System.out.println(a>>2);//25
 		a=-100;
 		System.out.println(a>>2);//对原码进行移位运算-25
-
+		// switch (a) {
+		// 	case 1 -> {a=1;}
+		// 	default -> {a=2;}
+		// }//						有bug
+		// switch (a) {
+		// 	case 1,2:a=2;
+		// 	break;｝					也有bug
+		
 	}
 }
