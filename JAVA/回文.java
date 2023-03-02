@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class huiwen {
+public class ╩ьнд {
     public static void main(String[] args){
     Scanner sc=new Scanner(System.in);
     int num=sc.nextInt();//abc
@@ -14,7 +14,8 @@ public class huiwen {
         x/=10;
         out=out*10+temp;
     }
+    sc.close();
     System.out.println(out);
-
+    System.out.println(out==num);
 }
 }

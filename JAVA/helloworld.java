@@ -31,10 +31,18 @@ public class helloworld{
 		// switch (a) {
 		// 	case 1 -> {a=1;}
 		// 	default -> {a=2;}
-		// }//						有bug
+		// }//						平板的jdk有bug
 		// switch (a) {
 		// 	case 1,2:a=2;
-		// 	break;｝					也有bug
+		// 	break;}	//也有bug
+
+
+		//无限循环
+		// while(true){
+		// 	System.out.println("学习");
+		// }
 		
+
+		 
 	}
 }
