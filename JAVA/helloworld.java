@@ -1,5 +1,6 @@
-
+import java.util.Random;
 import java.util.Scanner;
+
 public class helloworld{
 	public static void main(String[] args){
 		System.out.println("helloworld");
@@ -18,7 +19,7 @@ public class helloworld{
 		System.out.println(c);
 		Scanner sc =new Scanner(System.in);
 		System.out.println(a);
-		sc.close();
+
 		System.out.println("123"+123);
 		System.out.println("123"+"123");
 		System.out.println(1+23+"123"+123);
@@ -41,8 +42,10 @@ public class helloworld{
 		// while(true){
 		// 	System.out.println("ѧϰ");
 		// }
-		
+		Random r=new Random();
+		int num=r.nextInt(9);
+		System.out.println(num);
 
-		 
+		sc.close();
 	}
 }
