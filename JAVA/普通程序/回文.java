@@ -1,3 +1,4 @@
+package 普通程序;
 import java.util.Scanner;
 public class 回文 {
     public static void main(String[] args){

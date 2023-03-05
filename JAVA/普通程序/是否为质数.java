@@ -1,3 +1,4 @@
+package 普通程序;
 import java.util.Scanner;
 
 public class 是否为质数{
