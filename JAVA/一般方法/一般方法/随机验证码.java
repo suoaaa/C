@@ -1,4 +1,4 @@
-package 方法;
+package 一般方法;
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package 方法;
+package 一般方法;
 
 public class 拷贝数组 {
     public static void main(String[] args) {
