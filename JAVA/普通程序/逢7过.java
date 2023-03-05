@@ -1,5 +1,6 @@
 package ÆÕÍ¨³ÌÐò;
 
+
 public class ·ê7¹ý {
     public static void main(String[] args) {
         int i=1;

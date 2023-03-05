@@ -1,4 +1,6 @@
 package 普通程序;
+
+
 import java.util.Scanner;
 
 public class 求商和余数 {
