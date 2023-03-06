@@ -1,9 +1,11 @@
+package 普通程序;
+
 import java.util.Random;
 import java.util.Scanner;
 
 public class helloworld{
 	public static void main(String[] args){
-		System.out.println("helloworld");
+		System.out.println("普通程序.helloworld");
 		System.out.println(555);
 		System.out.println(-1.32);
 		System.out.println("男");

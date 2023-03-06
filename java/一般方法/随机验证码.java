@@ -9,7 +9,7 @@ public class 随机验证码 {
     }
     public static char[] securityCode(int n) {
         char []code=new char[n];
-        char allCode[]=new char[10+26+26];                  //记录验证码中的全部元素
+        char []allCode=new char[10+26+26];                  //记录验证码中的全部元素
         for (int i = 0; i < allCode.length; i++) {          //for循环给数组元素赋值：0-9，a-z，A-Z
             if(i<10)    allCode[i]=(char)('0'+i);
             if(i<36&&i>=10) allCode[i]=(char)('a'+i-10);
