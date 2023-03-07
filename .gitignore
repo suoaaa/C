@@ -12,6 +12,7 @@
 *.iml
 *.iws
 .idea/
+.vscode/
 
 # Maven
 target/
