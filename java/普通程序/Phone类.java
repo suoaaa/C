@@ -1,8 +1,8 @@
 package 普通程序;
 
 
-public class Phone {
-    Phone(String brand,double price){this.brand=brand;this.price=price;}
+public class Phone类 {
+   	Phone类(String brand,double price){this.brand=brand;this.price=price;}
     String brand;
     double price;
     public void call(){System.out.println("在打电话");}

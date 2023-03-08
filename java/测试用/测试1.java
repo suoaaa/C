@@ -4,5 +4,7 @@ public class ²âÊÔ1 {
         String out="1";
         out="2"+out;
         System.out.println(out);
+        System.out.println();
+        System.out.println();
     }
 }
