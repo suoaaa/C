@@ -1,6 +1,6 @@
 package ÆÕÍ¨³ÌĞò;
 
-public class ·ÂÉäÃÜÂë {
+public class ·ÂÉäÃÜÂë1 {
     public static void main(String[] args) {
         StringBuilder m=new StringBuilder();
         StringBuilder c=new StringBuilder("cqvjlvovqqtvoevvwshwbjmzrooevtzuhv");
