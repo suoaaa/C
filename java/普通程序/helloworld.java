@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 public class helloworld{
 	public static void main(String[] args){
+		float ad=3.0F;
+		if(ad==3);
 		System.out.println("∆’Õ®≥Ã–Ú.helloworld");
 		System.out.println(555);
 		System.out.println(-1.32);
