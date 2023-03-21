@@ -1,5 +1,11 @@
 {
     "java.project.sourcePaths": [
         "java"
-    ]
+    ],
+    "files.associations": {
+        "*.java": "java",
+        "stack": "cpp",
+        "deque": "cpp",
+        "iostream": "cpp"
+    }
 }
