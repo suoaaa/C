@@ -85,28 +85,29 @@ public class 学生管理系统 {
     }
 
     public static void addStudent(Student []st) {
-        Scanner sc=new Scanner(System.in);
-        int id=sc.nextInt();
-        String name=sc.next();
-        int age=sc.nextInt();
-        String home=sc.next();
-        int i=0;
+        try(Scanner sc=new Scanner(System.in);){
+        	int id=sc.nextInt();
+        	String name=sc.next();
+        	int age=sc.nextInt();
+        	String home=sc.next();
+        	int i=0;
         boolean flag=true;
         if(searchStudent(st, id)!=-1){
-            System.out.println("添加失败，学号重复");
-                flag=false;
-        }
-        while(flag){
-            if(i==st.length){
-                System.out.println("添加失败，学生名单已满");
-                flag=false;
-            }else if(st[i].flag==false){
-                st[i]=new Student(id, age, name, home);
-                System.out.println("添加成功");
-                flag=false;
-            	}
-            i++;
-        }
+            	System.out.println("添加失败，学号重复");
+            	flag=false;
+    	}
+        	while(flag){
+            	if(i==st.length){
+                	System.out.println("添加失败，学生名单已满");
+                	flag=false;
+            	}else if(st[i].flag==false){
+                	st[i]=new Student(id, age, name, home);
+                	System.out.println("添加成功");
+                	flag=false;
+            		}
+        	    i++;
+    	    }
+    }
     }
     public static void delStudent(Student []st,int id){
     	int ret=searchStudent(st, id);
@@ -133,14 +134,15 @@ public class 学生管理系统 {
         }else{
             st[ret].shouStu();
             System.out.println("请确认是否更改此学生信息：是输入1，否输入0");
-            Scanner sc=new Scanner(System.in);
-            int flag=sc.nextInt();
-            if(flag!=1) {sc.close();return;}
-            System.out.println("请输入更改后学生的学号，姓名，年龄以及家庭住址，中间用空格隔开，如相同数据一同输入");
-			st[ret].setAge(sc.nextInt());
-            st[ret].setName(sc.next());
-            st[ret].setAge(sc.nextInt());
-            st[ret].setHome(sc.next());
+            try (Scanner sc = new Scanner(System.in)) {
+                int flag=sc.nextInt();
+                if(flag!=1) {sc.close();return;}
+                System.out.println("请输入更改后学生的学号，姓名，年龄以及家庭住址，中间用空格隔开，如相同数据一同输入");
+                st[ret].setAge(sc.nextInt());
+                st[ret].setName(sc.next());
+                st[ret].setAge(sc.nextInt());
+                st[ret].setHome(sc.next());
+            }
             System.out.println("更改成功成功");
             st[ret].shouStu();
         }
