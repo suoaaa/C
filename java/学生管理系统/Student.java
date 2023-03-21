@@ -5,13 +5,15 @@ public class Student {
    int age;
    String name;
    String home;
+   boolean flag;
 
-   Student(){};
+   Student(){flag=false;};
    Student(int id,int age,String name,String home){
     this.id=id;
     this.name=name;
     this.age=age;
     this.home=home;
+    flag=true;
    }
 public int getId() {
     return id;
@@ -36,6 +38,9 @@ public String getHome() {
 }
 public void setHome(String home) {
     this.home = home;
+}
+public void shouStu() {
+    System.out.println("     "+this.id+"\t\t "+this.name+"\t"+this.age+"\t"+this.home);
 } 
    
 }
