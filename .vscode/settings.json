@@ -7,5 +7,6 @@
         "stack": "cpp",
         "deque": "cpp",
         "iostream": "cpp"
-    }
+    },
+    "cmake.configureOnOpen": false
 }
