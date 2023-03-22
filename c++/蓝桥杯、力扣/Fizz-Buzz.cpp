@@ -6,23 +6,26 @@ answer[i] == "Buzz"?如果?i?是?5?的倍数。
 answer[i] == i?（以字符串形式）如果上述条件全不满足。*/
 #include<iostream>
 #include<vector>
+#include<string>
 using namespace std;
 class Solution {
 public:
     vector<string> fizzBuzz(int n) {
-        vector<string> answer(n);
-        for(int i=0;i<n;i++){
-            if(!((i+1)%3)&&!((i+1)%5)) answer[i]="FizzBuzz";
-            else if(!((i+1)%3))	answer[i]="Fizz";
-            else if(!((i+1)%5))	answer[i]="Buzz";
-            else answer[i]=(string)("1"+i);
-            cout<<i<<"   "<<answer[i]<<endl;
+        vector<string> answer;
+        for(int i=1;i<=n;i++){
+            if((i)%15==0) answer.push_back("FizzBuzz");
+            else if(!((i)%3))	answer.push_back("Fizz");
+            else if(!((i)%5))	answer.push_back("Buzz");
+            else {
+                string s=to_string(i);
+                answer.push_back(s);
+            }
         }
         return answer;
     }
 };
 int main(){
     Solution s;
-    s.fizzBuzz(3);
+    s.fizzBuzz(4);
     return 0;
 }
