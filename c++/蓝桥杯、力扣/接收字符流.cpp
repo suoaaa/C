@@ -15,25 +15,25 @@ using namespace std;
 class StreamChecker {
 public:
     vector<string> words;
-    vector<int> words_long;
-    vector<bool> flag;
+    vector<int> flag;
+    StreamChecker(){};
     StreamChecker(vector<string>& words) {
-        this->words=words;
-        for(int i=0;i<words.size();i++){
-            words_long.push_back(words[i].length());
-        }
+        this->words=vector<string>(words);
+        flag=vector<int>(words.size(),0);
     }
-    
     bool query(char letter) {
-        
-
-        for(int k=0;k<words.size();k++){
-            for(int m=0;m<words[k].length();m++){
-                if(letter!=words[k].at(m)){
-
+        for(int i=0;i<words.size();i++){
+            if(words[i].at(flag[i])==letter){
+                flag[i]++;
+                }   else flag[i]=0;
+            if(flag[i]==words[i].length()) {
+                for(int j=i-flag[i];j<i;j++){
+                    if()
+                }
+                return true;
                 }
             }
-        }
+        return false;
     }
 };
 
