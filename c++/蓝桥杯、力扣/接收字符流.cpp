@@ -16,10 +16,17 @@ class StreamChecker {
 public:
     vector<string> words;
     vector<int> flag;
+    vector<int> before;
     StreamChecker(){};
     StreamChecker(vector<string>& words) {
         this->words=vector<string>(words);
         flag=vector<int>(words.size(),0);
+        before=vector<int>(words.size(),0);
+        for(int i=0;i<words.size();i++){
+            for(int j=0,k=1,m=;j<words[i].length()&&m<words[i].length();j++){
+                if()
+            }
+        }
     }
     bool query(char letter) {
         for(int i=0;i<words.size();i++){
@@ -27,9 +34,7 @@ public:
                 flag[i]++;
                 }   else flag[i]=0;
             if(flag[i]==words[i].length()) {
-                for(int j=i-flag[i];j<i;j++){
-                    if()
-                }
+                flag[i]=before[i];
                 return true;
                 }
             }
