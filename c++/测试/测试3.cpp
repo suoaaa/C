@@ -1,18 +1,20 @@
-#include <cstring>
-#include <iostream>
+/*设计一个算法：接收一个字符流，并检查这些字符的后缀是否是字符串数组 words 中的一个字符串。
+
+例如，words = ["abc", "xyz"] 且字符流中逐个依次加入 4 个字符 'a'、'x'、'y' 和 'z' ，
+你所设计的算法应当可以检测到?"axyz" 的后缀 "xyz" 与?words 中的字符串 "xyz" 匹配。
+
+按下述要求实现 StreamChecker 类：
+StreamChecker(String[] words) ：构造函数，用字符串数组?words 初始化数据结构。
+boolean query(char letter)：从字符流中接收一个新字符，
+如果字符流中的任一非空后缀能匹配 words 中的某一字符串，返回 true ；否则，返回 false。*/
+
+/**
+ * Your StreamChecker object will be instantiated and called as such:
+ * StreamChecker* obj = new StreamChecker(words);
+ * bool param_1 = obj->query(letter);
+ */
+#include<stdio.h>
+#include<iostream>
+#include<string.h>
+#include<vector>
 using namespace std;
-int dp[1001][1001];
-void MatrixChain(int *p, int n, int**m ,int**s)
-{
- 	for(int i=1; i<= n; i++) m[i][i]=0; //最小的子问题，矩阵个数为1
- 	for(int r= 2; r<= n; r++)  //r代表子问题的矩阵个数，从2到n
-	{
-   	for(int i=1;i<=n-r+1; i++){  //分析n-r+1种情况
- 		int j=i+r-1;
-        m[i][j]=m[i+1][j]+p[i-1]*p[i]*p[j];//假设每次都从第i个矩阵后分开
- 		s[i][j]=i;
- 		for(int k=i+1;k<j;k++){  //讨论k的所有可能情况
- 		int t= m[i][k]+m[k+1][j]+ p[i-1]*p[k]*p[j];
-        if(t<m[i][j]) {m[i][j]=t; s[i][j]=k;}}}//选择数乘次数最小的情况，并将相关数据覆盖于表中的相应位置
-    }
-}
