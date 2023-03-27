@@ -11,9 +11,9 @@ int y=2000,m=1,d=1;
 int main()
 {
   int all_day=0;
-  all_day=365*20+31+28+31+30+31+30+31+31+30+1+8+10;
+  all_day=365*20+31+28+31+30+31+30+31+31+30+1+6;//6是闰二月天数
   w=31-2;
-  road_all=all_day+12*19+10+all_day/7;
+  road_all=all_day+12*20+10+all_day/7+1;//除7加一是周一的天数，前边是月初的天数
   while(!(y==2020&&m==10))
   {
 
@@ -22,7 +22,7 @@ int main()
     w=(w+months[(m+11)%12]+flip())%7;
     if(w==0) road_all--;
   }
-  cout<<road_all;
+  cout<<road_all;//8879
   return 0;
 }
 int flip()
