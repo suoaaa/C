@@ -2,7 +2,6 @@
 using namespace std;
 #define MAX(x,y) (x)>(y)?(x):(y)
 int flip();
-int run_day();
 
 int months[12]={31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 int w=5;                    //初始时周6下标为5
