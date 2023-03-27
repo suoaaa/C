@@ -11,25 +11,23 @@
 using namespace std;
 class Solution {
 public:
-    bool isUniqueSubstr(string s,string t){
-        for(int i=0;i<t.length()-s.length();i++){
+    int isUniqueSubstr(string s,string t){
+        int ret=0;
+        for(int i=0;i<t.length();i++){
             int no=0;
             int j=0;
-            while(no<2&&j<s.length()){
+            for(;j<s.length()&&no<2&&i+j<t.length();j++){
                 if(t[i+j]!=s[j]) no++;
-                j++;
             }
-            if(no==1&&j==s.length()) {cout<<s;return true;}
+            if(no==1&&j==s.length()) {ret++;}
         }
-        return false;
+        return ret;
     }
     int countSubstrings(string s, string t) {
         int num=0;
         for(int i=0;i<s.length();i++){
-            for(int j=s.length();j>=i;j--){
-                if(isUniqueSubstr(s.substr(i,j-i),t)){
-                    num++;
-                }
+            for(int j=s.length();j>i;j--){
+                num+=isUniqueSubstr(s.substr(i,j-i),t);
             }
         }
         return num;
