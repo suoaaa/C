@@ -1,19 +1,18 @@
-/*对于一个字母矩阵，我们称矩阵中的一个递增序列是指在矩阵中找到两个字母，
-它们在同一行，同一列，或者在同一 45 度的斜线上，
-这两个字母从左向右看、或者从上向下看是递增的。*/
-#include <iostream>
-#include<cstring>
+/*顺子日期指的就是在日期的 yyyymmdd 表示法中，
+存在任意连续的三位数是一个顺子的日期。
+小明想知道在整个 2022 年份中，一共有多少个顺子日期?*/
+#include<stdio.h>
+#include<iostream>
+#include<string.h>
+#include<vector>
 using namespace std;
 int main(){
-    string arr[3]={"LANNA", "QIAOA","AAAAA"};
-    int sum=0;
-    for(int i=0;i<2;i++){
-        for(int j=0;j<4;j++){
-            if(arr[i][j]<arr[i][j+1])   sum++;
-            if(arr[i][j]<arr[i+1][j])   sum++;
-            if(arr[i][j]<arr[i+1][j+1]) sum++;
-        }
-    }
-    cout<<sum;
+    int months[12]={31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int month_index=0;
+    int day=0;
+    long long date=21;
+    string s;
+
+    s+=to_string(date);cout<<s<<endl;
     return 0;
 }
