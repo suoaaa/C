@@ -10,7 +10,6 @@ N 。你可以对 N 的任意一位数字执行任意次以下 2 种操 作：
 #include<vector>
 #include<algorithm>
 using namespace std;
-int main()
-{
+int main(){
     return 0;
 }
