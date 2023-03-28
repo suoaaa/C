@@ -1,20 +1,69 @@
-/*设计一个算法：接收一个字符流，并检查这些字符的后缀是否是字符串数组 words 中的一个字符串。
+/*给出两个字符串?str1 和?str2，返回同时以?str1?和?str2?作为子序列的最短字符串。如果答案不止一个，则可以返回满足条件的任意一个答案。
 
-例如，words = ["abc", "xyz"] 且字符流中逐个依次加入 4 个字符 'a'、'x'、'y' 和 'z' ，
-你所设计的算法应当可以检测到?"axyz" 的后缀 "xyz" 与?words 中的字符串 "xyz" 匹配。
-
-按下述要求实现 StreamChecker 类：
-StreamChecker(String[] words) ：构造函数，用字符串数组?words 初始化数据结构。
-boolean query(char letter)：从字符流中接收一个新字符，
-如果字符流中的任一非空后缀能匹配 words 中的某一字符串，返回 true ；否则，返回 false。*/
-
-/**
- * Your StreamChecker object will be instantiated and called as such:
- * StreamChecker* obj = new StreamChecker(words);
- * bool param_1 = obj->query(letter);
- */
+（如果从字符串 T 中删除一些字符（也可能不删除，并且选出的这些字符可以位于 T 中的?任意位置），可以得到字符串 S，那么?S 就是?T 的子序列）*/
 #include<stdio.h>
 #include<iostream>
 #include<string.h>
 #include<vector>
+#include<algorithm>
 using namespace std;
+class Solution {
+public:
+    string shortestCommonSupersequence(string str1, string str2) {
+        int m=str1.length(),n=str2.length();
+        string ret;
+        vector<bool> b1(m,false),b2(n,false);
+        int i,j,temp;
+        for(i=0,j=0;i<m;i++){
+            for(temp=j;temp<n&&j<n;temp++){
+                if(str1[i]==str2[temp]) {
+                    j=temp;
+                    b1[i]=true;
+                    b2[temp]=true;
+                    j+=1;
+                    break;
+                }
+            }
+        }
+        vector<string> str(2);
+        str[0]=str1;
+        str[1]=str2;
+        m=str[0].length();n=str[1].length();
+        i=0;j=0;
+        int num=0;
+        while(j<n||i<m){
+            if(j<n&&i<m){
+                // cout<<'a'<<i<<j;
+                if(b1[i]==true&&b2[j]==true){
+                    ret+=str[0][i];
+                    // cout<<'e';
+                    i++;j++;
+                }
+            }
+            while(i<m){
+                // cout<<'c';
+                if(b1[i]==false){
+                    ret+=str[0][i];
+                    i++;
+                }else break;
+            }
+            while(j<n){
+                // cout<<'d';
+                if(b2[j]==false){
+                    ret+=str[1][j];
+                    j++;
+                }else break;
+            }
+        }
+        return ret;
+    }
+};
+int main()
+{
+    string str1="aabbabaa";     //"aabb         a  baa"
+    string str2="aabbbbbbaa";   //"aabb  bbb   baa"
+    Solution s;
+    string str=s.shortestCommonSupersequence(str1,str2);//"bbbaaababbb"
+    cout<<str<<endl<<"aabbabbbbaa";
+    return 0;
+}
