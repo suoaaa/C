@@ -4,18 +4,24 @@
 #include<stdio.h>
 #include<iostream>
 #include<string.h>
-#include<vector>
+#include<set>
 #include<algorithm>
 using namespace std;
 class Solution {
 public:
-	int num;
-    char []sym;
+    char* sym;
+    vector<vector<int>> dp;
 	Solution(){
-        num=0;
-    	sym={'a','e','i','o','u'};
+        char s[5]={'a','e','i','o','u'};
+    	sym = s;
     }
     int countVowelStrings(int n) {
-        
+        vector<int> dp(5, 1);
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j < 5; j++) {
+                dp[j] += dp[j - 1];
+            }
+        }
+        return accumulate(dp.begin(), dp.end(), 0);
     }
 };

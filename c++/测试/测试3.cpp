@@ -1,104 +1,122 @@
-#include <iostream>
-#include <stack>
-#include <set>
-
+/*由于全球变暖导致了海面上升，科学家预测未来几十年，岛屿边缘一个像素的范围会被海水淹没。
+具体来说如果一块陆地像素与海洋相邻(上下左右四个相邻像素中有海洋)，它就会被淹没。
+.......                         .......     
+.##....                         .......  
+.##....                         .......  
+....##.       全球变暖之后      ....... 
+..####.                         ....#..    
+...###.                         .......     
+.......                         .......                                       
+输出多少个岛屿会被完全淹没*/
+#include<stdio.h>
+#include<iostream>
+#include<string.h>
+#include<set>
+#include<queue>
+#include<algorithm>
 using namespace std;
-
-typedef unsigned long long maxString;
-
-class Node{
-    public:
-        int id;
-        int currA;
-        int currB;
-        int currNum;
-        int res;
-};
-
-void dfs(){
-    stack<Node> s;
-    set<int> fNum;
-    int n;
-    int a,b;
-    cin >>n>>a>>b;
-    int tmp = n;
-    int num[17]={0};
-    int i = 0;
-    int cnt = 0;
-    while(tmp>0){
-        cnt++;
-        tmp /= 10;
-        cout<<cnt<<' ';
-    }
-cout<<endl;
-    for (i = cnt - 1; i >= 0; i--){
-        num[i] = n%10;
-        n /= 10;
-        cout<<num[i];
-    }
-    Node node;
-    node.id = 0;
-    node.currA = a;
-    node.currB = b;
-    node.currNum = num[0];
-    node.res = 0;
-    s.push(node);
-
-
-if (false)
-    while(!s.empty()){
-        Node now = s.top();
-        if((now.currA==0&&now.currB==0)||now.id==cnt-1){
-
-			//cout << now.res<<"A>B"<<endl;
-            //cout<<now.currNum;
-            while(now.id<cnt){
-				now.res = now.res*10 + num[now.id];
-                now.id++;
-            }
-            //cout << now.res<<endl;
-            fNum.insert(now.res);
-            s.pop();
-        }
-        int changeA = now.currA,changeB = now.currB;
-        int numA = now.currNum,numB = now.currNum;
-        while (changeA!=0&&numA!=9)
-        {
-            numA++;
-            changeA--;
-        }
-        while (changeB!=0&&numB!=9)
-        {
-            if(numB==0){
-                numB = 10;
-            }
-            numB--;
-            changeB--;
-        }
-        
-        Node nextNode1,nextNode2;
-        nextNode1.currA = changeA;
-        nextNode1.currB = now.currB;
-        nextNode1.id = now.id + 1;
-        nextNode1.currNum = num[now.id+1];
-        nextNode1.res = now.res*10 + numA;
-		nextNode2.id = now.id + 1;
-		nextNode2.currA = now.currA;
-    	nextNode2.currB = changeB;
-        nextNode2.currNum = num[now.id+1];
-        nextNode2.res = now.res*10 + numB;
-        s.pop();
-        s.push(nextNode1);
-        s.push(nextNode2);
-        
-    }
-	// cout << *fNum.rbegin()<<endl;
-
-}
-
-
-
+typedef set<set<pair<int,int> > >   ssp;
+typedef set<pair<int,int> >          sp;
+typedef pair<int,int>               pii;
+vector<vector<char> > earth,newEarth;
+vector<vector<int> >  flag1,flag2;
+vector<set<pair<int,int> > > vsp1,vsp2;
+sp link;
+ssp findIsland( vector<vector<char> > earth,vector<vector<int> > flag);
+void aroundEarth(vector<vector<char> > earth,vector<vector<int> > flag,int index,int i,int j,sp *sp1);
 int main(){
-    dfs();
+    int n=0;
+    cin>>n;
+    int num[10];
+    int num1=0,num2=0;
+    earth.resize(n);    newEarth.resize(n);     flag1.resize(n);    flag2.resize(n);
+    for(int i=0;i<n;i++) {
+            earth[i]=vector<char>(n,'#');
+            newEarth[i]=vector<char>(n,'#');
+            flag1[i]=vector<int>(n,-1);
+            flag2[i]=vector<int>(n,-1);
+        }
+    char temp;
+    // Scout<<endl;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            cin>>temp;
+            if(temp=='.') {             //如果有一块是水，马上淹没周围的地方，如果陆地：淹对了，海洋：之后或者之前会输入，本来已经是被淹的了
+                earth[i][j]='.';
+                newEarth[i][j]='.';
+                if(i!=0)    newEarth[i-1][j]='.';
+                if(i!=n-1)  newEarth[i+1][j]='.';
+                if(j!=0)    newEarth[i][j-1]='.';
+                if(j!=n-1)  newEarth[i][j+1]='.';
+            }else {
+                // cout<<'a';
+                int index1=-1,index2=-1;
+                // cout<<'b';
+                if(i!=0)    if(earth[i-1][j]=='#')   index1=flag1[i-1][j];
+                if(j!=0)    if(earth[i][j-1]=='#')   index2=flag1[i][j-1];
+                // cout<<'c';
+                // cout<<index1<<index2<<'\t'<<i<<j<<endl;
+                if(index1==-1&&index2==-1) {
+                    sp newsp;
+                    newsp.insert(pii(i,j));
+                    vsp1.push_back(newsp);
+                    flag1[i][j]=num1++;
+                    // cout<<flag1[i][j];
+                    // cout<<num1;
+                    continue;
+                    // cout<<'d';
+                }else if(index1==index2||index1==-1||index2==-1) {
+                    // cout<<'g';
+                    int k=(index1==-1?index2:index1);
+                    vsp1[k].insert(pii(i,j));
+                    flag1[i][j]=k;
+                    // cout<<flag1[i][j];
+                    continue;
+                }else  if(index1!=index2){
+                    // cout<<'a';
+                    flag1[i][j]=min(index1,index2);
+                    pii pii1(min(index1,index2),max(index1,index2));
+                    link.insert(pii1);
+                    // cout<<flag1[i][j];
+                    continue;
+                }
+            }
+        }
+    }
+    // cout<<flag1[3][4];
+    // cout<<link.size();
+    // for(sp::iterator k=link.begin();k!=link.end();k++,num1--){};
+    cout<<num1-link.size();
+    // ssp ssp1,ssp2;
+    // ssp1=findIsland(earth,flag1);
+    // cout<<ssp1.size();
     return 0;
+}
+ssp findIsland( vector<vector<char> > earth,vector<vector<int> > flag){
+    ssp ssp1;
+    int num=0;
+    int n=earth.size();
+    flag.resize(n);
+    for(int i=0;i<n;i++) flag[i]=vector<int>(n,-1);
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(earth[i][j]=='#'&&flag[i][j]==-1) {
+                sp newsp;
+                aroundEarth(earth,flag,num,i,j,&newsp);
+                num++;
+                ssp1.insert(newsp);
+            }
+        }
+    }
+    return ssp1;
+}
+void aroundEarth(vector<vector<char> > earth,vector<vector<int> > flag,int index,int i,int j,sp *sp1){
+    int n=earth.size();
+    pii p1=pii(i,j);
+    sp1->insert(p1);
+    flag[i][j]=index;
+    if(i!=0)    if(earth[i-1][j]=='#'&&flag[i-1][j]==-1)    aroundEarth(earth,flag,index,i-1,j,sp1);
+    if(i!=n-1)  if(earth[i+1][j]=='#'&&flag[i+1][j]==-1)    aroundEarth(earth,flag,index,i+1,j,sp1);
+    if(j!=0)    if(earth[i][j-1]=='#'&&flag[i][j-1]==-1)    aroundEarth(earth,flag,index,i,j-1,sp1);
+    if(j!=n-1)  if(earth[i][j+1]=='#'&&flag[i][j+1]==-1)    aroundEarth(earth,flag,index,i,j+1,sp1);
 }

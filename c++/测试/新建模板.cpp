@@ -1,7 +1,16 @@
-/**/
+/*由于全球变暖导致了海面上升，科学家预测未来几十年，岛屿边缘一个像素的范围会被海水淹没。
+具体来说如果一块陆地像素与海洋相邻(上下左右四个相邻像素中有海洋)，它就会被淹没。
+.......                         .......     
+.##....                         .......  
+.##....                         .......  
+....##.       全球变暖之后      ....... 
+..####.                         ....#..    
+...###.                         .......     
+.......                         .......                                       */
 #include<stdio.h>
 #include<iostream>
 #include<string.h>
-#include<vector>
+#include<set>
+#include<queue>
 #include<algorithm>
 using namespace std;
