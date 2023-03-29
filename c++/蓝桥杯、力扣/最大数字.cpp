@@ -8,13 +8,38 @@ N 。你可以对 N 的任意一位数字执行任意次以下 2 种操 作：
 #include<stdio.h>
 #include<iostream>
 #include<string.h>
-#include<vector>
 #include<algorithm>
 using namespace std;
-typedef	unsigned long long ull;
+string bestChangedNum(string N,int a,int b);
+string maxString(string a,string b);
 int main(){
-	ull N,a,b;
-    cin<<N<<a<<b;
-    
+	string N;
+    int a,b;
+    cin>>N>>a>>b;
+    cout<<bestChangedNum(N,a,b);
     return 0;
+}
+string bestChangedNum(string N,int a,int b){
+    if(N.length()==0) return "";
+    if(a==0&&b==0) return N;
+    string ret=N;
+    ret.erase(ret.begin());
+    cout<<' '<<N<<'\t'<<a<<'\t'<<b<<endl;
+    if(N[0]=='9') return to_string(9)+bestChangedNum(ret,a,b);
+    int i=9+'0'-N[0];
+    int j=(1+N[0]-'0')%10;
+    if(a>=i&&b>=j)    return to_string(9)+max(bestChangedNum(ret,a-i,b),bestChangedNum(ret,a,b-j));
+    	else {
+    		if(a>=i) return to_string(9)+bestChangedNum(ret,a-i,b);
+     	   	if(b>=j) return to_string(9)+bestChangedNum(ret,a,b-j);
+     	}
+    	return to_string(N[0]-'0'+a)+bestChangedNum(ret,0,b);
+}
+string maxString(string s1,string s2){
+    int a=s1.length(),b=s2.length();
+    if(a!=b) return a>b?s1:s2;
+    for(int i=0;i<a;i++){
+        if(s1[i]!=s2[i]) return s1[i]>s2[i]?s1:s2;
+    }
+    return s1;
 }
