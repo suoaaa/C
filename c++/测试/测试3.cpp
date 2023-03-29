@@ -1,69 +1,104 @@
-/*给出两个字符串?str1 和?str2，返回同时以?str1?和?str2?作为子序列的最短字符串。如果答案不止一个，则可以返回满足条件的任意一个答案。
+#include <iostream>
+#include <stack>
+#include <set>
 
-（如果从字符串 T 中删除一些字符（也可能不删除，并且选出的这些字符可以位于 T 中的?任意位置），可以得到字符串 S，那么?S 就是?T 的子序列）*/
-#include<stdio.h>
-#include<iostream>
-#include<string.h>
-#include<vector>
-#include<algorithm>
 using namespace std;
-class Solution {
-public:
-    string shortestCommonSupersequence(string str1, string str2) {
-        int m=str1.length(),n=str2.length();
-        string ret;
-        vector<bool> b1(m,false),b2(n,false);
-        int i,j,temp;
-        for(i=0,j=0;i<m;i++){
-            for(temp=j;temp<n&&j<n;temp++){
-                if(str1[i]==str2[temp]) {
-                    j=temp;
-                    b1[i]=true;
-                    b2[temp]=true;
-                    j+=1;
-                    break;
-                }
-            }
-        }
-        vector<string> str(2);
-        str[0]=str1;
-        str[1]=str2;
-        m=str[0].length();n=str[1].length();
-        i=0;j=0;
-        int num=0;
-        while(j<n||i<m){
-            if(j<n&&i<m){
-                // cout<<'a'<<i<<j;
-                if(b1[i]==true&&b2[j]==true){
-                    ret+=str[0][i];
-                    // cout<<'e';
-                    i++;j++;
-                }
-            }
-            while(i<m){
-                // cout<<'c';
-                if(b1[i]==false){
-                    ret+=str[0][i];
-                    i++;
-                }else break;
-            }
-            while(j<n){
-                // cout<<'d';
-                if(b2[j]==false){
-                    ret+=str[1][j];
-                    j++;
-                }else break;
-            }
-        }
-        return ret;
-    }
+
+typedef unsigned long long maxString;
+
+class Node{
+    public:
+        int id;
+        int currA;
+        int currB;
+        int currNum;
+        int res;
 };
-int main()
-{
-    string str1="aabbabaa";     //"aabb         a  baa"
-    string str2="aabbbbbbaa";   //"aabb  bbb   baa"
-    Solution s;
-    string str=s.shortestCommonSupersequence(str1,str2);//"bbbaaababbb"
-    cout<<str<<endl<<"aabbabbbbaa";
+
+void dfs(){
+    stack<Node> s;
+    set<int> fNum;
+    int n;
+    int a,b;
+    cin >>n>>a>>b;
+    int tmp = n;
+    int num[17]={0};
+    int i = 0;
+    int cnt = 0;
+    while(tmp>0){
+        cnt++;
+        tmp /= 10;
+        cout<<cnt<<' ';
+    }
+cout<<endl;
+    for (i = cnt - 1; i >= 0; i--){
+        num[i] = n%10;
+        n /= 10;
+        cout<<num[i];
+    }
+    Node node;
+    node.id = 0;
+    node.currA = a;
+    node.currB = b;
+    node.currNum = num[0];
+    node.res = 0;
+    s.push(node);
+
+
+if (false)
+    while(!s.empty()){
+        Node now = s.top();
+        if((now.currA==0&&now.currB==0)||now.id==cnt-1){
+
+			//cout << now.res<<"A>B"<<endl;
+            //cout<<now.currNum;
+            while(now.id<cnt){
+				now.res = now.res*10 + num[now.id];
+                now.id++;
+            }
+            //cout << now.res<<endl;
+            fNum.insert(now.res);
+            s.pop();
+        }
+        int changeA = now.currA,changeB = now.currB;
+        int numA = now.currNum,numB = now.currNum;
+        while (changeA!=0&&numA!=9)
+        {
+            numA++;
+            changeA--;
+        }
+        while (changeB!=0&&numB!=9)
+        {
+            if(numB==0){
+                numB = 10;
+            }
+            numB--;
+            changeB--;
+        }
+        
+        Node nextNode1,nextNode2;
+        nextNode1.currA = changeA;
+        nextNode1.currB = now.currB;
+        nextNode1.id = now.id + 1;
+        nextNode1.currNum = num[now.id+1];
+        nextNode1.res = now.res*10 + numA;
+		nextNode2.id = now.id + 1;
+		nextNode2.currA = now.currA;
+    	nextNode2.currB = changeB;
+        nextNode2.currNum = num[now.id+1];
+        nextNode2.res = now.res*10 + numB;
+        s.pop();
+        s.push(nextNode1);
+        s.push(nextNode2);
+        
+    }
+	// cout << *fNum.rbegin()<<endl;
+
+}
+
+
+
+int main(){
+    dfs();
     return 0;
 }
