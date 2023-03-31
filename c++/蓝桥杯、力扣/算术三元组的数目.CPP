@@ -16,13 +16,13 @@ public:
         int n=nums.size();
         int num=0;
         for(int i=1;i<n-1;i++){
-            for(int j=i-1;j>0;j--){
+            for(int j=i-1;j>=0;j--){
                 if(nums[i]-nums[j]==diff) {
                     for(int k=i+1;k<n;k++){
-                        if(nums[k]-nums[i]==diff) num++;
+                        if(nums[k]-nums[i]==diff) {num++;}
                     }
                 }
             }
-        }
+        }return num;
     }
 };
