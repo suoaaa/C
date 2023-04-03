@@ -13,7 +13,16 @@
 using namespace std;
 class Solution {
 public:
-    int minScoreTriangulation(vector<int>& values) {
-        
+    vector<int> prevPermOpt1(vector<int>& arr) {
+        int n=arr.size();
+        int i=n-2,j=n-1;
+        while(i>=0&&arr[i]<=arr[i+1]) i--;
+        if(i<0) return arr;
+        while(arr[i]<=arr[j]) j--;
+        while(arr[j]==arr[j-1]) j--;
+        int tmp=arr[i];
+        arr[i]=arr[j];
+        arr[j]=tmp;
+        return arr;
     }
 };
