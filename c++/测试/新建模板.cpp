@@ -1,9 +1,8 @@
-/*给你一个正整数数组 arr（可能存在重复的元素），请你返回可在?一次交换（交换两数字 arr[i] 和 arr[j] 的位置）后
-得到的、按字典序排列小于 arr 的最大排列。如果无法这么操作，就请返回原数组。
+/*有 N 堆石头排成一排，第 i 堆中有 stones[i] 块石头。
 
-输入：arr = [3,2,1]
-输出：[3,1,2]
-解释：321>312且是最大的比321小的序列*/
+每次移动（move）需要将连续的 K 堆石头合并为一堆，而这个移动的成本为这 K 堆石头的总数。
+
+找出把所有石头合并成一堆的最低成本。如果不可能，返回 -1 。*/
 #include<stdio.h>
 #include<iostream>
 #include<string.h>
@@ -11,9 +10,3 @@
 #include<queue>
 #include<algorithm>
 using namespace std;
-class Solution {
-public:
-    int minScoreTriangulation(vector<int>& values) {
-        
-    }
-};
