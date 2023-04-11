@@ -1,4 +1,3 @@
-package ²âÊÔÓÃ;
 
 import java.util.Scanner;
 
