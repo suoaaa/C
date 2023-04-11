@@ -1,6 +1,5 @@
 package ∆’Õ®≥Ã–Ú;
 
-
 import java.util.Random;
 import java.util.Scanner;
 
