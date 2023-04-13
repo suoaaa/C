@@ -1,8 +1,8 @@
 package 阅卷测试;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Random;
 
 //questions类储存题目信息
@@ -31,18 +31,46 @@ public class questions {
         getNewQuestions();
     };
 
+    private void getAllString() {
+        File f=new File("E:\\个人编程\\代码-全\\java\\阅卷测试\\题库.txt");
+        FileReader fr;        
+        char[] c;
+        String s;
+        try {
+            fr = new FileReader(f);
+            c = new char[13000];
+            fr.read(c,1,c.length-1);
+            s=new String(c);
+            // s=s.replace("\n", "&&");
+            allStrings=s.split("\n");
+            fr.close();
+        } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
     private void getNewQuestions(){
         Random r=new Random();
         for(int i=0;i<8;i++){
             index[i]=r.nextInt(10)+i*10;    //从题库的题目序号中随机获取题号，对应的题目作为新的试卷的题目
         }
-    }
-    private void getAllString() {
-        File f=new File("题库.txt");
-        FileReader freader=new FileReader(f);
-        String s=f.toString();
-        allStrings=s.split("&&");
-        System.out.println(allStrings[0]);
-        
+        for(int i=0;i<6;i++){
+            question[i]=allStrings[index[i]*5];
+            A[i]=allStrings[index[i]*5+1];
+            B[i]=allStrings[index[i]*5+2];
+            C[i]=allStrings[index[i]*5+3];
+            answer[i]=allStrings[index[i]*5+4];
+            System.out.print(question[i]);
+            System.out.print(A[i]);
+            System.out.print(B[i]);
+            System.out.print(C[i]);
+            System.out.print(answer[i]);
+        }
+        for(int i=6;i<8;i++){
+            question[i]=allStrings[180+index[i]*2];
+            answer[i]=allStrings[180+index[i]*2+1];
+            System.out.print(question[i]);
+            System.out.print(answer[i]);
+        }
     }
 }
