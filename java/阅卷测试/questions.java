@@ -1,6 +1,7 @@
 package 阅卷测试;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Random;
 
@@ -36,8 +37,12 @@ public class questions {
             index[i]=r.nextInt(10)+i*10;    //从题库的题目序号中随机获取题号，对应的题目作为新的试卷的题目
         }
     }
-    private void getAllString(){
-        File f=new File("null");
+    private void getAllString() {
+        File f=new File("题库.txt");
+        FileReader freader=new FileReader(f);
+        String s=f.toString();
+        allStrings=s.split("&&");
+        System.out.println(allStrings[0]);
         
     }
 }
