@@ -1,6 +1,5 @@
 package ExamSym;
 /*
- * XXX XXXXXXXXXXXXX
  * 一个基于JAVA的考试及评卷系统
  * 系统: windows 10
  * IDE: Eclipse

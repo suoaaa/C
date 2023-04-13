@@ -1,6 +1,5 @@
 package ExamSym;
 /*
- * XXX XXXXXXXXXXXXX
  * 一个基于JAVA的考试及评卷系统
  * 系统: windows 10
  * IDE: Eclipse
@@ -10,16 +9,12 @@ package ExamSym;
  * 本系统实现功能和运行方法请看readme.md
  * Date: Wed Jun 17 10:27:35 GMT+08:00 2020
  */
-
- import javax.imageio.ImageIO;//声明导入的类
- import java.util.Random;
  import java.lang.Math;
  import javax.swing.*;
  
  import java.awt.*;
  import java.io.*;
  import java.awt.event.*;
- import java.awt.image.BufferedImage;
  import java.util.*;
  
  class Function implements ActionListener
@@ -27,6 +22,7 @@ package ExamSym;
 	 /* 
 	  * 创建窗口、标签
 	  */
+	  
 	 Date now=new Date();
 	 JButton b1;
 	 JLabel l1;
@@ -148,11 +144,11 @@ package ExamSym;
 		 try
 		 {
 			 int count=0;
-			 FileInputStream in=new FileInputStream(file);//打开题目文件
-			 byte b[]=new byte[in.available()];
-			 in.read(b);
-			 s=new String(b);
-			 
+			 try (FileInputStream in = new FileInputStream(file)) {
+				byte b[]=new byte[in.available()];
+				 in.read(b);
+				 s=new String(b);
+			}
 			 // 分割题目和选项
 			 String c[]=s.split("&&");
 			 
@@ -191,7 +187,6 @@ package ExamSym;
 				 out.flush();
 				 out.close();
 			 } catch (IOException e) {
-				 // TODO Auto-generated catch block
 				 e.printStackTrace();
 			 }
 		 }
@@ -210,7 +205,6 @@ package ExamSym;
 				 out.flush();
 				 out.close();
 			 } catch (IOException e) {
-				 // TODO Auto-generated catch block
 				 e.printStackTrace();
 			 }
 		 }
@@ -229,7 +223,6 @@ package ExamSym;
 				 out.flush();
 				 out.close();
 			 } catch (IOException e) {
-				 // TODO Auto-generated catch block
 				 e.printStackTrace();
 			 }
 		 }
@@ -248,7 +241,6 @@ package ExamSym;
 				 out.flush();
 				 out.close();
 			 } catch (IOException e) {
-				 // TODO Auto-generated catch block
 				 e.printStackTrace();
 			 }
 		 }
@@ -317,7 +309,6 @@ package ExamSym;
 				 out.flush();
 				 out.close();
 			 } catch (IOException x) {
-				 // TODO Auto-generated catch block
 				 // e.printStackTrace();
 			 }
 		 }
@@ -334,7 +325,6 @@ package ExamSym;
 				 out.flush();
 				 out.close();
 			 } catch (IOException x) {
-				 // TODO Auto-generated catch block
 				 // x.printStackTrace();
 			 }
 		 }
