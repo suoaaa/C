@@ -1,5 +1,6 @@
 package ÔÄ¾í²âÊÔ;
 
+import java.io.File;
 import java.io.FileReader;
 import java.util.Random;
 
@@ -36,6 +37,7 @@ public class questions {
         }
     }
     private void getAllString(){
-        FileReader f=new FileReader(null)
+        File f=new File("null");
+        
     }
 }
