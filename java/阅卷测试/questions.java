@@ -42,7 +42,10 @@ public class questions {
             fr.read(c,1,c.length-1);
             s=new String(c);
             // s=s.replace("\n", "&&");
-            allStrings=s.split("\n");
+            allStrings=s.split("&");
+            // for(int i=0;i<allStrings.length;i++){
+            //     allStrings[i].replace("\n", "");
+            // }
             fr.close();
         } catch (IOException e) {
                 e.printStackTrace();
@@ -60,17 +63,17 @@ public class questions {
             B[i]=allStrings[index[i]*5+2];
             C[i]=allStrings[index[i]*5+3];
             answer[i]=allStrings[index[i]*5+4];
-            System.out.print(question[i]);
-            System.out.print(A[i]);
-            System.out.print(B[i]);
-            System.out.print(C[i]);
-            System.out.print(answer[i]);
+            System.out.print("1   "+question[i]);
+            System.out.print("2   "+A[i]);
+            System.out.print("3   "+B[i]);
+            System.out.print("4   "+C[i]);
+            System.out.print("5   "+answer[i]);
         }
         for(int i=6;i<8;i++){
             question[i]=allStrings[180+index[i]*2];
             answer[i]=allStrings[180+index[i]*2+1];
-            System.out.print(question[i]);
-            System.out.print(answer[i]);
+            System.out.print("6   "+question[i]);
+            System.out.print("7   "+answer[i]);
         }
     }
 }
