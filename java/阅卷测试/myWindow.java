@@ -12,6 +12,8 @@ public class myWindow {
     JTextField  stem = new JTextField(40);           //题目
     int i=1;                                                  //作为记录，目前显示的第几题
     JComboBox < String > cBox=new JComboBox< String >();
+    JLabel ti=new JLabel();                                     //倒计时显示
+    int remainedTime=60*8*1000;                                 //剩余时间
     
     JButton nextbt = new JButton("下个题目");               //菜单按钮
     JButton lastbt = new JButton("上个题目");               //菜单按钮
@@ -32,10 +34,11 @@ public class myWindow {
     JPanel pb = new JPanel();                           //选项B行 
     JPanel pc = new JPanel();                           //选项C行 
     JPanel p5 = new JPanel();                           //界面控制按钮行
-    JLabel la,lb,lc,ld;                                 //记录ABC选项具体内容
+    JLabel la,lb,lc;                                    //记录ABC选项具体内容
 
     questions q;                                        //questions类作为成员储存题目信息
     Timer endTimer=new Timer();
+    boolean b=false;
 
     myWindow(questions q){                              //UI初始化并且增加对按钮的监听
         this.q=q;
@@ -44,7 +47,9 @@ public class myWindow {
         p2.setVisible(false);
         p2.setSize(30, 30);
         g.add(Ba);      g.add(Bb);      g.add(Bc);
-        p0.add(new JLabel("当前题号"));         p0.add(cBox);   p0.setLayout(new FlowLayout(FlowLayout.LEFT));
+        p0.add(new JLabel("当前题号"));         p0.add(cBox);   
+        p0.add(new JLabel("                 倒计时："));       p0.add(ti);
+        p0.setLayout(new FlowLayout(FlowLayout.LEFT));
         p1.add(stem);   p1.setLayout(new FlowLayout(FlowLayout.LEFT));
         p2.add(t);      p2.setLayout(new FlowLayout(FlowLayout.LEFT));
         pa.add(Ba);     pa.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -60,6 +65,7 @@ public class myWindow {
 
         startbt.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
+                startCounting();
                 win.remove(startbt);
                 win.add(p0);    win.add(p1);    win.add(p2); win.add(pa);win.add(pb);     win.add(pc); win.add(p5);
                 fillQuestion();
@@ -68,7 +74,7 @@ public class myWindow {
 
         lastbt.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                fillMyAnswer();
+                if(remainedTime>=1)     fillMyAnswer();
                 i--;
                 fillQuestion();
                 update();
@@ -76,15 +82,28 @@ public class myWindow {
 
         nextbt.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                fillMyAnswer();
-                i++;
-                fillQuestion();
-                update();
+                if(remainedTime>=1)     fillMyAnswer();
+                if(g.isSelected(Ba.getModel())||g.isSelected(Bb.getModel())||g.isSelected(Bc.getModel())||i>6||remainedTime<1) {
+                    i++;
+                    fillQuestion();
+                    update();
+                }else {
+                    JFrame error=new JFrame("error");
+                    error.setSize(250,150);                   //设置窗口大小
+                    error.setLocationRelativeTo(null);                    //窗口在屏幕中间显示
+                    error.setVisible(false);
+                    error.setLayout(new GridLayout(3,1,10,10));
+                    error.add(new JLabel("请先选择一个答案"));
+                    error.setVisible(true);
+                }
             }});
 
         practiceAgainbt.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
+                endTimer.cancel();
+                startCounting();
                 i=1;
+                t.setText("");
                 q.getNewQuestions();
                 fillQuestion();
                 update();
@@ -101,23 +120,19 @@ public class myWindow {
         
         finishbt.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                endTimer.cancel();
-                fillMyAnswer();
+                remainedTime=0;
+                if(b==true) return;
+                if(remainedTime>0)  fillMyAnswer();
                 JFrame fin=new JFrame("结束");
-                fin.setSize(200,150);               //设置窗口大小
+                fin.setSize(250,150);                   //设置窗口大小
                 fin.setLocationRelativeTo(null);                //窗口在屏幕中间显示
-                fin.setVisible(true);
+                fin.setVisible(false);
                 fin.setLayout(new GridLayout(3,1,10,10));
                 q.input();
                 fin.add(new JLabel("你的得分是"+q.getScore()));
                 fin.add(new JLabel("你可以从试卷.txt中查看本次试卷"));
+                fin.setVisible(true);
             }});
-
-        endTimer.schedule(new TimerTask() {
-            public void run() {
-                finishbt.doClick(1);
-            }
-        }, 4000);
     }
 
     public void fillMyAnswer(){
@@ -181,5 +196,23 @@ public class myWindow {
         pc.updateUI();
         p5.updateUI();
         win.repaint();
+    }
+
+    public void startCounting(){
+        remainedTime=60*8*1000;
+        b=false;
+        endTimer=new Timer();
+        endTimer.schedule(new TimerTask() {
+            public void run(){
+                if(remainedTime<=0) return;
+                ti.setText(""+remainedTime/1000+"s（秒）");
+                remainedTime-=500;
+                p0.updateUI();
+                if(remainedTime<=500) {                    
+                    endTimer.cancel();
+                    finishbt.doClick(1);
+                }
+            }
+        }, 0,500);
     }
 }
