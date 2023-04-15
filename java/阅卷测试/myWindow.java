@@ -1,19 +1,185 @@
 package 阅卷测试;
 
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
-public class myWindow implements ActionListener{
-    JFrame win=new JFrame("简易阅卷系统");          //构建窗口以及为窗口命名
-    JRadioButton A=new JRadioButton("A");           //构建单选作为选项
-    JRadioButton B=new JRadioButton("B");
-    JRadioButton C=new JRadioButton("C");
-    JPanel p1 = new JPanel();
-    JPanel p2 = new JPanel();
-    JPanel p3 = new JPanel();
-    JPanel p4 = new JPanel();
-    JPanel p5 = new JPanel();
-    JLabel la,lb,lc,ld;
-    JButton b1,b2,b3;
+import java.util.Timer;
+import java.util.TimerTask;
 
-    myWindow(){  }
+public class myWindow {
+    JFrame win=new JFrame("简易阅卷系统");              //构建窗口以及为窗口命名
+    JTextField  stem = new JTextField(40);           //题目
+    int i=1;                                                  //作为记录，目前显示的第几题
+    JComboBox < String > cBox=new JComboBox< String >();
+    
+    JButton nextbt = new JButton("下个题目");               //菜单按钮
+    JButton lastbt = new JButton("上个题目");               //菜单按钮
+    JButton practiceAgainbt = new JButton("重新开始");
+    JButton startbt = new JButton("开始");
+    JButton finishbt = new JButton("结束答题");
+
+    ButtonGroup g=new ButtonGroup();                            //三个选项作为整体加入Buttongroup g
+    JRadioButton Ba=new JRadioButton("A");                 //构建单选作为选项
+    JRadioButton Bb=new JRadioButton("B");
+    JRadioButton Bc=new JRadioButton("C");
+
+    JTextField t=new JTextField(20);            //填空题填空处
+    JPanel p0 = new JPanel();                           //选择题号
+    JPanel p1 = new JPanel();                           //题目行
+    JPanel p2 = new JPanel();                           //填空题答案行
+    JPanel pa = new JPanel();                           //选项A行
+    JPanel pb = new JPanel();                           //选项B行 
+    JPanel pc = new JPanel();                           //选项C行 
+    JPanel p5 = new JPanel();                           //界面控制按钮行
+    JLabel la,lb,lc,ld;                                 //记录ABC选项具体内容
+
+    questions q;                                        //questions类作为成员储存题目信息
+    Timer endTimer=new Timer();
+
+    myWindow(questions q){                              //UI初始化并且增加对按钮的监听
+        this.q=q;
+        for(int i=0;i<8;i++) cBox.addItem(""+(i+1));
+
+        p2.setVisible(false);
+        p2.setSize(30, 30);
+        g.add(Ba);      g.add(Bb);      g.add(Bc);
+        p0.add(new JLabel("当前题号"));         p0.add(cBox);   p0.setLayout(new FlowLayout(FlowLayout.LEFT));
+        p1.add(stem);   p1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        p2.add(t);      p2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        pa.add(Ba);     pa.setLayout(new FlowLayout(FlowLayout.LEFT));
+        pb.add(Bb);     pb.setLayout(new FlowLayout(FlowLayout.LEFT));
+        pc.add(Bc);     pc.setLayout(new FlowLayout(FlowLayout.LEFT));
+        p5.add(lastbt); p5.add(nextbt); p5.add(practiceAgainbt);    p5.add(finishbt);
+        
+        win.add(startbt);
+        win.setSize(400,450);               //设置窗口大小
+        win.setLocationRelativeTo(null);                //窗口在屏幕中间显示
+        win.setVisible(true);
+        win.setLayout(new GridLayout(7,1,10,10));
+
+        startbt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                win.remove(startbt);
+                win.add(p0);    win.add(p1);    win.add(p2); win.add(pa);win.add(pb);     win.add(pc); win.add(p5);
+                fillQuestion();
+                update();
+            }});
+
+        lastbt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                fillMyAnswer();
+                i--;
+                fillQuestion();
+                update();
+            }});
+
+        nextbt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                fillMyAnswer();
+                i++;
+                fillQuestion();
+                update();
+            }});
+
+        practiceAgainbt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                i=1;
+                q.getNewQuestions();
+                fillQuestion();
+                update();
+            }});
+
+        cBox.addItemListener(new ItemListener()  {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED){
+                    i=cBox.getSelectedIndex()+1;
+                    fillQuestion();
+                    update();
+                } 
+            }});
+        
+        finishbt.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                endTimer.cancel();
+                fillMyAnswer();
+                JFrame fin=new JFrame("结束");
+                fin.setSize(200,150);               //设置窗口大小
+                fin.setLocationRelativeTo(null);                //窗口在屏幕中间显示
+                fin.setVisible(true);
+                fin.setLayout(new GridLayout(3,1,10,10));
+                q.input();
+                fin.add(new JLabel("你的得分是"+q.getScore()));
+                fin.add(new JLabel("你可以从试卷.txt中查看本次试卷"));
+            }});
+
+        endTimer.schedule(new TimerTask() {
+            public void run() {
+                finishbt.doClick(1);
+            }
+        }, 4000);
+    }
+
+    public void fillMyAnswer(){
+        if(i>=1&i<=6){
+            if(g.isSelected(Ba.getModel())==true) q.myAnswer[i-1]="A";
+            if(g.isSelected(Bb.getModel())==true) q.myAnswer[i-1]="B";
+            if(g.isSelected(Bc.getModel())==true) q.myAnswer[i-1]="C";
+        }
+        if(i==7||i==8){
+            q.myAnswer[i-1]=t.getText();
+        }
+        if(i==9)i=8;
+        if(i==0)i=1;
+    }
+
+    public void fillQuestion(){
+        if(i>=1&i<=6){
+            pa.setVisible(true);
+            pb.setVisible(true);
+            pc.setVisible(true);
+            p2.setVisible(false);
+            stem.setText(q.question[i-1]);
+            Ba.setText(q.A[i-1]);
+            Bb.setText(q.B[i-1]);
+            Bc.setText(q.C[i-1]);
+        }
+        if(i==7||i==8){
+            pa.setVisible(false);
+            pb.setVisible(false);
+            pc.setVisible(false);
+            p2.setVisible(true);
+            stem.setText(q.question[i-1]);
+        }
+        if(i>8||i<1){
+            if (i==0) i=1;
+            if  (i==9) i=8;
+            JFrame error=new JFrame("error");
+            error.setSize(150,100);               //设置窗口大小
+            error.setLocationRelativeTo(null);                //窗口在屏幕中间显示
+            error.setVisible(true);
+            error.setLayout(new GridLayout(1,1,10,10));
+            error.add(new JLabel("没有下一题/上一题了！"));
+        }else{
+            cBox.setSelectedIndex(i-1);
+        }
+    }
+
+    public void update(){
+        g.clearSelection();
+        if(i<=8)    switch(q.myAnswer[i-1]){
+            case "A" :g.setSelected(Ba.getModel(), true);break;
+            case "B" :g.setSelected(Bb.getModel(), true);break;
+            case "C" :g.setSelected(Bc.getModel(), true);break;
+        }
+        if(i<=8)    t.setText(q.myAnswer[i-1]);
+        p0.updateUI();
+        p1.updateUI();
+        p2.updateUI();
+        pa.updateUI();
+        pb.updateUI();
+        pc.updateUI();
+        p5.updateUI();
+        win.repaint();
+    }
 }

@@ -2,7 +2,9 @@ package 阅卷测试;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Random;
 
 //questions类储存题目信息
@@ -16,24 +18,33 @@ public class questions {
     String[] A, B, C;
     String[] question;
     String[] answer;
+    String[] myAnswer;
+    boolean[] right;
     int []index;
-    
-    public questions() {
+    String path;
+    int score=0;
+    Date beginTime=new Date();
+    boolean isWrite=false;
+
+    public questions(String path) {
+        this.path=path;
         if(allStrings==null) {                  //题库为空证明是第一次组卷，首先获取题库，初始化成员变量，定义变量长度
-            getAllString();                     //之后的每次组卷不需要重新定义长度，只需要改变变量的值
+            getAllString(path);                 //之后的每次组卷不需要重新定义长度，只需要改变变量的值
             A=new String[6];
             B=new String[6];
             C=new String[6];
             question=new String[8];
             answer=new String[8];
+            myAnswer=new String[8];
+            right=new boolean[8];
             index=new int[8];
         }
         getNewQuestions();
     };
 
-    private void getAllString() {
-        File f=new File("E:\\个人编程\\代码-全\\java\\阅卷测试\\题库.txt");
-        FileReader fr;        
+    private void getAllString(String path) {
+        File f=new File(path,"题库.txt");
+        FileReader fr;
         char[] c;
         String s;
         try {
@@ -41,18 +52,15 @@ public class questions {
             c = new char[13000];
             fr.read(c,1,c.length-1);
             s=new String(c);
-            // s=s.replace("\n", "&&");
-            allStrings=s.split("&");
-            // for(int i=0;i<allStrings.length;i++){
-            //     allStrings[i].replace("\n", "");
-            // }
+            allStrings=s.split("& ");
             fr.close();
         } catch (IOException e) {
                 e.printStackTrace();
             }
     }
 
-    private void getNewQuestions(){
+    public void getNewQuestions(){
+        beginTime=new Date();
         Random r=new Random();
         for(int i=0;i<8;i++){
             index[i]=r.nextInt(10)+i*10;    //从题库的题目序号中随机获取题号，对应的题目作为新的试卷的题目
@@ -62,18 +70,65 @@ public class questions {
             A[i]=allStrings[index[i]*5+1];
             B[i]=allStrings[index[i]*5+2];
             C[i]=allStrings[index[i]*5+3];
-            answer[i]=allStrings[index[i]*5+4];
-            System.out.print("1   "+question[i]);
-            System.out.print("2   "+A[i]);
-            System.out.print("3   "+B[i]);
-            System.out.print("4   "+C[i]);
-            System.out.print("5   "+answer[i]);
+            String tmp=allStrings[index[i]*5+4];
+            for(int j=0;j<tmp.length();j++){
+                answer[i]=tmp.substring(0, tmp.length()-2);
+            }
+            myAnswer[i]="";
         }
         for(int i=6;i<8;i++){
             question[i]=allStrings[180+index[i]*2];
-            answer[i]=allStrings[180+index[i]*2+1];
-            System.out.print("6   "+question[i]);
-            System.out.print("7   "+answer[i]);
+            String tmp = allStrings[180+index[i]*2+1];
+            for(int j=0;j<tmp.length();j++){
+                answer[i]=tmp.substring(0, tmp.length()-2);
+            }
+            myAnswer[i]="";
+        }
+    }
+
+    public int getScore(){
+        score=0;
+        for(int i=0;i<8;i++){
+            if(answer[i].equals(myAnswer[i]))   score=score+i/6*10+10;
+        }
+        return score;
+    }
+
+    public void input(){
+        if(isWrite==true) return;
+        else isWrite=true;
+        File f=new File(path,"试卷.txt");
+        FileWriter fw;
+        Date endTime=new Date();
+        try {
+            fw=new FileWriter(f,true);
+            fw.write(
+                "\n =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n"+
+                "                                                                                  \n"+
+                "                               XXX学校升学考试                                    \n"+
+                "                                                                                  \n"+
+                "   本次考试分为两节：前六题为单项选择题，每小题十分；后两题为填空题，每小题20分。   \n"+
+                "                                                                                  \n"+
+                "                     考试开始时间："+beginTime.toString()+"                       \n"+
+                "                                                                                  \n"+
+                "                       交卷时间："+endTime.toString()+"                           \n"+
+                "                                                                                  \n"+
+                "                               本次考试得分:"+getScore()+"                        \n"+
+                "                                                                                  \n"+
+                " ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n"+"\n"+
+                "试卷详情：                                                                        \n");
+            for(int i=0;i<6;i++){
+                fw.write("第"+(i+1)+"题、"+question[i]);
+                fw.write(A[i]+"\t\t"+B[i]+"\t\t"+C[i]+"\t\t正确答案："+answer[i]+"\t\t"+"你的答案："+myAnswer[i]+"\n");
+            }
+            for(int i=6;i<8;i++){
+                fw.write("第"+(i+1)+"题、"+question[i]);
+                fw.write("正确答案："+answer[i]+"\t\t"+"你的答案："+myAnswer[i]+"\n");
+            }
+                fw.flush();
+                fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
