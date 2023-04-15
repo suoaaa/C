@@ -16,7 +16,7 @@ public class myWindow {
     int remainedTime=60*8*1000;                                 //剩余时间
     
     JButton nextbt = new JButton("下个题目");               //菜单按钮
-    JButton lastbt = new JButton("上个题目");               //菜单按钮
+    JButton lastbt = new JButton("上个题目");
     JButton practiceAgainbt = new JButton("重新开始");
     JButton startbt = new JButton("开始");
     JButton finishbt = new JButton("结束答题");
@@ -37,8 +37,8 @@ public class myWindow {
     JLabel la,lb,lc;                                    //记录ABC选项具体内容
 
     questions q;                                        //questions类作为成员储存题目信息
-    Timer endTimer=new Timer();
-    boolean b=false;
+    Timer endTimer=new Timer();                         //用于计时，8分钟内答题
+    boolean b=false;                                    //检测是否打印过答题情况
 
     myWindow(questions q){                              //UI初始化并且增加对按钮的监听
         this.q=q;
@@ -58,12 +58,12 @@ public class myWindow {
         p5.add(lastbt); p5.add(nextbt); p5.add(practiceAgainbt);    p5.add(finishbt);
         
         win.add(startbt);
-        win.setSize(400,450);               //设置窗口大小
-        win.setLocationRelativeTo(null);                //窗口在屏幕中间显示
+        win.setSize(400,450);
+        win.setLocationRelativeTo(null);
         win.setVisible(true);
         win.setLayout(new GridLayout(7,1,10,10));
 
-        startbt.addActionListener(new ActionListener() {
+        startbt.addActionListener(new ActionListener() {                //开始按钮初始化，将元素引入win成员并开始计时
             public void actionPerformed(ActionEvent e){
                 startCounting();
                 win.remove(startbt);
@@ -72,7 +72,7 @@ public class myWindow {
                 update();
             }});
 
-        lastbt.addActionListener(new ActionListener() {
+        lastbt.addActionListener(new ActionListener() {                 //上一题按钮，题号溢出检测
             public void actionPerformed(ActionEvent e){
                 if(remainedTime>=1)     fillMyAnswer();
                 i--;
@@ -80,7 +80,7 @@ public class myWindow {
                 update();
             }});
 
-        nextbt.addActionListener(new ActionListener() {
+        nextbt.addActionListener(new ActionListener() {                 //下一题按钮，题号溢出检测，检测是否答题
             public void actionPerformed(ActionEvent e){
                 if(remainedTime>=1)     fillMyAnswer();
                 if(g.isSelected(Ba.getModel())||g.isSelected(Bb.getModel())||g.isSelected(Bc.getModel())||i>6||remainedTime<1) {
@@ -88,9 +88,9 @@ public class myWindow {
                     fillQuestion();
                     update();
                 }else {
-                    JFrame error=new JFrame("error");
-                    error.setSize(250,150);                   //设置窗口大小
-                    error.setLocationRelativeTo(null);                    //窗口在屏幕中间显示
+                    JFrame error=new JFrame("error");             //弹出错误提示框
+                    error.setSize(250,150);
+                    error.setLocationRelativeTo(null);
                     error.setVisible(false);
                     error.setLayout(new GridLayout(3,1,10,10));
                     error.add(new JLabel("请先选择一个答案"));
@@ -98,7 +98,7 @@ public class myWindow {
                 }
             }});
 
-        practiceAgainbt.addActionListener(new ActionListener() {
+        practiceAgainbt.addActionListener(new ActionListener() {         //重新答题，重新计时
             public void actionPerformed(ActionEvent e){
                 endTimer.cancel();
                 startCounting();
@@ -109,7 +109,7 @@ public class myWindow {
                 update();
             }});
 
-        cBox.addItemListener(new ItemListener()  {
+        cBox.addItemListener(new ItemListener()  {                          //监听下拉题号选择
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.SELECTED){
                     i=cBox.getSelectedIndex()+1;
@@ -118,14 +118,14 @@ public class myWindow {
                 } 
             }});
         
-        finishbt.addActionListener(new ActionListener() {
+        finishbt.addActionListener(new ActionListener() {                   //结束答题，打印答题情况
             public void actionPerformed(ActionEvent e){
                 remainedTime=0;
                 if(b==true) return;
                 if(remainedTime>0)  fillMyAnswer();
                 JFrame fin=new JFrame("结束");
-                fin.setSize(250,150);                   //设置窗口大小
-                fin.setLocationRelativeTo(null);                //窗口在屏幕中间显示
+                fin.setSize(250,150);
+                fin.setLocationRelativeTo(null);
                 fin.setVisible(false);
                 fin.setLayout(new GridLayout(3,1,10,10));
                 q.input();
@@ -135,7 +135,7 @@ public class myWindow {
             }});
     }
 
-    public void fillMyAnswer(){
+    public void fillMyAnswer(){                                             //获取用户填写或选择的答案
         if(i>=1&i<=6){
             if(g.isSelected(Ba.getModel())==true) q.myAnswer[i-1]="A";
             if(g.isSelected(Bb.getModel())==true) q.myAnswer[i-1]="B";
@@ -148,7 +148,7 @@ public class myWindow {
         if(i==0)i=1;
     }
 
-    public void fillQuestion(){
+    public void fillQuestion(){                                             //重新打印题目信息
         if(i>=1&i<=6){
             pa.setVisible(true);
             pb.setVisible(true);
@@ -170,8 +170,8 @@ public class myWindow {
             if (i==0) i=1;
             if  (i==9) i=8;
             JFrame error=new JFrame("error");
-            error.setSize(150,100);               //设置窗口大小
-            error.setLocationRelativeTo(null);                //窗口在屏幕中间显示
+            error.setSize(150,100);
+            error.setLocationRelativeTo(null);
             error.setVisible(true);
             error.setLayout(new GridLayout(1,1,10,10));
             error.add(new JLabel("没有下一题/上一题了！"));
@@ -180,7 +180,7 @@ public class myWindow {
         }
     }
 
-    public void update(){
+    public void update(){                                             //更新UI
         g.clearSelection();
         if(i<=8)    switch(q.myAnswer[i-1]){
             case "A" :g.setSelected(Ba.getModel(), true);break;
@@ -198,7 +198,7 @@ public class myWindow {
         win.repaint();
     }
 
-    public void startCounting(){
+    public void startCounting(){                                      //计时器时间到了自动交卷
         remainedTime=60*8*1000;
         b=false;
         endTimer=new Timer();

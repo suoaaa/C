@@ -15,16 +15,15 @@ import java.util.Random;
 
 public class questions {
     static String[] allStrings;                 //使用静态成员变量减小内存占用以及重新组卷的时间占用
-    String[] A, B, C;
+    String[] A, B, C;                           //成员名称代其意
     String[] question;
     String[] answer;
-    String[] myAnswer;
-    boolean[] right;
-    int []index;
-    String path;
-    int score=0;
-    Date beginTime=new Date();
-    boolean isWrite=false;
+    String[] myAnswer;                          //储存用户答题情况
+    int []index;                                //用于随机抽取题库题目的索引
+    String path;                                //题库路径
+    int score=0;                                //总分数
+    Date beginTime=new Date();                  //做题时间
+    boolean isWrite=false;                      //判断是否将此次做题情况打印到txt文件中
 
     public questions(String path) {
         this.path=path;
@@ -36,13 +35,12 @@ public class questions {
             question=new String[8];
             answer=new String[8];
             myAnswer=new String[8];
-            right=new boolean[8];
             index=new int[8];
         }
         getNewQuestions();
     };
 
-    private void getAllString(String path) {
+    private void getAllString(String path) {   //方法将所有题目储存到allString成员中
         File f=new File(path,"题库.txt");
         FileReader fr;
         char[] c;
@@ -59,7 +57,7 @@ public class questions {
             }
     }
 
-    public void getNewQuestions(){
+    public void getNewQuestions(){              //产生随机index序列，并获取题库中对应题目、答案、选项并初始化
         beginTime=new Date();
         Random r=new Random();
         for(int i=0;i<8;i++){
@@ -86,7 +84,7 @@ public class questions {
         }
     }
 
-    public int getScore(){
+    public int getScore(){                      //获取分数
         score=0;
         for(int i=0;i<8;i++){
             if(answer[i].equals(myAnswer[i]))   score=score+i/6*10+10;
@@ -94,7 +92,7 @@ public class questions {
         return score;
     }
 
-    public void input(){
+    public void input(){                        //将试卷信息与答题情况打印进txt文件
         if(isWrite==true) return;
         else isWrite=true;
         File f=new File(path,"试卷.txt");
@@ -105,7 +103,7 @@ public class questions {
             fw.write(
                 "\n =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n"+
                 "                                                                                  \n"+
-                "                               XXX学校升学考试                                    \n"+
+                "                                  开学考试试题                                    \n"+
                 "                                                                                  \n"+
                 "   本次考试分为两节：前六题为单项选择题，每小题十分；后两题为填空题，每小题20分。   \n"+
                 "                                                                                  \n"+
