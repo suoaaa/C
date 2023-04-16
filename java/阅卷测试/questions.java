@@ -13,7 +13,7 @@ import java.util.Random;
 //index成员负责初始化时获得新的题目，index储存的是题库中题目的序号(从小到大)，进而组建不同的试卷
 //index成员的数据通过random函数获得
 
-public class questions {
+public class Questions {
     static String[] allStrings;                 //使用静态成员变量减小内存占用以及重新组卷的时间占用
     String[] A, B, C;                           //成员名称代其意
     String[] question;
@@ -25,7 +25,7 @@ public class questions {
     Date beginTime=new Date();                  //做题时间
     boolean isWrite=false;                      //判断是否将此次做题情况打印到txt文件中
 
-    public questions(String path) {
+    public Questions(String path) {
         this.path=path;
         if(allStrings==null) {                  //题库为空证明是第一次组卷，首先获取题库，初始化成员变量，定义变量长度
             getAllString(path);                 //之后的每次组卷不需要重新定义长度，只需要改变变量的值
