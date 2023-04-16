@@ -1,4 +1,4 @@
-package ÔÄ¾í²âÊÔ;
+package ¿¼ÊÔÏµÍ³;
 
 public class MainFunc {
     public static void main(String[] args) {
