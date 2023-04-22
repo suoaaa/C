@@ -2,22 +2,9 @@
 #include<iostream>
 #include<string.h>
 #include<vector>
+#include<math.h>
 using namespace std;
-class test{
-	public: a3(){};
-	void a4(){
-		static int i=0;
-		cout<<i;
-		i++;
-	}
-};
-void test1(vector<int> a){
-	a[0]=1;
-}
-void test2(vector<int> a){
-	cout<<a[0];
-}
-int main()
-{
-	return 0;
+int main(){
+	double x=0.125;
+	cout<< x*log(x/3)/log(2)+(1-x)*log(1-x)/log(2)+2;
 }
