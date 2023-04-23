@@ -58,7 +58,7 @@ public class MyWindow {
         p5.add(lastbt); p5.add(nextbt); p5.add(practiceAgainbt);    p5.add(finishbt);
         
         win.add(startbt);
-        win.setSize(400,450);
+        win.setSize(420,500);
         win.setLocationRelativeTo(null);
         win.setVisible(true);
         win.setLayout(new GridLayout(7,1,10,10));
@@ -103,10 +103,10 @@ public class MyWindow {
         cBox.addItemListener(new ItemListener()  {                          //监听下拉题号选择
             public void itemStateChanged(ItemEvent e) {
                 if(e.getStateChange() == ItemEvent.SELECTED){
-                    if(b==true||i>6||g.isSelected(Ba.getModel())||g.isSelected(Bb.getModel())||g.isSelected(Bc.getModel())){
+                    // if(b==true||i>6||g.isSelected(Ba.getModel())||g.isSelected(Bb.getModel())||g.isSelected(Bc.getModel())){
                         i=cBox.getSelectedIndex()+1;
                         fillQuestion();
-                    }
+                    // }
                 } 
             }});
         
@@ -143,7 +143,7 @@ public class MyWindow {
             pb.setVisible(true);
             pc.setVisible(true);
             p2.setVisible(false);
-            stem.setText(""+i+"、"+q.question[i-1]);
+            stem.setText(q.question[i-1]);
             Ba.setText(q.A[i-1]);
             Bb.setText(q.B[i-1]);
             Bc.setText(q.C[i-1]);
