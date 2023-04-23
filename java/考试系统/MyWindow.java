@@ -62,6 +62,7 @@ public class MyWindow {
         win.setLocationRelativeTo(null);
         win.setVisible(true);
         win.setLayout(new GridLayout(7,1,10,10));
+        win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         startbt.addActionListener(new ActionListener() {                //开始按钮初始化，将元素引入win窗口成员并开始计时
             public void actionPerformed(ActionEvent e){
@@ -211,5 +212,6 @@ public class MyWindow {
         smallJFrame.setAlwaysOnTop(true);
         smallJFrame.setLayout(new GridLayout(3,1,10,10));
         smallJFrame.setVisible(true);
+        smallJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
