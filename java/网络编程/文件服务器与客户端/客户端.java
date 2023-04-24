@@ -1,4 +1,4 @@
-package 文件传输测试;
+package 网络编程.文件服务器与客户端;
 
 import java.io.IOException;
 import java.io.OutputStream;
