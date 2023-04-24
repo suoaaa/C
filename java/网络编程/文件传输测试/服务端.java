@@ -11,5 +11,7 @@ public class ·þÎñ¶Ë {
         InputStream o=s.getInputStream();
         byte[] b=o.readAllBytes();
         System.out.println(new String(b));
+
+        ss.close();
     }
 }

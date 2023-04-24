@@ -14,5 +14,6 @@ public class ·şÎñ¶Ë {
         o.read(b);o.read(b);o.read(b);
 
         System.out.println(new String(b,0,4));
+        ss.close();
     }
 }
