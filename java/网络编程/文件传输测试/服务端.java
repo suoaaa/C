@@ -9,7 +9,8 @@ public class ·þÎñ¶Ë {
         ServerSocket ss=new ServerSocket(5000);
         Socket s=ss.accept();
         InputStream o=s.getInputStream();
-        byte[] b=o.readAllBytes();
+        byte[] b=new byte[1024];
+        o.read(b);
         System.out.println(new String(b));
 
         ss.close();
