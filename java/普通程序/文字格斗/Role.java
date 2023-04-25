@@ -1,4 +1,4 @@
-package 文字格斗;
+package 普通程序.文字格斗;
 
 import java.util.Random;
 
