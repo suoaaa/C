@@ -1,45 +1,38 @@
 package ≤‚ ‘”√;
-
-import java.awt.*;
-import java.awt.event.*;
-
-public class ≤‚ ‘1 extends Frame implements WindowListener,ActionListener {
-        TextField text = new TextField(20);
-        Button b;
-        private int numClicks = 0;
-
-        public static void main(String[] args) {
-                ≤‚ ‘1 myWindow = new ≤‚ ‘1("My first window");
-                myWindow.setSize(350,100);
-                myWindow.setVisible(true);
-        }
-
-        public ≤‚ ‘1(String title) {
-
-                super(title);
-                setLayout(new FlowLayout());
-                addWindowListener(this);
-                b = new Button("Click me");
-                add(b);
-                add(text);
-                b.addActionListener(this);
-        }
-
-        public void actionPerformed(ActionEvent e) {
-                numClicks++;
-                text.setText("Button Clicked " + numClicks + " times");
-        }
-
-        public void windowClosing(WindowEvent e) {
-                dispose();
-                System.exit(0);
-        }
-
-        public void windowOpened(WindowEvent e) {}
-        public void windowActivated(WindowEvent e) {}
-        public void windowIconified(WindowEvent e) {}
-        public void windowDeiconified(WindowEvent e) {}
-        public void windowDeactivated(WindowEvent e) {}
-        public void windowClosed(WindowEvent e) {}
-
+ 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+ 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+ 
+public class ≤‚ ‘1 extends JFrame implements ActionListener{
+	JButton open=null;
+	public static void main(String[] args) {
+		new ≤‚ ‘1();
+	}
+	public ≤‚ ‘1(){
+		open=new JButton("open");
+		this.add(open);
+		this.setBounds(400, 200, 100, 100);
+		this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		open.addActionListener(this);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JFileChooser jfc=new JFileChooser();
+		jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES );
+		jfc.showDialog(new JLabel(), "—°‘Ò");
+		File file=jfc.getSelectedFile();
+		if(file.isDirectory()){
+			System.out.println("Œƒº˛º–:"+file.getAbsolutePath());
+		}else if(file.isFile()){
+			System.out.println("Œƒº˛:"+file.getAbsolutePath());
+		}
+		System.out.println(jfc.getSelectedFile().getName());
+	}
 }
