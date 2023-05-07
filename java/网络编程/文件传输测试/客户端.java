@@ -10,7 +10,7 @@ public class 客户端 {
         Socket s;
         try{
             InetAddress i=InetAddress.getLocalHost();
-            s=new Socket(i, 5000);
+            s=new Socket(i, 5050);
             System.out.println("服务器已链接");
             String path="E:\\个人编程\\代码-全\\a.txt";
             byte [ ]b=new byte[1024];
