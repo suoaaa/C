@@ -10,8 +10,8 @@ import javax.swing.*;
 
 public class mySever {
 
-    String rootpath="E:\\个人编程\\代码-全\\java";
-    severWindow severwindow;
+    String rootpath="E:\\个人编程\\代码-全\\java\\网络编程\\文件储存目录";
+    static severWindow severwindow;
     ExecutorService pool;
     ServerSocket s;
     Socket socket;
@@ -30,13 +30,21 @@ public class mySever {
     class myRunnable implements Runnable{
         Socket s;
         String path;
-        myRunnable(Socket s){this.s=s;}
+        myRunnable(Socket s){this.s=s;path=rootpath;}
         public void run() {
             try (InputStream o = s.getInputStream()) {
-                severwindow.print("一个用户已连接");
+                severwindow.print("IP为"+s.getInetAddress().getHostAddress()+"的用户已连接服务器");
                 byte[] b = new byte[1024];
-                o.read(b);
-                System.out.println(new String(b));
+                int n=0,i=0;
+                do{
+                    n=o.read();
+                    b[i]= (byte) n;
+                    i++;
+                }while(n!=0);
+                System.out.println();
+                System.out.println(new String(b,0,i-1));
+                severwindow.print(new String(b));
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -44,16 +52,15 @@ public class mySever {
     }
 
     class severWindow {
-        JFrame win=new JFrame("文件传输服务器");
+        JFrame win=new JFrame("文件传输系统服务器");
         JPanel p=new JPanel();         //p作为开头按钮的容器
         JTextArea jTextArea=new JTextArea(10,10);//显示登录信息以及文件传输情况
         JScrollPane jscrollpane;//给文本框添加滚动条
 
         JButton position=new JButton("储存位置");
-        JButton close=new JButton("关闭服务器");
-        JButton reopen=new JButton("重新开启服务器");
+        JButton clear=new JButton("清空消息");
+        JButton reopen=new JButton("重启服务器");
         severWindow(){
-            win=new JFrame("文件传输系统客户端");
             win.setSize(400,500);
             win.setLocationRelativeTo(null);
             win.setVisible(false);
@@ -62,7 +69,7 @@ public class mySever {
             print("服务器已启动，等待链接");
 
             p.add(position);
-            p.add(close);
+            p.add(clear);
             p.add(reopen);
             jscrollpane =new JScrollPane(jTextArea);
 
@@ -77,30 +84,22 @@ public class mySever {
                 }
             });
 
-            close.addActionListener(new ActionListener() {
+            clear.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if(!s.isClosed()){
-                        try{
-
-                            print("已经成功关闭");
-                        }catch (Exception ex){
-                        }
-                    }else{
-                        print("请勿重复关闭");
-                    }
+                    jTextArea.setText("消息成功清空");
                 }
             });
 
             reopen.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if(s.isClosed()){
-                        try{
-                            s=new ServerSocket(5050);
-                        }catch (Exception ex){
-                            ex.printStackTrace();
-                        }
-                    }else{
-                        print("服务器正在运行，请勿重复启动");
+                    try{
+                       if(s.isClosed()){
+                           s = new ServerSocket(5050,5);       //限定最多同时登录5名用户
+                       }else{
+                           severwindow.print("服务器正在运行中,无需重启");
+                       }
+                    }catch (Exception ie){
+                        ie.printStackTrace();
                     }
                 }
             });
@@ -114,12 +113,15 @@ public class mySever {
         }
 
         void fileWindow(){
-            JFileChooser jfc=new JFileChooser();
+            JFileChooser jfc=new JFileChooser(rootpath);
             jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             jfc.showDialog(new JLabel(), "选择文件储存目录");
             jfc.setVisible(true);
             try{
                 rootpath=jfc.getSelectedFile().getAbsolutePath();
+                File file=new File(rootpath);
+                if(file.isDirectory()&&file.exists()){}
+                else file.mkdir();
             }catch (Exception e){}
             severwindow.print("当前文件储存目录为:"+rootpath);
 
@@ -129,8 +131,13 @@ public class mySever {
     public static void main(String[] args) {
         try {
             new mySever();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SocketTimeoutException e1) {
+            mySever.severwindow.print("长时间未有用户链接服务器，服务器已自动关闭");
+        }catch(SocketException e3){
+            System.out.println("用户断开链接");
+        }
+        catch (Exception e2){
+            e2.printStackTrace();
         }
     }
 }

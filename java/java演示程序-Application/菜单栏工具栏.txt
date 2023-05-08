@@ -1,0 +1,130 @@
+（1）awt库菜单
+import java.awt.*;
+import java.awt.event.*;
+class B implements ActionListener
+{Frame f;
+  MenuBar mb;
+  Menu m1,m14;
+  MenuItem m11,m12,m13,m15,m141,m142,m143;
+  public B()
+      {f=new Frame("XXX");
+        mb=new MenuBar();
+        m1=new Menu("设置");
+        m11=new MenuItem("红色"); m11.addActionListener(this);
+        m12=new MenuItem("绿色"); m12.addActionListener(this);
+        m13=new MenuItem("蓝色"); m13.addActionListener(this);
+        m15=new MenuItem("退出"); m15.addActionListener(this);
+        m14=new Menu("其他颜色");
+        m141=new MenuItem("粉红色");m142=new MenuItem("青色");m143=new MenuItem("黄色");
+        m141.addActionListener(this); m142.addActionListener(this); m143.addActionListener(this);
+        f.setMenuBar(mb);
+        mb.add(m1);
+        m1.add(m11);
+        m1.add(m12);
+        m1.add(m13);
+        m1.add(m14); m14.add(m141); m14.add(m142); m14.add(m143);
+        m1.addSeparator();
+        m1.add(m15);
+        f.setSize(200,300);
+        f.setVisible(true);
+        f.addWindowListener(new WindowAdapter(){public void windowClosing(WindowEvent e){System.exit(0);}});
+       }
+ public void actionPerformed(ActionEvent e)
+       {if(e.getSource()==m11)f.setBackground(Color.RED);
+         else if(e.getSource()==m12)f.setBackground(Color.GREEN);
+         else if(e.getSource()==m13)f.setBackground(Color.BLUE);
+         else if(e.getSource()==m141)f.setBackground(Color.PINK);
+         else if(e.getSource()==m142)f.setBackground(Color.CYAN);
+         else if(e.getSource()==m143)f.setBackground(Color.YELLOW);
+         else if(e.getSource()==m15)System.exit(0);
+       }
+}
+public class A
+{public static void main(String[]args)
+        {B b=new B();}
+}
+
+（2）swing库菜单
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+class B implements ActionListener
+{JFrame f;
+  JMenuBar mb;
+  JMenu m1,m14;
+  JMenuItem m11,m12,m13,m15,m141,m142,m143;
+  JPanel p;
+  public B()
+      {f=new JFrame("XXX");p=new JPanel();f.setContentPane(p);        
+        mb=new JMenuBar();
+        m1=new JMenu("设置");
+        m11=new JMenuItem("红色"); m11.addActionListener(this);
+        m12=new JMenuItem("绿色"); m12.addActionListener(this);
+        m13=new JMenuItem("蓝色"); m13.addActionListener(this);
+        m15=new JMenuItem("退出"); m15.addActionListener(this);
+        m14=new JMenu("其他颜色");
+        m141=new JMenuItem("粉红色");m142=new JMenuItem("青色");m143=new JMenuItem("黄色");
+        m141.addActionListener(this); m142.addActionListener(this); m143.addActionListener(this);
+        f.setJMenuBar(mb);
+        mb.add(m1);
+        m1.add(m11);
+        m1.add(m12);
+        m1.add(m13);
+        m1.add(m14); m14.add(m141); m14.add(m142); m14.add(m143);
+        m1.addSeparator();
+        m1.add(m15);
+        f.setSize(200,300);
+        f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       }
+ public void actionPerformed(ActionEvent e)
+       {if(e.getSource()==m11)p.setBackground(Color.RED);
+         else if(e.getSource()==m12)p.setBackground(Color.GREEN);
+         else if(e.getSource()==m13)p.setBackground(Color.BLUE);
+         else if(e.getSource()==m141)p.setBackground(Color.PINK);
+         else if(e.getSource()==m142)p.setBackground(Color.CYAN);
+         else if(e.getSource()==m143)p.setBackground(Color.YELLOW);
+         else if(e.getSource()==m15)System.exit(0);
+       }
+}
+public class A
+{public static void main(String[]args)
+        {B b=new B();}
+}
+
+（3）工具栏
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
+class B implements ActionListener
+{JFrame f;
+  JToolBar tb;
+  JPanel p;
+  JButton b1,b2,b3,b4;
+  JTextArea t;
+  public B()
+      {f=new JFrame("XXX");p=new JPanel();f.setContentPane(p);        
+        tb=new JToolBar();
+        b1=new JButton(new ImageIcon("r.png"));b1.addActionListener(this);
+        b2=new JButton(new ImageIcon("g.png"));b2.addActionListener(this);
+        b3=new JButton(new ImageIcon("b.png"));b3.addActionListener(this);
+        b4=new JButton(new ImageIcon("x.png"));b4.addActionListener(this);
+        t=new JTextArea(300,200);
+        p.add(tb,BorderLayout.NORTH);
+        p.add(t,BorderLayout.CENTER);
+        tb.add(b1);tb.add(b2);tb.add(b3);tb.addSeparator();tb.add(b4);
+        f.setSize(300,200);
+        f.setVisible(true);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE );
+      }
+  public void actionPerformed(ActionEvent e)
+      {if(e.getSource()==b1)t.setBackground(Color.RED);
+        else if(e.getSource()==b2)t.setBackground(Color.GREEN);
+        else if(e.getSource()==b3)t.setBackground(Color.BLUE);
+        else if(e.getSource()==b4)System.exit(0);
+       }
+}
+public class A
+{public static void main(String[]args)
+        {B b=new B();}
+}
