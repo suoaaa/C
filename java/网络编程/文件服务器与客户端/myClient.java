@@ -32,14 +32,13 @@ public class myClient {
         JTextArea jTextArea = new JTextArea(10, 10);//显示登录信息以及文件传输情况
         JTextField jTextField=new JTextField();//用户可以输入指令
         JScrollPane jscrollpane;//给文本框添加滚动条
-        JButton position = new JButton("储存位置");
+        JButton position = new JButton("遍历文件");
         JButton upload = new JButton("上传文件");
         JButton download = new JButton("下载文件");
-        JButton clear = new JButton("清空对话");
+        JButton last = new JButton("上一级");
         JButton deldir = new JButton("删除文件夹");
         JButton delfile = new JButton("删除文件");
         JButton create = new JButton("创建文件夹");
-//        JButton yes = new JButton("确认");
         JButton cd = new JButton("进入");
 
         clientWindow() {
@@ -54,7 +53,7 @@ public class myClient {
             p1.add(position);
             p1.add(upload);
             p1.add(download);
-            p1.add(clear);
+            p1.add(last);
             p1.add(create);
             p1.add(deldir);
             p1.add(delfile);
@@ -66,32 +65,35 @@ public class myClient {
             jscrollpane = new JScrollPane(jTextArea);
             jTextArea.setEditable(false);
 
-           clientWindow.add(p1, BorderLayout.NORTH);
-           clientWindow.add(p2, BorderLayout.SOUTH);
-           clientWindow.add(jscrollpane, BorderLayout.CENTER);
-           clientWindow.setVisible(true);
+            clientWindow.add(p1, BorderLayout.NORTH);
+            clientWindow.add(p2, BorderLayout.SOUTH);
+            clientWindow.add(jscrollpane, BorderLayout.CENTER);
+            clientWindow.setVisible(true);
 
             position.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    downpath=fileWindow(1);
+                    String name;
+                    name=jTextField.getText();
+                    jTextField.setText("");
+                    byte []b=("0"+name).getBytes();
+                    send(b);
+                    //接收反馈指令
+                    b=receive(new byte[128]);
+                    int n=Integer.parseInt(new String(b));
+                    if(n==0)print("当前文件夹为空");
+                    else{
+                        print("即将遍历当前文件夹：");
+                        for(int i=0;i<n;i++){
+                            b=receive(new byte[128]);
+                            print(new String(b));
+                        }
+                    }
                 }
             });
 
             upload.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                    try {
-//                        BufferedInputStream filebufferinput=new BufferedInputStream(new FileInputStream(path+name));
-//                        BufferedOutputStream bufferoutput=new BufferedOutputStream(s.getOutputStream());
-//                        byte[] b=new byte[1024*3];
-//                        int n=0,i=0;
-//                        do{
-//                            n=filebufferinput.read();
-//                            b[i]= (byte) n;
-//                            i++;
-//                        }while(n!=0);
-//                        bufferoutput.write("upload".getBytes());
-//                        bufferoutput.write(b);
-                    } catch (Exception ignored ) {}
+                    print("1");
             }});
 
             download.addActionListener(new ActionListener(){
@@ -99,50 +101,25 @@ public class myClient {
                 print("1");
             }});
 
-            clear.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                print("1");
-            }});
-
             create.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    try{
-                        String name;
-                        BufferedOutputStream o;
-                        o= new BufferedOutputStream(s.getOutputStream());
-                        name=jTextField.getText();
-                        jTextField.setText("");
-                        if(name.getBytes().length>0) {           //这部分写新建指令发送给服务区的比特流
-                            o.write("3".getBytes());
-                            o.write(name.getBytes());
-                            int n=128-1-name.getBytes().length;
-                            int i=0;
-                            for(int j=n;j>0;i++) j/=10;
-                            for(;i<n;i++){
-                                o.write("0".getBytes());
-                            }
-                            o.write((""+n).getBytes());
-                            System.out.println(n);
-                            o.flush();
-
-                            byte []b=new byte[1];
-                            BufferedInputStream in=new BufferedInputStream(s.getInputStream());
-                            in.read(b,0,1);
-                            String string=new String(b);
-                            System.out.println(string);
-                            System.out.println("aaa");
-                            switch (string.charAt(0)){
-                                case '0' : print("存在同名文件夹");    break;
-                                case '1' : print("创建成功");         break;
-                                case '2' : print("创建失败");         break;
-                            }System.out.println("bb");
+                    String name;
+                    name=jTextField.getText();
+                    jTextField.setText("");
+                    if(name.getBytes().length>0) {           //这部分写新建指令发送给服务区的比特流
+                        byte []b=("3"+name).getBytes();
+                        send(b);
+                        //接收反馈指令
+                        b=new byte[128];
+                        b=receive(b);
+                        switch (b[0]){
+                            case '0' : print("存在同名文件夹");    break;
+                            case '1' : print("创建成功");         break;
+                            case '2' : print("创建失败");         break;
                         }
-
-                        else {
-                            print("请输入文件名并重新点击");
-                        }
-                    }catch (Exception ex){
-                        ex.printStackTrace();
+                    }
+                    else {
+                        print("请输入文件名并重新点击");
                     }
                 }
             });
@@ -157,23 +134,92 @@ public class myClient {
                 print("1");
             }});
 
+            last.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    jTextField.setText("");
+                    send(("6").getBytes());
+                    //接收反馈指令
+                    byte[] b=new byte[128];
+                    b=receive(b);
+                    switch (b[0]){
+                        case '0' : print("返回失败，已是根目录");    break;
+                        case '1' : {
+                            print("返回成功，当前目录：根目录"+new String(b,1,b.length-1));
+                            break;
+                        }
+                    }
+                }});
+
             cd.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                print("1");
+                    String name;
+                    name=jTextField.getText();
+                    jTextField.setText("");
+                    if(name.getBytes().length>0) {           //这部分写新建指令发送给服务区的比特流
+                        byte []b=("7"+name).getBytes();
+                        send(b);
+                        //接收反馈指令
+                        b=receive(new byte[128]);
+                        switch (b[0]){
+                            case '0' : print("无此文件夹");    break;
+                            case '1' : print("进入文件夹:根目录"+new String(b,1,b.length-1));         break;
+                            case '2' : {
+                                print("进入文件，以下为预览内容：");
+                                System.out.println(new String(b));
+                                print(new String(b,1,b.length-1));
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        print("请输入文件名并重新点击");
+                    }
             }});
 
-//            void showdir(){
-//
-//            }
         }
-
-        void showDir(){}
-
 
         void print(String string) {
             jTextArea.append(string + "\r\n");
             clientWindow.repaint();
         }
+
+        void send(byte[] b){
+            try{
+                BufferedOutputStream o = new BufferedOutputStream(s.getOutputStream());
+                o.write(b);
+                int m = 128 - b.length;
+                int i = 0;
+                for (int j = m; j > 0; i++) j /= 10;
+                for (; i < m; i++) {
+                    o.write("@".getBytes());
+                }
+                o.write(("" + m).getBytes());
+                o.flush();
+            }catch (Exception ignored){}
+        }
+
+        byte[] receive(byte[] b){   //接收128比特的数组并分析出需要的数据
+            byte[] ret=new byte[128];
+            try{
+                InputStream in = s.getInputStream();
+                in.read(b);
+                String string = new String(b);
+                int i=b.length-1;
+                String num="";
+                while(b[i]!='@'){
+                    num=(char)b[i]+""+num;
+                    i--;
+                }
+                int n=Integer.parseInt(num);
+                ret=new byte[128-n];
+                for(i=0;i<128-n;i++){
+                    ret[i]=b[i];
+                }
+
+            }catch (Exception ignored){}
+            return ret;
+        }
+
         String fileWindow(int n){
             JFileChooser jfc=new JFileChooser(rootpath);
             switch (n){
@@ -198,7 +244,6 @@ public class myClient {
             JFrame jFrame=new JFrame(s);
             return instruct;
         }
-
     }
     public static void main(String[] args) {
         try{
