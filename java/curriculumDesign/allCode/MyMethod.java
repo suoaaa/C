@@ -164,4 +164,18 @@ public final class MyMethod {
             }
         }
     }
+    public static JFileChooser fileWindow(int model,String rootpath){
+        JFileChooser jfc=new JFileChooser(rootpath);
+        switch (model){
+            case 1:jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                jfc.setMultiSelectionEnabled(true);
+                jfc.showDialog(new JLabel(), "选择上传的多个文件/文件夹");
+                break;
+            case 2:jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                jfc.showDialog(new JLabel(), "选择本地文件夹");
+                break;
+        }
+        jfc.setVisible(true);
+        return jfc;
+    }
 }

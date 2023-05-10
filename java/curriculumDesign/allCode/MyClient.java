@@ -81,9 +81,10 @@ public class MyClient {
                     MyMethod.send(b,s);
                     //接收反馈指令
                     b= MyMethod.receive(new byte[128],s);
-                    int n=Integer.parseInt(new String(b));
-                    if(n==0)print("当前文件夹为空");
+                    if(b[0]=='0') print("检测到服务器储存地址变化，已回到当前服务器储存地址根目录");
+                    if(b.length==1)print("当前文件夹为空");
                     else{
+                        int n=Integer.parseInt(new String(b,1,b.length-1));
                         b= MyMethod.receive(new byte[128],s);
                         print("即将遍历当前文件夹："+new String(b));
                         for(int i=0;i<n;i++){
@@ -96,11 +97,14 @@ public class MyClient {
 
             upload.addActionListener(new ActionListener(){              //1
                 public void actionPerformed(ActionEvent e) {
-                    JFileChooser jfc = fileWindow(1);
+                    JFileChooser jfc = MyMethod.fileWindow(1,rootpath);
                     try{
                         File[] file=jfc.getSelectedFiles();
                         for(File f:file){
                             MyMethod.send(f,s);
+                        }
+                        if(MyMethod.receive(new byte[128],s)[0]!='0'){
+                            print("检测到服务器储存地址变化，已将文件上传到服务器新的储存地址根目录");
                         }
                     }catch (Exception ex){ex.printStackTrace();}
             }});
@@ -117,12 +121,14 @@ public class MyClient {
                     }else{
                         MyMethod.send(("21"+name).getBytes(),s);
                         b=MyMethod.receive(new byte[128],s);
-                        if (b[0]=='0'){
-                            print("服务器中当前目录无此文件或文件夹，请重试");
-                            return;
+                        switch (b[0]){
+                            case '0' :  print("服务器中当前目录无此文件或文件夹，请重试");
+                                return;
+                            case '2' : print("检测到服务器储存地址变化，请重新浏览服务器中的文件重新选择");
+                            default : break;
                         }
                     }
-                    JFileChooser jfc = fileWindow(2);
+                    JFileChooser jfc = MyMethod.fileWindow(2,rootpath);
                     try{
                         File file=jfc.getSelectedFile();
                         if(file==null)  file=new File(rootpath);
@@ -155,6 +161,9 @@ public class MyClient {
                             case '0' : print("存在同名文件夹");    break;
                             case '1' : print("创建成功");         break;
                             case '2' : print("创建失败");         break;
+                            case '3' : print("检测到服务器储存地址变化，请重新浏览服务器中的文件重新操作");
+                                    break;
+                            default:break;
                         }
                     }
                     else {
@@ -179,6 +188,9 @@ public class MyClient {
                             case '1' : print("删除文件夹：" + name + "成功"); break;
                             case '2' : print("删除：" + name + "失败，存在文件被占用");break;
                             case '4' : print("删除失败：此目录下文件或文件夹" + name + "不存在");break;
+                            case '3' : print("检测到服务器储存地址变化，请重新浏览服务器中的文件重新操作");
+                                break;
+                            default:break;
                         }
                     }
             }});
@@ -187,14 +199,17 @@ public class MyClient {
                 public void actionPerformed(ActionEvent e) {
                     jTextField.setText("");
                     MyMethod.send(("3").getBytes(),s);
-                    byte[] b=new byte[128];
-                    b= MyMethod.receive(b,s);
+                    byte[] b;
+                    b= MyMethod.receive(new byte[128],s);
                     switch (b[0]){
                         case '0' : print("返回失败，已是根目录");    break;
                         case '1' : {
                             print("返回成功，当前目录：根目录"+new String(b,1,b.length-1));
                             break;
                         }
+                        case '3' : print("检测到服务器储存地址变化，已回到服务器储存根目录");
+                            break;
+                        default:break;
                     }
                 }});
 
@@ -213,10 +228,12 @@ public class MyClient {
                             case '1' : print("进入文件夹:根目录"+new String(b,1,b.length-1));         break;
                             case '2' : {
                                 print("进入文件，以下为预览内容：");
-                                System.out.println(new String(b));
                                 print(new String(b,1,b.length-1));
                                 break;
                             }
+                            case '3' : print("检测到服务器储存地址变化，请重新浏览服务器中的文件重新操作");
+                                break;
+                            default:break;
                         }
                     }
                     else {
@@ -237,20 +254,7 @@ public class MyClient {
             clientWindow.repaint();
         }
 
-        JFileChooser fileWindow(int model){
-            JFileChooser jfc=new JFileChooser(rootpath);
-            switch (model){
-                case 1:jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-                    jfc.setMultiSelectionEnabled(true);
-                    jfc.showDialog(new JLabel(), "选择上传的多个文件/文件夹");
-                    break;
-                case 2:jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                    jfc.showDialog(new JLabel(), "选择文件储存位置");
-                    break;
-            }
-            jfc.setVisible(true);
-            return jfc;
-        }
+
     }
 
     public static void main(String[] args) {
