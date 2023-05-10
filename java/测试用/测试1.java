@@ -10,20 +10,23 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
  
 public class ≤‚ ‘1 extends JFrame implements ActionListener{
-	JButton open=null;
+	JButton open1=null;
 	public static void main(String[] args) {
 		new ≤‚ ‘1();
 	}
 	public ≤‚ ‘1(){
-		open=new JButton("open");
-		this.add(open);
+		open1=new JButton("open");
+		this.add(open1);
 		this.setBounds(400, 200, 100, 100);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		open.addActionListener(this);
+		open1.addActionListener(this);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		System.out.println(e.getActionCommand());
+		System.out.println(e.getID());
+		System.out.println(e.getModifiers());
 		JFileChooser jfc=new JFileChooser();
 		jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES );
 		jfc.showDialog(new JLabel(), "—°‘Ò");
