@@ -16,7 +16,7 @@ public final class MyRunnable implements Runnable {
     String downName;//记录客户端申请下载的文件名称
     String rootpath;//记录服务器对本次链接提供的文件储存根目录，服务器更改后不影响已连接的客户端
     JTextArea jTextArea;//服务器窗口的对应JTextField
-    MyRunnable(Socket s,String rootpath,JTextArea jTextArea) {
+    public MyRunnable(Socket s,String rootpath,JTextArea jTextArea) {
         this.s = s;
         this.rootpath=rootpath;
         nowPath = rootpath;

@@ -1,4 +1,6 @@
-package curriculumDesign.allCode;
+package curriculumDesign.allCode.mainRun;
+
+import curriculumDesign.allCode.*;
 
 import java.awt.*;
 import java.awt.event.*;
