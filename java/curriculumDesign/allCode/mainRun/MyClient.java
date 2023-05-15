@@ -10,7 +10,7 @@ import java.net.*;
 
 public class MyClient extends JFrame implements ActionListener{
 
-    InetAddress i;
+    StringBuffer ip=new StringBuffer();
     Socket s;
     String rootpath ;
     JPanel p1 = new JPanel();
@@ -66,14 +66,22 @@ public class MyClient extends JFrame implements ActionListener{
         bCd.addActionListener(this);
 
         rootpath = new File("").getAbsolutePath()+"\\java\\curriculumDesign\\clientSave";
+
+
         try{
-            i=InetAddress.getLocalHost();
-            MyStreamMethod.print(jTextArea,"服务器连接中..");
-            s=new Socket(i, 5050);
-            MyStreamMethod.print(jTextArea,"服务器"+i.getHostAddress()+"已链接");
+            InputWindow inputWindow=new InputWindow(ip);
+            while (true){
+                if(ip.isEmpty())  Thread.sleep(1000);               //未输入服务器地址时不进行下一步并睡眠1s后继续判断
+                else {
+                    MyStreamMethod.print(jTextArea,"服务器连接中..");
+                    s=new Socket(String.valueOf(ip), 5050);
+                    MyStreamMethod.print(jTextArea,"服务器"+ip+"已链接");
+                    break;
+                }
+            }
         } catch (ConnectException e1){
             MyStreamMethod.print(jTextArea,"服务器连接超时，请关闭客户端并等待3-5s后重新链接");
-        } catch(IOException e2){
+        } catch(Exception e2){
             e2.printStackTrace();
         }
     }

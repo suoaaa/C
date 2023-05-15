@@ -178,6 +178,12 @@ public final class MyStreamMethod {
         }
     }
 
+    public static void print(JTextArea jTextArea,String string){
+        //在JTexArea中打印string的内容并换行
+        jTextArea.append(string + "\r\n");
+    }
+
+
     public static JFileChooser fileWindow(int model,String rootpath){
         //新建窗口选择文件储存地址
         JFileChooser jfc=new JFileChooser(rootpath);
@@ -195,11 +201,5 @@ public final class MyStreamMethod {
         jfc.setVisible(true);
         return jfc;
     }
-
-    public static void print(JTextArea jTextArea,String string){
-        //在JTexArea中打印string的内容并换行
-        jTextArea.append(string + "\r\n");
-    }
-
 
 }

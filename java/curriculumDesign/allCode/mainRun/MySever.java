@@ -32,12 +32,12 @@ public class MySever extends JFrame implements ActionListener {
         p.add(bClear);
 
         jTextArea.setEditable(false);
-        MyStreamMethod.print(jTextArea,"服务器已启动，等待链接");
+        MyStreamMethod.print(jTextArea,"本服务器IP为："+InetAddress.getLocalHost().getHostAddress()+",已启动，等待链接");
         this.add(p, BorderLayout.NORTH);
         this.add(jscrollpane,BorderLayout.CENTER);
         this.setVisible(true);
         rootpath=new File("").getAbsolutePath()+"\\java\\curriculumDesign\\severSave";
-        s = new ServerSocket(5050,3);       //限定最多同时登录3个ip
+        s = new ServerSocket(5050);
         pool = Executors.newCachedThreadPool();
 
         bPosition.addActionListener(this);
