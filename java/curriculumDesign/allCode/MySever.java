@@ -1,6 +1,4 @@
-package curriculumDesign.allCode.mainRun;
-
-import curriculumDesign.allCode.*;
+package curriculumDesign.allCode;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -20,7 +18,7 @@ public class MySever extends JFrame implements ActionListener {
     JButton bPosition =new JButton("储存位置");
     JButton bClear =new JButton("清空消息");
 
-    MySever() throws Exception {                //这一段是初始化窗口，新建对按钮的监听，获取文件储存目录，新建线程池，等待客户端链接申请
+    public MySever() throws Exception {                //这一段是初始化窗口，新建对按钮的监听，获取文件储存目录，新建线程池，等待客户端链接申请
         super("文件传输系统服务器");
         this.setSize(400,500);
         this.setLocationRelativeTo(null);
@@ -55,9 +53,4 @@ public class MySever extends JFrame implements ActionListener {
        else if(e.getSource()==bClear) MyActionMethod.clear(jTextArea);
     }
 
-    public static void main(String[] args) {
-        try {
-            new MySever();
-        }catch(Exception ignored){}
-    }
 }

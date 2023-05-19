@@ -1,6 +1,4 @@
-package curriculumDesign.allCode.mainRun;
-
-import curriculumDesign.allCode.*;
+package curriculumDesign.allCode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +24,7 @@ public class MyClient extends JFrame implements ActionListener{
     JButton bCreate = new JButton("创建文件夹");
     JButton bDel = new JButton("删除文件");
     JButton bCd = new JButton("进入");
-    MyClient(){                                             //这一段是初始化窗口，新建对按钮的监听，获取文件储存目录，链接服务器
+    public MyClient() {                                             //这一段是初始化窗口，新建对按钮的监听，获取文件储存目录，链接服务器
         super("文件传输客户端");
         this.setSize(400, 500);
         this.setLocationRelativeTo(null);
@@ -67,7 +65,6 @@ public class MyClient extends JFrame implements ActionListener{
 
         rootpath = new File("").getAbsolutePath()+"\\java\\curriculumDesign\\clientSave";
 
-
         try{
             InputWindow inputWindow=new InputWindow(ip);
             while (true){
@@ -87,22 +84,16 @@ public class MyClient extends JFrame implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==bShow) MyActionMethod.show(s,jTextArea,jTextField);
-        else if(e.getSource()==bUpload)   MyActionMethod.upload(s,rootpath);
-        else if(e.getSource()==bDownload)   MyActionMethod.download(s,jTextArea,jTextField,rootpath);
-        else if(e.getSource()==bLast)   MyActionMethod.last(s,jTextArea,jTextField);
-        else if(e.getSource()==bClear)   MyActionMethod.clear(jTextArea);
-        else if(e.getSource()==bCreate)   MyActionMethod.create(s,jTextArea,jTextField);
-        else if(e.getSource()==bDel)   MyActionMethod.del(s,jTextArea,jTextField);
-        else if(e.getSource()==bCd)   MyActionMethod.cd(s,jTextArea,jTextField);
-    }
-
-    public static void main(String[] args) {
         try{
-            new MyClient();
-        }catch (Exception em){
-            em.printStackTrace();
-        }
+            if (e.getSource() == bShow) MyActionMethod.show(s, jTextArea, jTextField);
+            else if (e.getSource() == bUpload) MyActionMethod.upload(s, rootpath);
+            else if (e.getSource() == bDownload) MyActionMethod.download(s, jTextArea, jTextField, rootpath);
+            else if (e.getSource() == bLast) MyActionMethod.last(s, jTextArea, jTextField);
+            else if (e.getSource() == bClear) MyActionMethod.clear(jTextArea);
+            else if (e.getSource() == bCreate) MyActionMethod.create(s, jTextArea, jTextField);
+            else if (e.getSource() == bDel) MyActionMethod.del(s, jTextArea, jTextField);
+            else if (e.getSource() == bCd) MyActionMethod.cd(s, jTextArea, jTextField);
+        }catch (Exception ignored){}
     }
 
 }

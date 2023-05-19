@@ -1,71 +1,45 @@
 package 测试用;
 
-import javax.swing.*; 
+import java.io.*;
+
 public class 测试2 {
-    public static void main(String[] args) {    
-        // 创建 JFrame 实例
-        JFrame frame = new JFrame("Login Example");
-        // Setting the width and height of frame
-        frame.setSize(350, 200);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public static void main(String[] args) throws IOException{
+        long start = System.currentTimeMillis();
+        测试2.copy();
+        long end = System.currentTimeMillis();
+        //打印运行时间
+        System.out.println("time :"+(end-start));
 
-        /* 创建面板，这个类似于 HTML 的 div 标签
-         * 我们可以创建多个面板并在 JFrame 中指定位置
-         * 面板中我们可以添加文本字段，按钮及其他组件。
-         */
-        JPanel panel = new JPanel();    
-        // 添加面板
-        frame.add(panel);
-        /* 
-         * 调用用户定义的方法并添加组件到面板
-         */
-        placeComponents(panel);
-
-        // 设置界面可见
-        frame.setVisible(true);
     }
-
-    private static void placeComponents(JPanel panel) {
-
-        /* 布局部分我们这边不多做介绍
-         * 这边设置布局为 null
-         */
-        panel.setLayout(null);
-
-        // 创建 JLabel
-        JLabel userLabel = new JLabel("User:");
-        /* 这个方法定义了组件的位置。
-         * setBounds(x, y, width, height)
-         * x 和 y 指定左上角的新位置，由 width 和 height 指定新的大小。
-         */
-        userLabel.setBounds(10,20,80,25);
-        panel.add(userLabel);
-
-        /* 
-         * 创建文本域用于用户输入
-         */
-        JTextField userText = new JTextField(20);
-        userText.setBounds(100,20,165,25);
-        panel.add(userText);
-
-        // 输入密码的文本域
-        JLabel passwordLabel = new JLabel("Password:");
-        passwordLabel.setBounds(10,50,80,25);
-        panel.add(passwordLabel);
-
-        /* 
-         *这个类似用于输入的文本域
-         * 但是输入的信息会以点号代替，用于包含密码的安全性
-         */
-        JPasswordField passwordText = new JPasswordField(20);
-        passwordText.setBounds(100,50,165,25);
-        panel.add(passwordText);
-
-        // 创建登录按钮
-        JButton loginButton = new JButton("login");
-        loginButton.setBounds(10, 80, 80, 25);
-        panel.add(loginButton);
+    //字节流复制
+    public static void copy() {
+        //此处在try外创建引用，在try内进行初始化，能避免finally块中对象引用不了的问题；
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+        try{
+            fis = new FileInputStream("E:\\个人编程\\代码-全\\java\\curriculumDesign\\severSave\\3\\3.png");
+            fos = new FileOutputStream("E:\\个人编程\\代码-全\\java\\curriculumDesign\\severSave\\3\\4.png");
+            bis =  new BufferedInputStream(fis);
+            bos = new BufferedOutputStream(fos);
+            int by = 0;
+            while ((by = bis.read()) != -1){
+                bos.write(by);
+            }
+        }catch (IOException e){
+            System.out.println(e);
+        }finally {
+            try{
+                //此处close()要加判断是因为，初始化可能不成功，所以对fw操作会产生异常，在finally中必须对每个流对象先进行判断再关闭。
+                if (bis != null)
+                    bis.close();
+                if (bos != null)
+                    bos.close();
+            }catch (IOException e){
+                System.out.println(e);
+            }
+        }
     }
-
 }
+

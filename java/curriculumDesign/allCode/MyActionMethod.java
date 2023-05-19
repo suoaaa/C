@@ -3,6 +3,7 @@ package curriculumDesign.allCode;
 import javax.swing.*;
 import java.io.File;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public final class MyActionMethod {
 
     private MyActionMethod(){}
 
-    public static void show  (Socket s, JTextArea jTextArea,JTextField jTextField){
+    public static void show  (Socket s, JTextArea jTextArea,JTextField jTextField) throws InterruptedException {
         //客户端调用，向服务端申请遍历文件夹
         //接收服务端发送的文件数量，并循环打印遍历文件夹
         String name;
@@ -23,17 +24,19 @@ public final class MyActionMethod {
         byte []b=("0"+name).getBytes();
         MyStreamMethod.send(b,s);
         //接收反馈指令，获得文件数量
+//        Thread.sleep(50);
         b= MyStreamMethod.receive(new byte[128],s);
-        if(b[0]=='0')   MyStreamMethod.print(jTextArea,"当前文件夹为空");
-        else{
-            int n=Integer.parseInt(new String(b));
+        if(b[0]=='0') {
+            MyStreamMethod.print(jTextArea, "当前文件夹为空");
+            return ;
+        }
+        int n=Integer.parseInt(new String(b));
+        b= MyStreamMethod.receive(new byte[128],s);
+        MyStreamMethod.print(jTextArea,"即将遍历当前文件夹："+new String(b));
+        for(int i=0;i<n;i++){
+            //循环打印文件名
             b= MyStreamMethod.receive(new byte[128],s);
-            MyStreamMethod.print(jTextArea,"即将遍历当前文件夹："+new String(b));
-            for(int i=0;i<n;i++){
-                //循环打印文件名
-                b= MyStreamMethod.receive(new byte[128],s);
-                MyStreamMethod.print(jTextArea,new String(b));
-            }
+            MyStreamMethod.print(jTextArea,new String(b));
         }
     }
 
@@ -82,6 +85,7 @@ public final class MyActionMethod {
             for(String string:allFileList){
                 MyStreamMethod.print(jTextArea,string);
             }
+            MyStreamMethod.print(jTextArea,"遍历结束");
         }catch (Exception ex){ex.printStackTrace();}
     }
 
@@ -161,7 +165,7 @@ public final class MyActionMethod {
                 case '1' -> MyStreamMethod.print(jTextArea, "进入文件夹:根目录" + new String(b, 1, b.length - 1));
                 case '2' -> {
                     MyStreamMethod.print(jTextArea, "进入文件，以下为预览内容：");
-                    MyStreamMethod.print(jTextArea, new String(b, 1, b.length - 1));
+                    MyStreamMethod.print(jTextArea, new String(b, 1, b.length - 1, StandardCharsets.UTF_8));
                 }
                 case '3' -> MyStreamMethod.print(jTextArea, "检测到服务器储存地址变化，请重新浏览服务器中的文件重新操作");
             }

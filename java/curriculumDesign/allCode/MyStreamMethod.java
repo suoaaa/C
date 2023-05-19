@@ -16,6 +16,7 @@ public final class MyStreamMethod {
     public static void send(byte[] b, Socket s){
         //传输b中内容，不足127比特则中间填‘@’，最后几位标记无效位的位数
         //位127比特则最后一位为’@‘，之前全为有效位
+
         try{
             BufferedOutputStream o = new BufferedOutputStream(s.getOutputStream());
             if(b.length>=127) {
@@ -25,8 +26,9 @@ public final class MyStreamMethod {
                 return;
             }else o.write(b);
             int m = 128 - b.length;
-            int i = 0;
-            for (int j = m; j > 0; i++) j /= 10;
+            int i=1;
+            if(m>9&&m<100) i=2;
+            else if (m>100) i=3;
             for (; i < m; i++) {
                 o.write("@".getBytes());
             }
@@ -36,11 +38,13 @@ public final class MyStreamMethod {
     }
 
     public static void send(File file, Socket s){
-        //字节头1位为1:确定是上传文件
-        //自己头2位：确定是文件或文件夹，0：文件，1：文件夹
-        //若干位确定size（文件夹中文件数量/文件比特大小）
+        //字节头1位为：1:确定是上传文件
+        //字节头2位为：确定是文件或文件夹，0：文件，1：文件夹
+        //若为文件夹，三位确定size-文件夹中文件数量
         //后为文件名
-        //之后文件传输文件内容比特流，比特头无特殊含义
+        //之后的若干比特流传输文件内容，比特头无特殊含义
+        //当文件到达末尾，则在文件发送结束后在发送一个只有一位‘@’的比特流作为结束标志
+
         int flag=3;
         if(file.exists()&& file.isFile()) flag=0;
         if(file.exists()&& file.isDirectory()) flag=1;
@@ -49,30 +53,24 @@ public final class MyStreamMethod {
         switch (flag) {
             case 0 -> {
                 byte[] b = new byte[127];
-                long size = file.length();    //最大值为9223372036854775807
-                long m = size % 127;            //最大值为72624976668147841---17位
-                long n = size / 127;
-                if (n != 0) m++;
-                long i = m;
-                int j = 0;
-                for (; i > 0; j++) i /= 10;
-                string.append("0".repeat(17 - j)).append(m).append(file.getName());
+                string.append(file.getName());
                 send(string.toString().getBytes(), s);
-                BufferedInputStream in;
                 try {
-                    in = new BufferedInputStream(new FileInputStream(file));
-                    for (i = 0; i < m - 1; i++) {
-                        in.read(b, 0, 127);
+                    InputStream in;
+                    in = new FileInputStream(file);
+                    int j=0,i=0;
+                    while (j!=-1){
+                        for(i=0;i<127&&(j=in.read())!=-1;i++){
+                            b[i]=(byte) j;
+                        }
+                        if(i!=127){
+                            byte [] c=b;
+                            b=new byte[i];
+                            System.arraycopy(c, 0, b, 0, i);
+                        }
                         send(b, s);
                     }
-                    if (n == 0) {
-                        in.read(b, 0, 127);
-                        send(b, s);
-                    } else {
-                        b = new byte[(int) n];
-                        in.read(b, 0, (int) n);
-                        send(b, s);
-                    }
+                    send("@".getBytes(),s);
                     in.close();
                 } catch (Exception ignore) {
                 }
@@ -97,6 +95,7 @@ public final class MyStreamMethod {
         //当比特流最后一位为‘@’时，表示前127位都是需要的内容
         //当比特流最后一位为数字时，中间为无效内容，只需前一部分
         //返回有效数据组成的比特串
+
         byte[] ret=null;
         try{
             InputStream in = s.getInputStream();
@@ -123,23 +122,21 @@ public final class MyStreamMethod {
         //为文件直接下载
         //文件夹新建文件夹进入文件夹继续接收
         //每次进入下一级都要传递当前地址确保文件下载后结构相同
+
         try{
             switch (b[1]) {
                 case '0' -> {
-                    BufferedOutputStream o;
-                    File f = new File(nowPath + "\\" + new String(b, 19, b.length - 19));
-                    if (f.exists()) {
-                        if (!f.delete() && !f.createNewFile()) return;
+                    File file = new File(nowPath + "\\" + new String(b, 2, b.length - 2));
+                    if (file.exists()) {
+                        if (!file.delete() && !file.createNewFile()) return;
                     }
-                    o = new BufferedOutputStream(new FileOutputStream(f));
-                    long num = 0;
-                    for (int i = 2; i < 19; i++) {
-                        num = num * 10 + b[i] - '0';
-                    }
-                    for (long i = 0; i < num; i++) {
-                        b = receive(new byte[128], s);
+                    FileOutputStream o;
+                    o=new FileOutputStream(file);
+                    while((b = receive(new byte[128], s)).length!=1) {
                         o.write(b);
+                        o.flush();
                     }
+                    if(b[0]!='@')   o.write(b);
                     o.flush();
                     o.close();
                 }
@@ -161,6 +158,7 @@ public final class MyStreamMethod {
     }
 
     public static void getAllFile (File fileInput, List< String > allFileList, int n){
+        //方法功能：获取文件夹内所有文件的文件名，广度优先算法
         // 获取文件列表
         File[] fileList = fileInput.listFiles();
         assert fileList != null;

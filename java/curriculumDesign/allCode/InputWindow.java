@@ -4,6 +4,7 @@ package curriculumDesign.allCode;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.InetAddress;
 
 public class InputWindow extends JFrame implements ActionListener {
     StringBuffer ip;
@@ -33,7 +34,13 @@ public class InputWindow extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         ip.append(jf.getText());
-        System.out.println(ip);
-        this.dispose();
+        if(ip.isEmpty()){
+            try {
+                ip.append(InetAddress.getLocalHost().getHostAddress());
+                this.dispose();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }else        this.dispose();
     }
 }

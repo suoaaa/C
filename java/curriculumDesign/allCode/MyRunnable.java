@@ -54,10 +54,6 @@ public final class MyRunnable implements Runnable {
         //展示文件，首先发送文件数
         //再循环发送文件名称
         File dir = new File(nowPath);
-        if(!dir.exists()) if(!dir.mkdirs()) {
-            MyStreamMethod.send("0".getBytes(), s);
-            return;
-        }
         List<String> allFileList = new ArrayList<>();
         MyStreamMethod.getAllFile(dir, allFileList, 0);
         MyStreamMethod.send((""+allFileList.size()).getBytes(),s);
@@ -79,6 +75,7 @@ public final class MyRunnable implements Runnable {
         //第一次接收后判断b[1]，判断第一次或第二次请求
         //第一次请求判断是否有该文件夹或者文件
         //第二次请求发送文件
+
         switch (b[1]) {
             case '1' -> {
                 downName = new String(b, 2, b.length - 2);
@@ -192,9 +189,10 @@ public final class MyRunnable implements Runnable {
                 MyStreamMethod.send(("1"+string).getBytes(),s);
                 MyStreamMethod.print(jTextArea,"IP为"+s.getInetAddress()+"的用户进入文件夹："+string);
             }else{
-                BufferedInputStream i;
+//                BufferedInputStream i;
                 try{
-                    i=new BufferedInputStream(new FileInputStream(file));
+//                    i=new BufferedInputStream(new FileInputStream(file));
+                    FileInputStream i=new FileInputStream(file);
                     int n;
                     if(file.length()>=124) n=124;
                     else n=(int) file.length();
