@@ -1,4 +1,4 @@
-package curriculumDesign.allCode;
+package allCode;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,19 +13,19 @@ public class MyClient extends JFrame implements ActionListener{
     String rootpath ;
     JPanel p1 = new JPanel();
     JPanel p2 = new JPanel();
-    JTextArea jTextArea = new JTextArea(1, 1);  //ÏÔÊ¾Á´½ÓĞÅÏ¢ÒÔ¼°ÎÄ¼ş´«ÊäÇé¿ö
-    JTextField jTextField=new JTextField();                 //ÓÃ»§¿ÉÒÔÔÚ´ËÊäÈëÎÄ¼şÃû³Æ
-    JScrollPane jscrollpane;                                //¸øÎÄ±¾¿òÌí¼Ó¹ö¶¯Ìõ
-    JButton bShow = new JButton("±éÀúÎÄ¼ş");                //°´Å¥ÊµÏÖ¶ÔÓ¦¹¦ÄÜ
-    JButton bUpload = new JButton("ÉÏ´«ÎÄ¼ş");
-    JButton bDownload = new JButton("ÏÂÔØÎÄ¼ş");
-    JButton bLast = new JButton("ÉÏÒ»¼¶");
-    JButton bClear = new JButton("Çå¿Õ¶Ô»°");
-    JButton bCreate = new JButton("´´½¨ÎÄ¼ş¼Ğ");
-    JButton bDel = new JButton("É¾³ıÎÄ¼ş");
-    JButton bCd = new JButton("½øÈë");
-    public MyClient() {                                             //ÕâÒ»¶ÎÊÇ³õÊ¼»¯´°¿Ú£¬ĞÂ½¨¶Ô°´Å¥µÄ¼àÌı£¬»ñÈ¡ÎÄ¼ş´¢´æÄ¿Â¼£¬Á´½Ó·şÎñÆ÷
-        super("ÎÄ¼ş´«Êä¿Í»§¶Ë");
+    JTextArea jTextArea = new JTextArea(1, 1);  //æ˜¾ç¤ºé“¾æ¥ä¿¡æ¯ä»¥åŠæ–‡ä»¶ä¼ è¾“æƒ…å†µ
+    JTextField jTextField=new JTextField();                 //ç”¨æˆ·å¯ä»¥åœ¨æ­¤è¾“å…¥æ–‡ä»¶åç§°
+    JScrollPane jscrollpane;                                //ç»™æ–‡æœ¬æ¡†æ·»åŠ æ»šåŠ¨æ¡
+    JButton bShow = new JButton("éå†æ–‡ä»¶");                //æŒ‰é’®å®ç°å¯¹åº”åŠŸèƒ½
+    JButton bUpload = new JButton("ä¸Šä¼ æ–‡ä»¶");
+    JButton bDownload = new JButton("ä¸‹è½½æ–‡ä»¶");
+    JButton bLast = new JButton("ä¸Šä¸€çº§");
+    JButton bClear = new JButton("æ¸…ç©ºå¯¹è¯");
+    JButton bCreate = new JButton("åˆ›å»ºæ–‡ä»¶å¤¹");
+    JButton bDel = new JButton("åˆ é™¤æ–‡ä»¶");
+    JButton bCd = new JButton("è¿›å…¥");
+    public MyClient() {                                             //è¿™ä¸€æ®µæ˜¯åˆå§‹åŒ–çª—å£ï¼Œæ–°å»ºå¯¹æŒ‰é’®çš„ç›‘å¬ï¼Œè·å–æ–‡ä»¶å‚¨å­˜ç›®å½•ï¼Œé“¾æ¥æœåŠ¡å™¨
+        super("æ–‡ä»¶ä¼ è¾“å®¢æˆ·ç«¯");
         this.setSize(400, 500);
         this.setLocationRelativeTo(null);
         this.setVisible(false);
@@ -33,16 +33,16 @@ public class MyClient extends JFrame implements ActionListener{
         this.setResizable(false);
 
         p1.setLayout(new GridLayout(2,4));
-        p1.add(bShow);              //Í·±ÈÌØ:'0'
-        p1.add(bUpload);            //Í·±ÈÌØ:¡®1¡¯
-        p1.add(bDownload);          //Í·±ÈÌØ:¡®2¡¯
-        p1.add(bLast);              //Í·±ÈÌØ:¡®3¡¯
+        p1.add(bShow);              //å¤´æ¯”ç‰¹:'0'
+        p1.add(bUpload);            //å¤´æ¯”ç‰¹:â€˜1â€™
+        p1.add(bDownload);          //å¤´æ¯”ç‰¹:â€˜2â€™
+        p1.add(bLast);              //å¤´æ¯”ç‰¹:â€˜3â€™
         p1.add(bClear);
-        p1.add(bCreate);            //Í·±ÈÌØ:¡®4¡¯
-        p1.add(bDel);               //Í·±ÈÌØ:¡®5¡¯
-        p1.add(bCd);                //Í·±ÈÌØ:¡®6¡¯
+        p1.add(bCreate);            //å¤´æ¯”ç‰¹:â€˜4â€™
+        p1.add(bDel);               //å¤´æ¯”ç‰¹:â€˜5â€™
+        p1.add(bCd);                //å¤´æ¯”ç‰¹:â€˜6â€™
         p2.setLayout(new GridLayout(2,1));
-        p2.add(new JLabel("ÊäÈëµØÖ·»òÎÄ¼şÃû³Æ£º"));
+        p2.add(new Label("è¾“å…¥åœ°å€æˆ–æ–‡ä»¶åç§°ï¼š"));
         p2.add(jTextField);
 
         jscrollpane = new JScrollPane(jTextArea);
@@ -66,18 +66,18 @@ public class MyClient extends JFrame implements ActionListener{
         rootpath = new File("").getAbsolutePath()+"\\java\\curriculumDesign\\clientSave";
 
         try{
-            new InputWindow(ip);
+            InputWindow inputWindow=new InputWindow(ip);
             while (true){
-                if(ip.isEmpty())  Thread.sleep(1000);               //Î´ÊäÈë·şÎñÆ÷µØÖ·Ê±²»½øĞĞÏÂÒ»²½²¢Ë¯Ãß1sºó¼ÌĞøÅĞ¶Ï
+                if(ip.isEmpty())  Thread.sleep(1000);               //æœªè¾“å…¥æœåŠ¡å™¨åœ°å€æ—¶ä¸è¿›è¡Œä¸‹ä¸€æ­¥å¹¶ç¡çœ 1såç»§ç»­åˆ¤æ–­
                 else {
-                    MyStreamMethod.print(jTextArea,"·şÎñÆ÷Á¬½ÓÖĞ..");
+                    MyStreamMethod.print(jTextArea,"æœåŠ¡å™¨è¿æ¥ä¸­..");
                     s=new Socket(String.valueOf(ip), 5050);
-                    MyStreamMethod.print(jTextArea,"·şÎñÆ÷"+ip+"ÒÑÁ´½Ó");
+                    MyStreamMethod.print(jTextArea,"æœåŠ¡å™¨"+ip+"å·²é“¾æ¥");
                     break;
                 }
             }
         } catch (ConnectException e1){
-            MyStreamMethod.print(jTextArea,"·şÎñÆ÷Á¬½Ó³¬Ê±£¬Çë¹Ø±Õ¿Í»§¶Ë²¢µÈ´ı3-5sºóÖØĞÂÁ´½Ó");
+            MyStreamMethod.print(jTextArea,"æœåŠ¡å™¨è¿æ¥è¶…æ—¶ï¼Œè¯·å…³é—­å®¢æˆ·ç«¯å¹¶ç­‰å¾…3-5såé‡æ–°é“¾æ¥");
         } catch(Exception e2){
             e2.printStackTrace();
         }

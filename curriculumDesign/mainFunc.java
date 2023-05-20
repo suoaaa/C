@@ -6,8 +6,8 @@ import java.util.concurrent.Executors;
 
 public class mainFunc {
     public static void main(String[] args) {
-        //´´½¨¶àÏß³Ì£¬²¢Ìí¼Ó¿Í»§¶ËÓë·şÎñ¶ËÀàµÄ´´½¨
-        //ÒòÎª·şÎñ¶ËÓë¿Í»§¶ËÓĞĞí¶à×èÈû·½·¨£¬Òò´Ë½«¿Í»§¶ËÓë·şÎñ¶Ë×÷Îª²»Í¬Ïß³ÌÖ´ĞĞ
+        //åˆ›å»ºå¤šçº¿ç¨‹ï¼Œå¹¶æ·»åŠ å®¢æˆ·ç«¯ä¸æœåŠ¡ç«¯ç±»çš„åˆ›å»º
+        //å› ä¸ºæœåŠ¡ç«¯ä¸å®¢æˆ·ç«¯æœ‰è®¸å¤šé˜»å¡æ–¹æ³•ï¼Œå› æ­¤å°†å®¢æˆ·ç«¯ä¸æœåŠ¡ç«¯ä½œä¸ºä¸åŒçº¿ç¨‹æ‰§è¡Œ
 
         ExecutorService pool= Executors.newCachedThreadPool();
         pool.execute(new Runnable(){

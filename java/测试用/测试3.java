@@ -24,10 +24,10 @@ public class ≤‚ ‘3{
 
         file.createNewFile();
 
-       OutputStream in2 = new FileOutputStream(file);
+        OutputStream in2 = new FileOutputStream(file);
         InputStream inputStream=new FileInputStream(file2);
         int b=0;
-        byte []bytes=new byte[111111];
+        byte []bytes=new byte[1111111];
         int i=0;
         while((b = inputStream.read()) != -1 ){
 //            inputStream.read(b,0,128);
@@ -39,6 +39,7 @@ public class ≤‚ ‘3{
         in2.write(bytes,0,i);
         in2.flush();
         System.out.println(file.length());
+        System.out.println(file.getName().substring(0,file.getName().lastIndexOf(".")));
 
 //        inputStream.read(head);
 //

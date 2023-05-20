@@ -42,7 +42,7 @@ public class MyClient extends JFrame implements ActionListener{
         p1.add(bDel);               //头比特:‘5’
         p1.add(bCd);                //头比特:‘6’
         p2.setLayout(new GridLayout(2,1));
-        p2.add(new JLabel("输入地址或文件名称："));
+        p2.add(new Label("输入地址或文件名称："));
         p2.add(jTextField);
 
         jscrollpane = new JScrollPane(jTextArea);
@@ -66,7 +66,7 @@ public class MyClient extends JFrame implements ActionListener{
         rootpath = new File("").getAbsolutePath()+"\\java\\curriculumDesign\\clientSave";
 
         try{
-            new InputWindow(ip);
+            InputWindow inputWindow=new InputWindow(ip);
             while (true){
                 if(ip.isEmpty())  Thread.sleep(1000);               //未输入服务器地址时不进行下一步并睡眠1s后继续判断
                 else {

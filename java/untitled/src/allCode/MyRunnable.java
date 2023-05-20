@@ -1,4 +1,4 @@
-package curriculumDesign.allCode;
+package allCode;
 
 import javax.swing.*;
 import java.io.File;
@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Objects;
 
 public final class MyRunnable implements Runnable {
-    //¸ÃÀà¼Ì³ĞRunnableÀà£¬ÔÚ·şÎñ¶Ëµ÷ÓÃ£¬Ã¿ÓĞÒ»¸öĞÂµÄ¿Í»§¶ËÇëÇóµ÷ÓÃ£¬±ãĞÂ½¨±¾Àà¼ÓÈëÏß³Ì³Ø
-    Socket s;       //Óë¿Í»§¶Ë½¨Á¢Á´½Ó
-    String nowPath; //¼ÇÂ¼¿Í»§¶ËÄ¿Ç°ÔÚÄ¿Â¼µÄÎ»ÖÃ
-    String downName;//¼ÇÂ¼¿Í»§¶ËÉêÇëÏÂÔØµÄÎÄ¼şÃû³Æ
-    String rootpath;//¼ÇÂ¼·şÎñÆ÷¶Ô±¾´ÎÁ´½ÓÌá¹©µÄÎÄ¼ş´¢´æ¸ùÄ¿Â¼£¬·şÎñÆ÷¸ü¸Äºó²»Ó°ÏìÒÑÁ¬½ÓµÄ¿Í»§¶Ë
-    JTextArea jTextArea;//·şÎñÆ÷´°¿ÚµÄ¶ÔÓ¦JTextField
+    //è¯¥ç±»ç»§æ‰¿Runnableç±»ï¼Œåœ¨æœåŠ¡ç«¯è°ƒç”¨ï¼Œæ¯æœ‰ä¸€ä¸ªæ–°çš„å®¢æˆ·ç«¯è¯·æ±‚è°ƒç”¨ï¼Œä¾¿æ–°å»ºæœ¬ç±»åŠ å…¥çº¿ç¨‹æ± 
+    Socket s;       //ä¸å®¢æˆ·ç«¯å»ºç«‹é“¾æ¥
+    String nowPath; //è®°å½•å®¢æˆ·ç«¯ç›®å‰åœ¨ç›®å½•çš„ä½ç½®
+    String downName;//è®°å½•å®¢æˆ·ç«¯ç”³è¯·ä¸‹è½½çš„æ–‡ä»¶åç§°
+    String rootpath;//è®°å½•æœåŠ¡å™¨å¯¹æœ¬æ¬¡é“¾æ¥æä¾›çš„æ–‡ä»¶å‚¨å­˜æ ¹ç›®å½•ï¼ŒæœåŠ¡å™¨æ›´æ”¹åä¸å½±å“å·²è¿æ¥çš„å®¢æˆ·ç«¯
+    JTextArea jTextArea;//æœåŠ¡å™¨çª—å£çš„å¯¹åº”JTextField
     public MyRunnable(Socket s,String rootpath,JTextArea jTextArea) {
         this.s = s;
         this.rootpath=rootpath;
@@ -24,34 +24,34 @@ public final class MyRunnable implements Runnable {
 
     public void run() {
         try {
-            MyStreamMethod.print(jTextArea,"IPÎª" + s.getInetAddress().getHostAddress() + "µÄÓÃ»§ÒÑÁ¬½Ó·şÎñÆ÷");
+            MyStreamMethod.print(jTextArea,"IPä¸º" + s.getInetAddress().getHostAddress() + "çš„ç”¨æˆ·å·²è¿æ¥æœåŠ¡å™¨");
             byte []b;
             while (true) {
                 b= MyStreamMethod.receive(new byte[128],s);
                 if(b==null) {
                     s.close();
-                    MyStreamMethod.print(jTextArea,"IPÎª" + s.getInetAddress().getHostAddress() + "µÄÓÃ»§ÒÑ¶Ï¿ªÁ¬½Ó");
+                    MyStreamMethod.print(jTextArea,"IPä¸º" + s.getInetAddress().getHostAddress() + "çš„ç”¨æˆ·å·²æ–­å¼€è¿æ¥");
                     return;
                 }
-                switch (b[0]) {                     //¸ù¾İ½ÓÊÕµ½µÄ±ÈÌØÁ÷µÄ0Ë÷Òı£¬ÅäºÏ¿Í»§¶ËÊµÏÖ²»Í¬µÄ¹¦ÄÜ
-                    case '0' -> showDir();          //Õ¹Ê¾Ä¿Â¼ÖĞÎÄ¼ş
-                    case '1' -> upload(b);          //ÉÏ´«ÎÄ¼ş
-                    case '2' -> download(b);        //ÏÂÔØÎÄ¼ş
-                    case '3' -> last();             //½øÈëÉÏÒ»¼¶
-                    case '4' -> create(b);          //´´½¨ĞÂÎÄ¼ş¼ĞÔÚµ±Ç°ÎÄ¼ş¼Ğ
-                    case '5' -> del(b);             //É¾³ıÎÄ¼ş/ÎÄ¼ş¼Ğ
-                    case '6' -> cd(b);              //½øÈëÌØ¶¨ÎÄ¼ş/Ô¤ÀÀÎÄ¼ş
+                switch (b[0]) {                     //æ ¹æ®æ¥æ”¶åˆ°çš„æ¯”ç‰¹æµçš„0ç´¢å¼•ï¼Œé…åˆå®¢æˆ·ç«¯å®ç°ä¸åŒçš„åŠŸèƒ½
+                    case '0' -> showDir();          //å±•ç¤ºç›®å½•ä¸­æ–‡ä»¶
+                    case '1' -> upload(b);          //ä¸Šä¼ æ–‡ä»¶
+                    case '2' -> download(b);        //ä¸‹è½½æ–‡ä»¶
+                    case '3' -> last();             //è¿›å…¥ä¸Šä¸€çº§
+                    case '4' -> create(b);          //åˆ›å»ºæ–°æ–‡ä»¶å¤¹åœ¨å½“å‰æ–‡ä»¶å¤¹
+                    case '5' -> del(b);             //åˆ é™¤æ–‡ä»¶/æ–‡ä»¶å¤¹
+                    case '6' -> cd(b);              //è¿›å…¥ç‰¹å®šæ–‡ä»¶/é¢„è§ˆæ–‡ä»¶
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            MyStreamMethod.print(jTextArea,"IPÎª" + s.getInetAddress().getHostAddress() + "µÄÓÃ»§ÒÑ¶Ï¿ªÁ¬½Ó");
+            MyStreamMethod.print(jTextArea,"IPä¸º" + s.getInetAddress().getHostAddress() + "çš„ç”¨æˆ·å·²æ–­å¼€è¿æ¥");
         }
     }
 
     void showDir () {
-        //Õ¹Ê¾ÎÄ¼ş£¬Ê×ÏÈ·¢ËÍÎÄ¼şÊı
-        //ÔÙÑ­»··¢ËÍÎÄ¼şÃû³Æ
+        //å±•ç¤ºæ–‡ä»¶ï¼Œé¦–å…ˆå‘é€æ–‡ä»¶æ•°
+        //å†å¾ªç¯å‘é€æ–‡ä»¶åç§°
         File dir = new File(nowPath);
         List<String> allFileList = new ArrayList<>();
         MyStreamMethod.getAllFile(dir, allFileList, 0);
@@ -60,20 +60,20 @@ public final class MyRunnable implements Runnable {
         for (String value : allFileList) {
             MyStreamMethod.send(value.getBytes(),s);
         }
-        MyStreamMethod.print(jTextArea,"IPÎª"+s.getInetAddress()+"µÄÓÃ»§±éÀúÁËÎÄ¼ş¼Ğ");
+        MyStreamMethod.print(jTextArea,"IPä¸º"+s.getInetAddress()+"çš„ç”¨æˆ·éå†äº†æ–‡ä»¶å¤¹");
     }
 
     void upload (byte[] b){
-        //½ÓÊÕÎÄ¼ş
+        //æ¥æ”¶æ–‡ä»¶
         MyStreamMethod.receive(b,s, nowPath);
-        MyStreamMethod.print(jTextArea,"IPÎª"+s.getInetAddress()+"µÄÓÃ»§ÉÏ´«ÁËĞÂµÄÎÄ¼ş");
+        MyStreamMethod.print(jTextArea,"IPä¸º"+s.getInetAddress()+"çš„ç”¨æˆ·ä¸Šä¼ äº†æ–°çš„æ–‡ä»¶");
     }
 
     void download (byte[] b){
-        //Îª¿Í»§¶Ë·¢ËÍÌØ¶¨Ãû³ÆµÄÎÄ¼ş»òÕßÎÄ¼ş¼Ğ
-        //µÚÒ»´Î½ÓÊÕºóÅĞ¶Ïb[1]£¬ÅĞ¶ÏµÚÒ»´Î»òµÚ¶ş´ÎÇëÇó
-        //µÚÒ»´ÎÇëÇóÅĞ¶ÏÊÇ·ñÓĞ¸ÃÎÄ¼ş¼Ğ»òÕßÎÄ¼ş
-        //µÚ¶ş´ÎÇëÇó·¢ËÍÎÄ¼ş
+        //ä¸ºå®¢æˆ·ç«¯å‘é€ç‰¹å®šåç§°çš„æ–‡ä»¶æˆ–è€…æ–‡ä»¶å¤¹
+        //ç¬¬ä¸€æ¬¡æ¥æ”¶ååˆ¤æ–­b[1]ï¼Œåˆ¤æ–­ç¬¬ä¸€æ¬¡æˆ–ç¬¬äºŒæ¬¡è¯·æ±‚
+        //ç¬¬ä¸€æ¬¡è¯·æ±‚åˆ¤æ–­æ˜¯å¦æœ‰è¯¥æ–‡ä»¶å¤¹æˆ–è€…æ–‡ä»¶
+        //ç¬¬äºŒæ¬¡è¯·æ±‚å‘é€æ–‡ä»¶
 
         switch (b[1]) {
             case '1' -> {
@@ -96,12 +96,12 @@ public final class MyRunnable implements Runnable {
                 }
             }
         }
-        MyStreamMethod.print(jTextArea,"IPÎª"+s.getInetAddress()+"µÄÓÃ»§ÕıÔÚÏÂÔØÎÄ¼ş");
+        MyStreamMethod.print(jTextArea,"IPä¸º"+s.getInetAddress()+"çš„ç”¨æˆ·æ­£åœ¨ä¸‹è½½æ–‡ä»¶");
     }
 
     void last(){
-        //½øÈëÉÏÒ»¼¶
-        //·¢ËÍÉÏÒ»´ÎÎÄ¼ş¼ĞÃû³Æ¸ø¿Í»§¶Ë
+        //è¿›å…¥ä¸Šä¸€çº§
+        //å‘é€ä¸Šä¸€æ¬¡æ–‡ä»¶å¤¹åç§°ç»™å®¢æˆ·ç«¯
         File file=new File(nowPath);
         if(nowPath.contains(rootpath)){
             if(rootpath.equals(nowPath)){
@@ -110,13 +110,13 @@ public final class MyRunnable implements Runnable {
                 nowPath = file.getParent();
                 String string= nowPath.substring(rootpath.length());
                 MyStreamMethod.send(("1"+string).getBytes(),s);
-                MyStreamMethod.print(jTextArea,"IPÎª"+s.getInetAddress()+"µÄÓÃ»§·µ»ØÎÄ¼ş¼Ğ£º¸ùÄ¿Â¼\\"+string);
+                MyStreamMethod.print(jTextArea,"IPä¸º"+s.getInetAddress()+"çš„ç”¨æˆ·è¿”å›æ–‡ä»¶å¤¹ï¼šæ ¹ç›®å½•\\"+string);
             }
         }
     }
 
     void create (byte[] b){
-        //¸ù¾İbÖĞÄÚÈİĞÂ½¨ÎÄ¼ş
+        //æ ¹æ®bä¸­å†…å®¹æ–°å»ºæ–‡ä»¶
         String thisPath = new String(b,1,b.length-1);
         int n = b.length - 1;
         try {
@@ -137,11 +137,11 @@ public final class MyRunnable implements Runnable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        MyStreamMethod.print(jTextArea,"IPÎª"+s.getInetAddress()+"µÄÓÃ»§ÕıÔÚĞÂ½¨ÎÄ¼ş¼Ğ");
+        MyStreamMethod.print(jTextArea,"IPä¸º"+s.getInetAddress()+"çš„ç”¨æˆ·æ­£åœ¨æ–°å»ºæ–‡ä»¶å¤¹");
     }
 
     void del(byte[] b){
-        //É¾³ıÌØ¶¨ÎÄ¼ş»òÎÄ¼ş¼Ğ£¬²¢·¢ËÍ·´À¡
+        //åˆ é™¤ç‰¹å®šæ–‡ä»¶æˆ–æ–‡ä»¶å¤¹ï¼Œå¹¶å‘é€åé¦ˆ
         String name=new String(b,1,b.length-1);
         String string="";
         File file=new File(nowPath +"\\"+name);
@@ -156,16 +156,16 @@ public final class MyRunnable implements Runnable {
                 }else {
                     MyStreamMethod.send("2".getBytes(),s);
                 }
-                MyStreamMethod.print(jTextArea,"IPÎª"+s.getInetAddress()+"µÄÓÃ»§É¾³ıÎÄ¼ş"+string);
+                MyStreamMethod.print(jTextArea,"IPä¸º"+s.getInetAddress()+"çš„ç”¨æˆ·åˆ é™¤æ–‡ä»¶"+string);
             }
         }else {
             MyStreamMethod.send("3".getBytes(), s);
-            MyStreamMethod.print(jTextArea, "IPÎª" + s.getInetAddress() + "µÄÓÃ»§É¾³ıÎÄ¼şÊ§°Ü£ºÎÄ¼ş²»´æÔÚ");
+            MyStreamMethod.print(jTextArea, "IPä¸º" + s.getInetAddress() + "çš„ç”¨æˆ·åˆ é™¤æ–‡ä»¶å¤±è´¥ï¼šæ–‡ä»¶ä¸å­˜åœ¨");
         }
     }
 
     void cd(byte[] b){
-        //½øÈëÏÂÒ»¼¶·¢ËÍ·´À¡
+        //è¿›å…¥ä¸‹ä¸€çº§å‘é€åé¦ˆ
         String name=new String(b,1,b.length-1);
         name= nowPath +"\\"+name;
         File file=new File(name);
@@ -181,7 +181,7 @@ public final class MyRunnable implements Runnable {
             nowPath =name;
             if(file.isDirectory()){
                 MyStreamMethod.send(("1"+string).getBytes(),s);
-                MyStreamMethod.print(jTextArea,"IPÎª"+s.getInetAddress()+"µÄÓÃ»§½øÈëÎÄ¼ş¼Ğ£º"+string);
+                MyStreamMethod.print(jTextArea,"IPä¸º"+s.getInetAddress()+"çš„ç”¨æˆ·è¿›å…¥æ–‡ä»¶å¤¹ï¼š"+string);
             }else if(string.substring(string.lastIndexOf(".")).equals(".txt")){
                 try{
                     FileInputStream i=new FileInputStream(file);
@@ -197,17 +197,17 @@ public final class MyRunnable implements Runnable {
                     i.close();
                     System.arraycopy(by, 0, byt, 0, j);
                     MyStreamMethod.send(byt,s);
-                    MyStreamMethod.print(jTextArea,"IPÎª"+s.getInetAddress()+"µÄÓÃ»§Ô¤ÀÀÎÄ¼ş£º"+string);
+                    MyStreamMethod.print(jTextArea,"IPä¸º"+s.getInetAddress()+"çš„ç”¨æˆ·é¢„è§ˆæ–‡ä»¶ï¼š"+string);
                 }catch (Exception ie){ie.printStackTrace();}
             }else {
                 MyStreamMethod.send(("3"+string).getBytes(),s);
-                MyStreamMethod.print(jTextArea,"IPÎª"+s.getInetAddress()+"µÄÓÃ»§Ô¤ÀÀÎÄ¼şÊ§°Ü£ºÎÄ¼şÀàĞÍ²»Ö§³Ö");
+                MyStreamMethod.print(jTextArea,"IPä¸º"+s.getInetAddress()+"çš„ç”¨æˆ·é¢„è§ˆæ–‡ä»¶å¤±è´¥ï¼šæ–‡ä»¶ç±»å‹ä¸æ”¯æŒ");
             }
         }
     }
 
     boolean delAllFile(File file){
-        //É¾³ıÎÄ¼ş¼Ğ·½·¨µ÷ÓÃ×Ó·½·¨
+        //åˆ é™¤æ–‡ä»¶å¤¹æ–¹æ³•è°ƒç”¨å­æ–¹æ³•
         boolean ret = true;
         File[] arr;
         arr=file.listFiles();
@@ -217,7 +217,7 @@ public final class MyRunnable implements Runnable {
         }
         if(!file.delete()){
             String path= file.getPath().substring(rootpath.length());
-            MyStreamMethod.print(jTextArea,"ÎÄ¼ş"+path+"É¾³ıÊ§°Ü");
+            MyStreamMethod.print(jTextArea,"æ–‡ä»¶"+path+"åˆ é™¤å¤±è´¥");
         }
         return ret;
     }

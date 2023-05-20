@@ -1,4 +1,4 @@
-package curriculumDesign.allCode;
+package 测试用;
 
 import javax.swing.*;
 import java.io.*;
@@ -10,8 +10,8 @@ import java.util.List;
 //包括两个receive方法：基础接收处理单个数据包（128比特），以及接收文件/文件夹（多个基础receive组合）
 //获取给定文件夹下的所有文件，储存在实参中的字符串list中
 
-public final class MyStreamMethod {
-    private MyStreamMethod(){}
+public final class temp {
+    private temp(){}
 
     public static void send(byte[] b, Socket s){
         //传输b中内容，不足127比特则中间填‘@’，最后几位标记无效位的位数
@@ -56,6 +56,7 @@ public final class MyStreamMethod {
         StringBuilder string = new StringBuilder();
         string.append(1).append(flag);
         switch (flag) {
+            case 0 -> send("0".getBytes(), s);
             case 1 -> {
                 byte[] b = new byte[127];
                 string.append(file.getName());
@@ -108,8 +109,9 @@ public final class MyStreamMethod {
             int i=b.length-1;
             StringBuilder num= new StringBuilder();
             while(b[i]!='@'){
-                num.insert(0, (char) b[i] + "");
+                num.append(b[i]);
                 i--;}
+            num.reverse();
             int n;
             if(i==b.length-1) n=1;
             else n=Integer.parseInt(num.toString());
@@ -143,14 +145,13 @@ public final class MyStreamMethod {
                     }
                     FileOutputStream o;
                     o=new FileOutputStream(file);
-                    while((b = receive(new byte[128], s)).length==127) {
+                    while((b = receive(new byte[128], s)).length>1) {
                         o.write(b);
                         o.flush();
                     }
-                    if(b[b.length-2]!='@')   o.write(b);
+                    if(b[0]!='@')   o.write(b);
                     o.flush();
                     o.close();
-                    receive(new byte[128],s);
                 }
                 case '2' -> {
                     String string = nowPath + "\\" + new String(b, 5, b.length - 5);

@@ -1,4 +1,4 @@
-package curriculumDesign.allCode;
+package allCode;
 
 import java.awt.*;
 import java.awt.event.*;

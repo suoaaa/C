@@ -1,21 +1,21 @@
-package curriculumDesign.allCode;
+package allCode;
 
 import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.List;
 
-//±¾ÀàÖĞ¹²ÊµÏÖÁË¸ö·½·¨
-//°üÀ¨Á½¸ösend·½·¨£º»ù´¡·¢ËÍµ¥¸öÊı¾İ°ü£¨128±ÈÌØ£©£¬ÒÔ¼°·¢ËÍÎÄ¼ş/ÎÄ¼ş¼Ğ£¨¶à¸ö»ù´¡send×éºÏ£©
-//°üÀ¨Á½¸öreceive·½·¨£º»ù´¡½ÓÊÕ´¦Àíµ¥¸öÊı¾İ°ü£¨128±ÈÌØ£©£¬ÒÔ¼°½ÓÊÕÎÄ¼ş/ÎÄ¼ş¼Ğ£¨¶à¸ö»ù´¡receive×éºÏ£©
-//»ñÈ¡¸ø¶¨ÎÄ¼ş¼ĞÏÂµÄËùÓĞÎÄ¼ş£¬´¢´æÔÚÊµ²ÎÖĞµÄ×Ö·û´®listÖĞ
+//æœ¬ç±»ä¸­å…±å®ç°äº†ä¸ªæ–¹æ³•
+//åŒ…æ‹¬ä¸¤ä¸ªsendæ–¹æ³•ï¼šåŸºç¡€å‘é€å•ä¸ªæ•°æ®åŒ…ï¼ˆ128æ¯”ç‰¹ï¼‰ï¼Œä»¥åŠå‘é€æ–‡ä»¶/æ–‡ä»¶å¤¹ï¼ˆå¤šä¸ªåŸºç¡€sendç»„åˆï¼‰
+//åŒ…æ‹¬ä¸¤ä¸ªreceiveæ–¹æ³•ï¼šåŸºç¡€æ¥æ”¶å¤„ç†å•ä¸ªæ•°æ®åŒ…ï¼ˆ128æ¯”ç‰¹ï¼‰ï¼Œä»¥åŠæ¥æ”¶æ–‡ä»¶/æ–‡ä»¶å¤¹ï¼ˆå¤šä¸ªåŸºç¡€receiveç»„åˆï¼‰
+//è·å–ç»™å®šæ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰æ–‡ä»¶ï¼Œå‚¨å­˜åœ¨å®å‚ä¸­çš„å­—ç¬¦ä¸²listä¸­
 
 public final class MyStreamMethod {
     private MyStreamMethod(){}
 
     public static void send(byte[] b, Socket s){
-        //´«ÊäbÖĞÄÚÈİ£¬²»×ã127±ÈÌØÔòÖĞ¼äÌî¡®@¡¯£¬×îºó¼¸Î»±ê¼ÇÎŞĞ§Î»µÄÎ»Êı
-        //Î»127±ÈÌØÔò×îºóÒ»Î»Îª¡¯@¡®£¬Ö®Ç°È«ÎªÓĞĞ§Î»
+        //ä¼ è¾“bä¸­å†…å®¹ï¼Œä¸è¶³127æ¯”ç‰¹åˆ™ä¸­é—´å¡«â€˜@â€™ï¼Œæœ€åå‡ ä½æ ‡è®°æ— æ•ˆä½çš„ä½æ•°
+        //ä½127æ¯”ç‰¹åˆ™æœ€åä¸€ä½ä¸ºâ€™@â€˜ï¼Œä¹‹å‰å…¨ä¸ºæœ‰æ•ˆä½
 
         try{
             BufferedOutputStream o ;
@@ -39,20 +39,20 @@ public final class MyStreamMethod {
     }
 
     public static void send(File file, Socket s){
-        //×Ö½ÚÍ·1Î»Îª£º1:È·¶¨ÊÇÉÏ´«ÎÄ¼ş
-        //×Ö½ÚÍ·2Î»Îª£ºÈ·¶¨ÊÇÎÄ¼ş»òÎÄ¼ş¼Ğ£¬1£ºÎÄ¼ş£¬2£ºÎÄ¼ş¼Ğ
-        //ÈôÎªÎÄ¼ş¼Ğ£¬ÈıÎ»È·¶¨size-ÎÄ¼ş¼ĞÖĞÎÄ¼şÊıÁ¿,ºóÎªÎÄ¼şÃû
+        //å­—èŠ‚å¤´1ä½ä¸ºï¼š1:ç¡®å®šæ˜¯ä¸Šä¼ æ–‡ä»¶
+        //å­—èŠ‚å¤´2ä½ä¸ºï¼šç¡®å®šæ˜¯æ–‡ä»¶æˆ–æ–‡ä»¶å¤¹ï¼Œ1ï¼šæ–‡ä»¶ï¼Œ2ï¼šæ–‡ä»¶å¤¹
+        //è‹¥ä¸ºæ–‡ä»¶å¤¹ï¼Œä¸‰ä½ç¡®å®šsize-æ–‡ä»¶å¤¹ä¸­æ–‡ä»¶æ•°é‡,åä¸ºæ–‡ä»¶å
 
-        //ÈôÎªÎÄ¼ş£¬ÔòºóÈô¸ÉÎ»ÎªÎÄ¼şÃû³Æ
-        //Ö®ºóµÄÈô¸É±ÈÌØÁ÷´«ÊäÎÄ¼şÄÚÈİ£¬±ÈÌØÍ·ÎŞÌØÊâº¬Òå
-        //µ±ÎÄ¼şµ½´ïÄ©Î²£¬ÔòÔÚÎÄ¼ş·¢ËÍ½áÊøºóÔÚ·¢ËÍÒ»¸öÖ»ÓĞÒ»Î»¡®@¡¯µÄ±ÈÌØÁ÷×÷Îª½áÊø±êÖ¾
+        //è‹¥ä¸ºæ–‡ä»¶ï¼Œåˆ™åè‹¥å¹²ä½ä¸ºæ–‡ä»¶åç§°
+        //ä¹‹åçš„è‹¥å¹²æ¯”ç‰¹æµä¼ è¾“æ–‡ä»¶å†…å®¹ï¼Œæ¯”ç‰¹å¤´æ— ç‰¹æ®Šå«ä¹‰
+        //å½“æ–‡ä»¶åˆ°è¾¾æœ«å°¾ï¼Œåˆ™åœ¨æ–‡ä»¶å‘é€ç»“æŸååœ¨å‘é€ä¸€ä¸ªåªæœ‰ä¸€ä½â€˜@â€™çš„æ¯”ç‰¹æµä½œä¸ºç»“æŸæ ‡å¿—
 
         int flag=0;
         if(file.exists()) {
             if(file.isFile())           flag = 1;
             if (file.isDirectory())     flag = 2;
         }
-        //ÅĞ¶ÏÎÄ¼şÊÇ·ñ´æÔÚ
+        //åˆ¤æ–­æ–‡ä»¶æ˜¯å¦å­˜åœ¨
         StringBuilder string = new StringBuilder();
         string.append(1).append(flag);
         switch (flag) {
@@ -96,10 +96,10 @@ public final class MyStreamMethod {
     }
 
     public static byte[] receive(byte[] b, Socket s){
-        //½ÓÊÕ128±ÈÌØµÄÊı×é²¢·ÖÎö³öĞèÒªµÄÊı¾İ
-        //µ±±ÈÌØÁ÷×îºóÒ»Î»Îª¡®@¡¯Ê±£¬±íÊ¾Ç°127Î»¶¼ÊÇĞèÒªµÄÄÚÈİ
-        //µ±±ÈÌØÁ÷×îºóÒ»Î»ÎªÊı×ÖÊ±£¬ÖĞ¼äÎªÎŞĞ§ÄÚÈİ£¬Ö»ĞèÇ°Ò»²¿·Ö
-        //·µ»ØÓĞĞ§Êı¾İ×é³ÉµÄ±ÈÌØ´®
+        //æ¥æ”¶128æ¯”ç‰¹çš„æ•°ç»„å¹¶åˆ†æå‡ºéœ€è¦çš„æ•°æ®
+        //å½“æ¯”ç‰¹æµæœ€åä¸€ä½ä¸ºâ€˜@â€™æ—¶ï¼Œè¡¨ç¤ºå‰127ä½éƒ½æ˜¯éœ€è¦çš„å†…å®¹
+        //å½“æ¯”ç‰¹æµæœ€åä¸€ä½ä¸ºæ•°å­—æ—¶ï¼Œä¸­é—´ä¸ºæ— æ•ˆå†…å®¹ï¼Œåªéœ€å‰ä¸€éƒ¨åˆ†
+        //è¿”å›æœ‰æ•ˆæ•°æ®ç»„æˆçš„æ¯”ç‰¹ä¸²
 
         byte[] ret=null;
         try{
@@ -121,10 +121,10 @@ public final class MyStreamMethod {
     }
 
     public static void receive(byte[] b, Socket s, String nowPath){
-        //½ÓÊÕÎÄ¼ş¼Ğ
-        //ÎªÎÄ¼şÖ±½ÓÏÂÔØ
-        //ÎÄ¼ş¼ĞĞÂ½¨ÎÄ¼ş¼Ğ½øÈëÎÄ¼ş¼Ğ¼ÌĞø½ÓÊÕ
-        //Ã¿´Î½øÈëÏÂÒ»¼¶¶¼Òª´«µİµ±Ç°µØÖ·È·±£ÎÄ¼şÏÂÔØºó½á¹¹ÏàÍ¬
+        //æ¥æ”¶æ–‡ä»¶å¤¹
+        //ä¸ºæ–‡ä»¶ç›´æ¥ä¸‹è½½
+        //æ–‡ä»¶å¤¹æ–°å»ºæ–‡ä»¶å¤¹è¿›å…¥æ–‡ä»¶å¤¹ç»§ç»­æ¥æ”¶
+        //æ¯æ¬¡è¿›å…¥ä¸‹ä¸€çº§éƒ½è¦ä¼ é€’å½“å‰åœ°å€ç¡®ä¿æ–‡ä»¶ä¸‹è½½åç»“æ„ç›¸åŒ
 
         try{
             if(b[0]=='0') return;
@@ -135,7 +135,7 @@ public final class MyStreamMethod {
                     if (file.exists()) {
                         int i=1;
                         String last=string.substring(string.lastIndexOf("."));
-                        string = string.substring(0,string.lastIndexOf("."))+"-¸±±¾";
+                        string = string.substring(0,string.lastIndexOf("."))+"-å‰¯æœ¬";
                         while((file=new File(string+i+last)).exists()){
                             i++;
                         }
@@ -170,42 +170,42 @@ public final class MyStreamMethod {
     }
 
     public static void getAllFile (File fileInput, List< String > allFileList, int n){
-        //·½·¨¹¦ÄÜ£º»ñÈ¡ÎÄ¼ş¼ĞÄÚËùÓĞÎÄ¼şµÄÎÄ¼şÃû£¬¹ã¶ÈÓÅÏÈËã·¨
-        // »ñÈ¡ÎÄ¼şÁĞ±í
+        //æ–¹æ³•åŠŸèƒ½ï¼šè·å–æ–‡ä»¶å¤¹å†…æ‰€æœ‰æ–‡ä»¶çš„æ–‡ä»¶åï¼Œå¹¿åº¦ä¼˜å…ˆç®—æ³•
+        // è·å–æ–‡ä»¶åˆ—è¡¨
         File[] fileList = fileInput.listFiles();
         assert fileList != null;
         StringBuilder string = new StringBuilder();
         string.append("  ".repeat(Math.max(0, n)));
         for (File file : fileList) {
             if (file.isDirectory()) {
-                // µİ¹é´¦ÀíÎÄ¼ş¼Ğ
+                // é€’å½’å¤„ç†æ–‡ä»¶å¤¹
                 allFileList.add(string + file.getName() + "\\");
                 getAllFile(file, allFileList, n + 1);
             } else {
-                // Èç¹ûÊÇÎÄ¼şÔò½«Æä¼ÓÈëµ½ÎÄ¼şÃûÊı×éÖĞ
+                // å¦‚æœæ˜¯æ–‡ä»¶åˆ™å°†å…¶åŠ å…¥åˆ°æ–‡ä»¶åæ•°ç»„ä¸­
                 allFileList.add(string + file.getName());
             }
         }
     }
 
     public static void print(JTextArea jTextArea,String string){
-        //ÔÚJTexAreaÖĞ´òÓ¡stringµÄÄÚÈİ²¢»»ĞĞ
+        //åœ¨JTexAreaä¸­æ‰“å°stringçš„å†…å®¹å¹¶æ¢è¡Œ
         jTextArea.append(string + "\r\n");
     }
 
 
     public static JFileChooser fileWindow(int model,String rootpath){
-        //ĞÂ½¨´°¿ÚÑ¡ÔñÎÄ¼ş´¢´æµØÖ·
+        //æ–°å»ºçª—å£é€‰æ‹©æ–‡ä»¶å‚¨å­˜åœ°å€
         JFileChooser jfc=new JFileChooser(rootpath);
         switch (model) {
             case 1 -> {
                 jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 jfc.setMultiSelectionEnabled(true);
-                jfc.showDialog(new JLabel(), "Ñ¡ÔñÉÏ´«µÄ¶à¸öÎÄ¼ş/ÎÄ¼ş¼Ğ");
+                jfc.showDialog(new JLabel(), "é€‰æ‹©ä¸Šä¼ çš„å¤šä¸ªæ–‡ä»¶/æ–‡ä»¶å¤¹");
             }
             case 2 -> {
                 jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                jfc.showDialog(new JLabel(), "Ñ¡Ôñ±¾µØÎÄ¼ş¼Ğ");
+                jfc.showDialog(new JLabel(), "é€‰æ‹©æœ¬åœ°æ–‡ä»¶å¤¹");
             }
         }
         jfc.setVisible(true);

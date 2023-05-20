@@ -3,6 +3,7 @@ package curriculumDesign.allCode;
 import javax.swing.*;
 import java.io.File;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,6 @@ public final class MyActionMethod {
         byte []b=("0"+name).getBytes();
         MyStreamMethod.send(b,s);
         //接收反馈指令，获得文件数量
-//        Thread.sleep(50);
         b= MyStreamMethod.receive(new byte[128],s);
         if(b[0]=='0') {
             MyStreamMethod.print(jTextArea, "当前文件夹为空");
@@ -144,8 +144,8 @@ public final class MyActionMethod {
             switch (b[0]) {
                 case '0' -> MyStreamMethod.print(jTextArea, "删除文件：" + name + "成功");
                 case '1' -> MyStreamMethod.print(jTextArea, "删除文件夹：" + name + "成功");
-                case '2' -> MyStreamMethod.print(jTextArea, "删除：" + name + "失败，存在文件被占用");
-                case '4' -> MyStreamMethod.print(jTextArea, "删除失败：此目录下文件或文件夹" + name + "不存在");
+                case '2' -> MyStreamMethod.print(jTextArea, "删除：" + name + "失败，目录中存在文件被占用");
+                case '3' -> MyStreamMethod.print(jTextArea, "删除失败：此目录下" + name + "不存在");
             }
         }
     }
@@ -164,10 +164,13 @@ public final class MyActionMethod {
                 case '0' -> MyStreamMethod.print(jTextArea, "无此文件夹");
                 case '1' -> MyStreamMethod.print(jTextArea, "进入文件夹:根目录" + new String(b, 1, b.length - 1));
                 case '2' -> {
-                    MyStreamMethod.print(jTextArea, "进入文件，以下为预览内容：");
+                    MyStreamMethod.print(jTextArea, "无法确定该文件编码格式，以下两段其中一段为正确预览内容：");
+                    MyStreamMethod.print(jTextArea,"------------开始预览，以下为GBK格式：----------------");
+                    MyStreamMethod.print(jTextArea, new String(b, 1, b.length - 1, Charset.forName("GBK")));
+                    MyStreamMethod.print(jTextArea,"-------------------以下为utf-8格式：----------------");
                     MyStreamMethod.print(jTextArea, new String(b, 1, b.length - 1, StandardCharsets.UTF_8));
                 }
-                case '3' -> MyStreamMethod.print(jTextArea, "检测到服务器储存地址变化，请重新浏览服务器中的文件重新操作");
+                case '3' -> MyStreamMethod.print(jTextArea, "文件类型不支持预览");
             }
         }
         else {
