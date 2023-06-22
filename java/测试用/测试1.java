@@ -10,12 +10,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
  
 public class ≤‚ ‘1 {
-	public static void main(String[] args) {
-		File f=new File("");
-		// String s=f.getAbsolutePath().substring(0,f.getAbsolutePath().lastIndexOf("\\"));
-		File f2=new File("E:\\∏ˆ»À±‡≥Ã");
-		System.out.println(f.getAbsolutePath());
-		System.out.println(f2.getAbsolutePath());
-		// System.out.println(f.getParentFile().getAbsolutePath());
+	
+    public static void main(String[] args) {
+       int[][] x={{1,2},{3},{4,5,6}};
+	   System.out.println(x[1].length);
+
 	}
 }

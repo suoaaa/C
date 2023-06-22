@@ -1,11 +1,7 @@
 package 考试系统;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Random;
+import java.io.*;
+import java.util.*;
 
 //questions类储存题目信息
 //allString成员储存题库所有题目、选项以及答案
