@@ -1,19 +1,25 @@
-package ¿¼ÊÔÏµÍ³;
-
 import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 
 public class MainFunc {
     public static void main(String[] args) {
+        String rootpath, name=null;
         File file=new File("");
-        String rootpath ;
-        rootpath=file.getAbsolutePath().substring(0,file.getAbsolutePath().lastIndexOf("\\"));
-        if(!file.exists()) file.mkdirs();
-
-//        System.out.println(path.getAbsolutePath());
-        
-        new MyWindow(new Questions(rootpath));
-        //Ê¹ÓÃÊ±Çë°´ÎÄ¼şÂ·¾¶¸ü¸ÄÊµ²Î£¬ÀıÈç±ÊÕßÌâ¿âÂ·¾¶Îªjava\\ÔÄ¾í²âÊÔ\\Ìâ¿â.txt
-        //Êµ²ÎÓ¦ÎªÌâ¿â.txtÎÄ¼şËùÔÚÎÄ¼ş¼Ğ
-        //Ò²¿ÉÒÔÀûÓÃÌâ¿â1½øĞĞ²âÊÔ
+        rootpath=file.getAbsolutePath();
+        JFileChooser jfc=new JFileChooser(rootpath);
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.setMultiSelectionEnabled(true);
+        jfc.showDialog(new JLabel(), "é€‰æ‹©é¢˜åº“");
+        jfc.setVisible(true);
+        if(jfc.getSelectedFile()!=null) {
+            rootpath=jfc.getSelectedFile().getAbsolutePath();
+            name=rootpath.substring(rootpath.lastIndexOf('\\'));
+            rootpath=rootpath.substring(0, rootpath.lastIndexOf('\\'));
+        }
+        new MyWindow(new Questions(rootpath,name));
     }
 }
+        //é€‰æ‹©é¢˜åº“è¿›è¡Œè€ƒè¯•ï¼Œé»˜è®¤å³ä¸é€‰æ‹©æ–‡ä»¶ä¸ºé¢˜åº“.txt
+        //å®å‚åº”ä¸ºé¢˜åº“æ–‡ä»¶æ‰€åœ¨æ–‡ä»¶å¤¹,ä»¥åŠé¢˜åº“çš„åç§°
+        //ä¹Ÿå¯ä»¥åˆ©ç”¨é¢˜åº“1è¿›è¡Œæµ‹è¯•

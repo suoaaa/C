@@ -1,30 +1,31 @@
-package ¿¼ÊÔÏµÍ³;
-
 import java.io.*;
 import java.util.*;
 
-//questionsÀà´¢´æÌâÄ¿ĞÅÏ¢
-//allString³ÉÔ±´¢´æÌâ¿âËùÓĞÌâÄ¿¡¢Ñ¡ÏîÒÔ¼°´ğ°¸
-//question,A,B,C,answer³ÉÔ±´¢´æÑ¡Ôñ³öÀ´µÄÌâÄ¿µÄÌâÄ¿¡¢Ñ¡Ïî¡¢´ğ°¸
-//index³ÉÔ±¸ºÔğ³õÊ¼»¯Ê±»ñµÃĞÂµÄÌâÄ¿£¬index´¢´æµÄÊÇÌâ¿âÖĞÌâÄ¿µÄĞòºÅ(´ÓĞ¡µ½´ó)£¬½ø¶ø×é½¨²»Í¬µÄÊÔ¾í
-//index³ÉÔ±µÄÊı¾İÍ¨¹ırandomº¯Êı»ñµÃ
+//questionsç±»å‚¨å­˜é¢˜ç›®ä¿¡æ¯
+//allStringæˆå‘˜å‚¨å­˜é¢˜åº“æ‰€æœ‰é¢˜ç›®ã€é€‰é¡¹ä»¥åŠç­”æ¡ˆ
+//question,A,B,C,answeræˆå‘˜å‚¨å­˜é€‰æ‹©å‡ºæ¥çš„é¢˜ç›®çš„é¢˜ç›®ã€é€‰é¡¹ã€ç­”æ¡ˆ
+//indexæˆå‘˜è´Ÿè´£åˆå§‹åŒ–æ—¶è·å¾—æ–°çš„é¢˜ç›®ï¼Œindexå‚¨å­˜çš„æ˜¯é¢˜åº“ä¸­é¢˜ç›®çš„åºå·(ä»å°åˆ°å¤§)ï¼Œè¿›è€Œç»„å»ºä¸åŒçš„è¯•å·
+//indexæˆå‘˜çš„æ•°æ®é€šè¿‡randomå‡½æ•°è·å¾—
 
 public class Questions {
-    static String[] allStrings;                 //Ê¹ÓÃ¾²Ì¬³ÉÔ±±äÁ¿¼õĞ¡ÄÚ´æÕ¼ÓÃÒÔ¼°ÖØĞÂ×é¾íµÄÊ±¼äÕ¼ÓÃ
-    String[] A, B, C;                           //³ÉÔ±Ãû³Æ´úÆäÒâ
+    static String[] allStrings;                 //ä½¿ç”¨é™æ€æˆå‘˜å˜é‡å‡å°å†…å­˜å ç”¨ä»¥åŠé‡æ–°ç»„å·çš„æ—¶é—´å ç”¨
+    String[] A, B, C;                           //æˆå‘˜åç§°ä»£å…¶æ„
     String[] question;
     String[] answer;
-    String[] myAnswer;                          //´¢´æÓÃ»§´ğÌâÇé¿ö
-    int []index;                                //ÓÃÓÚËæ»ú³éÈ¡Ìâ¿âÌâÄ¿µÄË÷Òı
-    String path;                                //Ìâ¿âÂ·¾¶
-    int score=0;                                //×Ü·ÖÊı
-    Date beginTime=new Date();                  //×öÌâÊ±¼ä
-    boolean isWrite=false;                      //ÅĞ¶ÏÊÇ·ñ½«´Ë´Î×öÌâÇé¿ö´òÓ¡µ½txtÎÄ¼şÖĞ
+    String[] myAnswer;                          //å‚¨å­˜ç”¨æˆ·ç­”é¢˜æƒ…å†µ
+    int []index;                                //ç”¨äºéšæœºæŠ½å–é¢˜åº“é¢˜ç›®çš„ç´¢å¼•
+    String path;                                //é¢˜åº“è·¯å¾„
+    String name;                                //é¢˜åº“åç§°
+    int score=0;                                //æ€»åˆ†æ•°
+    Date beginTime=new Date();                  //åšé¢˜æ—¶é—´
+    boolean isWrite=false;                      //åˆ¤æ–­æ˜¯å¦å°†æ­¤æ¬¡åšé¢˜æƒ…å†µæ‰“å°åˆ°txtæ–‡ä»¶ä¸­
 
-    public Questions(String path) {
+    public Questions(String path,String name) {
         this.path=path;
-        if(allStrings==null) {                  //Ìâ¿âÎª¿ÕÖ¤Ã÷ÊÇµÚÒ»´Î×é¾í£¬Ê×ÏÈ»ñÈ¡Ìâ¿â£¬³õÊ¼»¯³ÉÔ±±äÁ¿£¬¶¨Òå±äÁ¿³¤¶È
-            getAllString(path);                 //Ö®ºóµÄÃ¿´Î×é¾í²»ĞèÒªÖØĞÂ¶¨Òå³¤¶È£¬Ö»ĞèÒª¸Ä±ä±äÁ¿µÄÖµ
+        if(name==null) this.name="é¢˜åº“.txt";
+        else this.name=name;
+        if(allStrings==null) {                  //é¢˜åº“ä¸ºç©ºè¯æ˜æ˜¯ç¬¬ä¸€æ¬¡ç»„å·ï¼Œé¦–å…ˆè·å–é¢˜åº“ï¼Œåˆå§‹åŒ–æˆå‘˜å˜é‡ï¼Œå®šä¹‰å˜é‡é•¿åº¦
+            getAllString();                     //ä¹‹åçš„æ¯æ¬¡ç»„å·ä¸éœ€è¦é‡æ–°å®šä¹‰é•¿åº¦ï¼Œåªéœ€è¦æ”¹å˜å˜é‡çš„å€¼
             A=new String[6];
             B=new String[6];
             C=new String[6];
@@ -36,8 +37,8 @@ public class Questions {
         getNewQuestions();
     };
 
-    private void getAllString(String path) {   //·½·¨½«ËùÓĞÌâÄ¿´¢´æµ½allString³ÉÔ±ÖĞ
-        File f=new File(path,"Ìâ¿â.txt");
+    private void getAllString() {       //æ–¹æ³•å°†æ‰€æœ‰é¢˜ç›®å‚¨å­˜åˆ°allStringæˆå‘˜ä¸­
+        File f=new File(path,name);
         FileReader fr;
         char[] c;
         String s;
@@ -53,11 +54,12 @@ public class Questions {
             }
     }
 
-    public void getNewQuestions(){              //²úÉúËæ»úindexĞòÁĞ£¬²¢»ñÈ¡Ìâ¿âÖĞ¶ÔÓ¦ÌâÄ¿¡¢´ğ°¸¡¢Ñ¡Ïî²¢³õÊ¼»¯
+    public void getNewQuestions(){              //äº§ç”Ÿéšæœºindexåºåˆ—ï¼Œå¹¶è·å–é¢˜åº“ä¸­å¯¹åº”é¢˜ç›®ã€ç­”æ¡ˆã€é€‰é¡¹å¹¶åˆå§‹åŒ–
         beginTime=new Date();
         Random r=new Random();
+        isWrite=false;
         for(int i=0;i<8;i++){
-            index[i]=r.nextInt(10)+i*10;    //´ÓÌâ¿âµÄÌâÄ¿ĞòºÅÖĞËæ»ú»ñÈ¡ÌâºÅ£¬¶ÔÓ¦µÄÌâÄ¿×÷ÎªĞÂµÄÊÔ¾íµÄÌâÄ¿
+            index[i]=r.nextInt(10)+i*10;    //ä»é¢˜åº“çš„é¢˜ç›®åºå·ä¸­éšæœºè·å–é¢˜å·ï¼Œå¯¹åº”çš„é¢˜ç›®ä½œä¸ºæ–°çš„è¯•å·çš„é¢˜ç›®
         }
         for(int i=0;i<6;i++){
             question[i]=allStrings[index[i]*5];
@@ -80,18 +82,17 @@ public class Questions {
         }
     }
 
-    public int getScore(){                      //»ñÈ¡·ÖÊı
+    public int getScore(){                      //è·å–åˆ†æ•°
         score=0;
-        for(int i=0;i<8;i++){
+        for(int i=0;i<8;i++)
             if(answer[i].equals(myAnswer[i]))   score=score+i/6*10+10;
-        }
         return score;
     }
 
-    public void input(){                        //½«ÊÔ¾íĞÅÏ¢Óë´ğÌâÇé¿ö´òÓ¡½øtxtÎÄ¼ş
-        if(isWrite==true) return;
+    public void input(){                        //å°†è¯•å·ä¿¡æ¯ä¸ç­”é¢˜æƒ…å†µæ‰“å°è¿›txtæ–‡ä»¶
+        if(isWrite) return;
         else isWrite=true;
-        File f=new File(path,"ÊÔ¾í.txt");
+        File f=new File(path,"è¯•å·.txt");
         FileWriter fw;
         Date endTime=new Date();
         try {
@@ -99,25 +100,25 @@ public class Questions {
             fw.write(
                 "\n =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n"+
                 "                                                                                  \n"+
-                "                                  ¿ªÑ§¿¼ÊÔÊÔÌâ                                    \n"+
+                "                                  å¼€å­¦è€ƒè¯•è¯•é¢˜                                    \n"+
                 "                                                                                  \n"+
-                "   ±¾´Î¿¼ÊÔ·ÖÎªÁ½½Ú£ºÇ°ÁùÌâÎªµ¥ÏîÑ¡ÔñÌâ£¬Ã¿Ğ¡ÌâÊ®·Ö£»ºóÁ½ÌâÎªÌî¿ÕÌâ£¬Ã¿Ğ¡Ìâ20·Ö¡£   \n"+
+                "   æœ¬æ¬¡è€ƒè¯•åˆ†ä¸ºä¸¤èŠ‚ï¼šå‰å…­é¢˜ä¸ºå•é¡¹é€‰æ‹©é¢˜ï¼Œæ¯å°é¢˜ååˆ†ï¼›åä¸¤é¢˜ä¸ºå¡«ç©ºé¢˜ï¼Œæ¯å°é¢˜20åˆ†ã€‚   \n"+
                 "                                                                                  \n"+
-                "                     ¿¼ÊÔ¿ªÊ¼Ê±¼ä£º"+beginTime.toString()+"                       \n"+
+                "                     è€ƒè¯•å¼€å§‹æ—¶é—´ï¼š"+beginTime.toString()+"                       \n"+
                 "                                                                                  \n"+
-                "                       ½»¾íÊ±¼ä£º"+endTime.toString()+"                           \n"+
+                "                       äº¤å·æ—¶é—´ï¼š"+endTime.toString()+"                           \n"+
                 "                                                                                  \n"+
-                "                               ±¾´Î¿¼ÊÔµÃ·Ö:"+getScore()+"                        \n"+
+                "                               æœ¬æ¬¡è€ƒè¯•å¾—åˆ†:"+getScore()+"                        \n"+
                 "                                                                                  \n"+
                 " ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n"+"\n"+
-                "ÊÔ¾íÏêÇé£º                                                                        \n");
+                "è¯•å·è¯¦æƒ…ï¼š                                                                        \n");
             for(int i=0;i<6;i++){
-                fw.write("µÚ"+(i+1)+"Ìâ¡¢"+question[i]);
-                fw.write(A[i]+"\t\t"+B[i]+"\t\t"+C[i]+"\t\tÕıÈ·´ğ°¸£º"+answer[i]+"\t\t"+"ÄãµÄ´ğ°¸£º"+myAnswer[i]+"\n");
+                fw.write("ç¬¬"+(i+1)+"é¢˜ã€"+question[i]);
+                fw.write(A[i]+"\t\t"+B[i]+"\t\t"+C[i]+"\t\tæ­£ç¡®ç­”æ¡ˆï¼š"+answer[i]+"\t\t"+"ä½ çš„ç­”æ¡ˆï¼š"+myAnswer[i]+"\n");
             }
             for(int i=6;i<8;i++){
-                fw.write("µÚ"+(i+1)+"Ìâ¡¢"+question[i]);
-                fw.write("ÕıÈ·´ğ°¸£º"+answer[i]+"\t\t"+"ÄãµÄ´ğ°¸£º"+myAnswer[i]+"\n");
+                fw.write("ç¬¬"+(i+1)+"é¢˜ã€"+question[i]);
+                fw.write("æ­£ç¡®ç­”æ¡ˆï¼š"+answer[i]+"\t\t"+"ä½ çš„ç­”æ¡ˆï¼š"+myAnswer[i]+"\n");
             }
                 fw.flush();
                 fw.close();

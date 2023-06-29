@@ -1,54 +1,50 @@
-package ¿¼ÊÔÏµÍ³;
-
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
-public class MyWindow {
-    JFrame win=new JFrame("¼òÒ×ÔÄ¾íÏµÍ³");              //¹¹½¨´°¿ÚÒÔ¼°Îª´°¿ÚÃüÃû
-    JFrame smallJFrame=new JFrame();                            //Ğ¡ÌáÊ¾¿ò
-    JTextField  stem = new JTextField(40);              //ÌâÄ¿
-    int i=1;                                                  //×÷Îª¼ÇÂ¼£¬Ä¿Ç°ÏÔÊ¾µÄµÚ¼¸Ìâ
-    JComboBox < String > cBox=new JComboBox< String >();
-    JLabel ti=new JLabel();                                     //µ¹¼ÆÊ±ÏÔÊ¾
-    int remainedTime=60*8*1000;                                 //Ê£ÓàÊ±¼ä
-    
-    JButton nextbt = new JButton("ÏÂ¸öÌâÄ¿");               //²Ëµ¥°´Å¥
-    JButton lastbt = new JButton("ÉÏ¸öÌâÄ¿");
-    JButton practiceAgainbt = new JButton("ÖØĞÂ¿ªÊ¼");
-    JButton startbt = new JButton("¿ªÊ¼");
-    JButton finishbt = new JButton("½áÊø´ğÌâ");
+public class MyWindow extends JFrame implements ActionListener {
+    JFrame smallJFrame=new JFrame();                            //å°æç¤ºæ¡†
+    JTextField  stem = new JTextField(40);              //é¢˜ç›®
+    int i=1;                                                    //ä½œä¸ºè®°å½•ï¼Œç›®å‰æ˜¾ç¤ºçš„ç¬¬å‡ é¢˜
+    JComboBox < String > cBox= new JComboBox<>();
+    JLabel ti=new JLabel();                                     //å€’è®¡æ—¶æ˜¾ç¤º
+    int remainedTime=60*8*1000;                                 //å‰©ä½™æ—¶é—´
 
-    ButtonGroup g=new ButtonGroup();                            //Èı¸öÑ¡Ïî×÷ÎªÕûÌå¼ÓÈëButtongroup g
-    JRadioButton Ba=new JRadioButton("A");                 //¹¹½¨µ¥Ñ¡×÷ÎªÑ¡Ïî
+    JButton nextbt = new JButton("ä¸‹ä¸ªé¢˜ç›®");               //èœå•æŒ‰é’®
+    JButton lastbt = new JButton("ä¸Šä¸ªé¢˜ç›®");
+    JButton practiceAgainbt = new JButton("é‡æ–°å¼€å§‹");
+    JButton startbt = new JButton("å¼€å§‹");
+    JButton finishbt = new JButton("ç»“æŸç­”é¢˜");
+
+    ButtonGroup g=new ButtonGroup();                            //ä¸‰ä¸ªé€‰é¡¹ä½œä¸ºæ•´ä½“åŠ å…¥Buttongroup g
+    JRadioButton Ba=new JRadioButton("A");                 //æ„å»ºå•é€‰ä½œä¸ºé€‰é¡¹
     JRadioButton Bb=new JRadioButton("B");
     JRadioButton Bc=new JRadioButton("C");
 
-    JTextField t=new JTextField(20);            //Ìî¿ÕÌâÌî¿Õ´¦
-    JPanel p0 = new JPanel();                           //Ñ¡ÔñÌâºÅ
-    JPanel p1 = new JPanel();                           //ÌâÄ¿ĞĞ
-    JPanel p2 = new JPanel();                           //Ìî¿ÕÌâ´ğ°¸ĞĞ
-    JPanel pa = new JPanel();                           //Ñ¡ÏîAĞĞ
-    JPanel pb = new JPanel();                           //Ñ¡ÏîBĞĞ 
-    JPanel pc = new JPanel();                           //Ñ¡ÏîCĞĞ 
-    JPanel p5 = new JPanel();                           //½çÃæ¿ØÖÆ°´Å¥ĞĞ
-    JLabel la,lb,lc;                                    //¼ÇÂ¼ABCÑ¡Ïî¾ßÌåÄÚÈİ
+    JTextField t=new JTextField(20);            //å¡«ç©ºé¢˜å¡«ç©ºå¤„
+    JPanel p0 = new JPanel();                           //é€‰æ‹©é¢˜å·
+    JPanel p1 = new JPanel();                           //é¢˜ç›®è¡Œ
+    JPanel p2 = new JPanel();                           //å¡«ç©ºé¢˜ç­”æ¡ˆè¡Œ
+    JPanel pa = new JPanel();                           //é€‰é¡¹Aè¡Œ
+    JPanel pb = new JPanel();                           //é€‰é¡¹Bè¡Œ
+    JPanel pc = new JPanel();                           //é€‰é¡¹Cè¡Œ
+    JPanel p5 = new JPanel();                           //ç•Œé¢æ§åˆ¶æŒ‰é’®è¡Œ
 
-    Questions q;                                        //questionsÀà×÷Îª³ÉÔ±´¢´æÌâÄ¿ĞÅÏ¢
-    Timer endTimer=new Timer();                         //ÓÃÓÚ¼ÆÊ±£¬8·ÖÖÓÄÚ´ğÌâ
-    boolean b=false;                                    //¼ì²âÊÇ·ñ´òÓ¡¹ı´ğÌâÇé¿ö
+    Questions q;                                        //questionsç±»ä½œä¸ºæˆå‘˜å‚¨å­˜é¢˜ç›®ä¿¡æ¯
+    Timer endTimer=new Timer();                         //ç”¨äºè®¡æ—¶ï¼Œ8åˆ†é’Ÿå†…ç­”é¢˜
+    boolean b=false;                                    //æ£€æµ‹æ˜¯å¦æ‰“å°è¿‡ç­”é¢˜æƒ…å†µ
 
-    MyWindow(Questions q){                              //UI³õÊ¼»¯²¢ÇÒÔö¼Ó¶Ô°´Å¥µÄ¼àÌı
+    MyWindow(Questions q){                              //UIåˆå§‹åŒ–å¹¶ä¸”å¢åŠ å¯¹æŒ‰é’®çš„ç›‘å¬
         this.q=q;
         for(int i=0;i<8;i++) cBox.addItem(""+(i+1));
 
         p2.setVisible(false);
         p2.setSize(30, 30);
         g.add(Ba);      g.add(Bb);      g.add(Bc);
-        p0.add(new JLabel("µ±Ç°ÌâºÅ"));         p0.add(cBox);   
-        p0.add(new JLabel("                 µ¹¼ÆÊ±£º"));       p0.add(ti);
+        p0.add(new JLabel("å½“å‰é¢˜å·"));         p0.add(cBox);
+        p0.add(new JLabel("                 å€’è®¡æ—¶ï¼š"));       p0.add(ti);
         p0.setLayout(new FlowLayout(FlowLayout.LEFT));
         p1.add(stem);   p1.setLayout(new FlowLayout(FlowLayout.LEFT));
         p2.add(t);      p2.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -56,96 +52,59 @@ public class MyWindow {
         pb.add(Bb);     pb.setLayout(new FlowLayout(FlowLayout.LEFT));
         pc.add(Bc);     pc.setLayout(new FlowLayout(FlowLayout.LEFT));
         p5.add(lastbt); p5.add(nextbt); p5.add(practiceAgainbt);    p5.add(finishbt);
-        
-        win.add(startbt);
-        win.setSize(420,500);
-        win.setLocationRelativeTo(null);
-        win.setVisible(true);
-        win.setLayout(new GridLayout(7,1,10,10));
-        win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        win.setResizable(false);
 
-        startbt.addActionListener(new ActionListener() {                //¿ªÊ¼°´Å¥³õÊ¼»¯£¬½«ÔªËØÒıÈëwin´°¿Ú³ÉÔ±²¢¿ªÊ¼¼ÆÊ±
-            public void actionPerformed(ActionEvent e){
-                startCounting();
-                win.remove(startbt);
-                win.add(p0);    win.add(p1);    win.add(p2); win.add(pa);win.add(pb);     win.add(pc); win.add(p5);
-                fillQuestion();
-            }});
 
-        lastbt.addActionListener(new ActionListener() {                 //ÉÏÒ»Ìâ°´Å¥£¬ÌâºÅÒç³ö¼ì²â
-            public void actionPerformed(ActionEvent e){
-                if(remainedTime>=1)     fillMyAnswer();
-                i--;
-                fillQuestion();
-            }});
+        this.setSize(400,450);
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
+        this.setLayout(new BorderLayout());
+        this.add(startbt,BorderLayout.CENTER);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        nextbt.addActionListener(new ActionListener() {                 //ÏÂÒ»Ìâ°´Å¥£¬ÌâºÅÒç³ö¼ì²â£¬¼ì²âÊÇ·ñ´ğÌâ
-            public void actionPerformed(ActionEvent e){
-                if(remainedTime>=1)     fillMyAnswer();
-                if(g.isSelected(Ba.getModel())||g.isSelected(Bb.getModel())||g.isSelected(Bc.getModel())||i>6||remainedTime<1) {
-                    i++;
-                    fillQuestion();
-                }else {
-                    getSmallFrame("error");                         //µ¯³ö´íÎóÌáÊ¾¿ò
-                    smallJFrame.add(new JLabel("ÇëÏÈÑ¡ÔñÒ»¸ö´ğ°¸"));
+        startbt.addActionListener(this);
+        lastbt.addActionListener(this);
+        nextbt.addActionListener(this);
+        practiceAgainbt.addActionListener(this);
+        finishbt.addActionListener(this);
+
+        cBox.addItemListener(new ItemListener()  {                          //ç›‘å¬ä¸‹æ‹‰é¢˜å·é€‰æ‹©
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED){
+                    if(Ba.isSelected()||Bb.isSelected()||Bc.isSelected()||b||!t.getText().equals("")){
+                        fillMyAnswer();
+                        i=cBox.getSelectedIndex()+1;
+                        fillQuestion();
+                    }else {
+                        cBox.setSelectedIndex(i-1);
+                        getSmallFrame("error");                         //å¼¹å‡ºé”™è¯¯æç¤ºæ¡†
+                        smallJFrame.add(new JLabel("è¯·å…ˆé€‰æ‹©ä¸€ä¸ªç­”æ¡ˆ"));
+                    }
                 }
             }});
 
-        practiceAgainbt.addActionListener(new ActionListener() {         //ÖØĞÂ´ğÌâ£¬ÖØĞÂ¼ÆÊ±
-            public void actionPerformed(ActionEvent e){
-                endTimer.cancel();
-                startCounting();
-                i=1;
-                t.setText("");
-                q.getNewQuestions();
-                fillQuestion();
-            }});
-
-        cBox.addItemListener(new ItemListener()  {                          //¼àÌıÏÂÀ­ÌâºÅÑ¡Ôñ
-            public void itemStateChanged(ItemEvent e) {
-                if(e.getStateChange() == ItemEvent.SELECTED){
-                    // if(b==true||i>6||g.isSelected(Ba.getModel())||g.isSelected(Bb.getModel())||g.isSelected(Bc.getModel())){
-                        i=cBox.getSelectedIndex()+1;
-                        fillQuestion();
-                    // }
-                } 
-            }});
-        
-        finishbt.addActionListener(new ActionListener() {                   //½áÊø´ğÌâ£¬´òÓ¡´ğÌâÇé¿ö
-            public void actionPerformed(ActionEvent e){
-                remainedTime=0;
-                fillMyAnswer();
-                if(b==true) return;
-                if(remainedTime>0)  fillMyAnswer();
-                getSmallFrame("½áÊø");
-                smallJFrame.add(new JLabel("ÄãµÄµÃ·ÖÊÇ"+q.getScore()));
-                smallJFrame.add(new JLabel("Äã¿ÉÒÔ´ÓÊÔ¾í.txtÖĞ²é¿´±¾´ÎÊÔ¾í"));
-                smallJFrame.setVisible(true);
-                q.input();                                                  //questions³ÉÔ±·½·¨£¬´òÓ¡´ğÌâÇé¿ö
-            }});
     }
 
-    public void fillMyAnswer(){                                             //»ñÈ¡ÓÃ»§ÌîĞ´»òÑ¡ÔñµÄ´ğ°¸
-        if(i>=1&i<=6){
-            if(g.isSelected(Ba.getModel())==true) q.myAnswer[i-1]="A";
-            if(g.isSelected(Bb.getModel())==true) q.myAnswer[i-1]="B";
-            if(g.isSelected(Bc.getModel())==true) q.myAnswer[i-1]="C";
+    public void fillMyAnswer(){                                             //è·å–ç”¨æˆ·å¡«å†™æˆ–é€‰æ‹©çš„ç­”æ¡ˆ
+        if(!b){
+            if (i >= 1 & i <= 6) {
+                if (g.isSelected(Ba.getModel())) q.myAnswer[i - 1] = "A";
+                if (g.isSelected(Bb.getModel())) q.myAnswer[i - 1] = "B";
+                if (g.isSelected(Bc.getModel())) q.myAnswer[i - 1] = "C";
+                g.clearSelection();
+            }
+            if (i == 7 || i == 8) {
+                q.myAnswer[i - 1] = t.getText();
+            }
         }
-        if(i==7||i==8){
-            q.myAnswer[i-1]=t.getText();
-        }
-        if(i==9)i=8;
-        if(i==0)i=1;
     }
 
-    public void fillQuestion(){                                             //ÖØĞÂ´òÓ¡ÌâÄ¿ĞÅÏ¢,²¢ÇÒ¸üĞÂ´°¿Ú
-        if(i>=1&i<=6){                                                      //ÀûÓÃJPanelµÄsetVisible³ÉÔ±·½·¨¿ØÖÆÌî¿ÕÓëÑ¡ÏîµÄÏÔÊ¾
-            pa.setVisible(true);    
+    public void fillQuestion(){                                             //é‡æ–°æ‰“å°é¢˜ç›®ä¿¡æ¯,å¹¶ä¸”æ›´æ–°çª—å£
+        if(i>=1&&i<=6){                                                      //åˆ©ç”¨JPanelçš„setVisibleæˆå‘˜æ–¹æ³•æ§åˆ¶å¡«ç©ºä¸é€‰é¡¹çš„æ˜¾ç¤º
+            pa.setVisible(true);
             pb.setVisible(true);
             pc.setVisible(true);
             p2.setVisible(false);
-            stem.setText(q.question[i-1]);
+            stem.setText(""+i+"ã€"+q.question[i-1]);
             Ba.setText(q.A[i-1]);
             Bb.setText(q.B[i-1]);
             Bc.setText(q.C[i-1]);
@@ -157,25 +116,17 @@ public class MyWindow {
             p2.setVisible(true);
             stem.setText(q.question[i-1]);
         }
-        if(i>8||i<1){
-            if (i==0) i=1;
-            if  (i==9) i=8;
-            getSmallFrame("error");
-            smallJFrame.add(new JLabel("Ã»ÓĞÏÂÒ»Ìâ/ÉÏÒ»ÌâÁË£¡"));
-        }else{
-            cBox.setSelectedIndex(i-1);
-        }
         update();
     }
 
-    public void update(){                                             //¸üĞÂUI
+    public void update(){                                             //æ›´æ–°UI
         g.clearSelection();
-        if(i<=8)    switch(q.myAnswer[i-1]){
-            case "A" :g.setSelected(Ba.getModel(), true);break;
-            case "B" :g.setSelected(Bb.getModel(), true);break;
-            case "C" :g.setSelected(Bc.getModel(), true);break;
+        if(q.myAnswer[i-1]!=null&&i<=6) {
+            g.setSelected(Ba.getModel(), q.myAnswer[i - 1].equals( "A"));
+            g.setSelected(Bb.getModel(), q.myAnswer[i - 1].equals( "B"));
+            g.setSelected(Bc.getModel(), q.myAnswer[i - 1].equals( "C"));
         }
-        if(i<=8)    t.setText(q.myAnswer[i-1]);
+        if(i>=7)    t.setText(q.myAnswer[i-1]);
         p0.updateUI();
         p1.updateUI();
         p2.updateUI();
@@ -183,28 +134,28 @@ public class MyWindow {
         pb.updateUI();
         pc.updateUI();
         p5.updateUI();
-        win.repaint();
+        this.repaint();
     }
 
-    public void startCounting(){                                      //¼ÆÊ±Æ÷Ê±¼äµ½Ê±×Ô¶¯½»¾í
-        remainedTime=60*8*1000;                                       //Ö÷ÒªÊÇ¿ØÖÆ¾íÍ·µÄÊ±¼äÁ÷ÊÅ£¬¹éÁãÊ±½»¾í
+    public void startCounting(){                                      //è®¡æ—¶å™¨æ—¶é—´åˆ°æ—¶è‡ªåŠ¨äº¤å·
+        remainedTime=60*8*1000;                                       //ä¸»è¦æ˜¯æ§åˆ¶å·å¤´çš„æ—¶é—´æµé€ï¼Œå½’é›¶æ—¶äº¤å·
         b=false;
         endTimer=new Timer();
         endTimer.schedule(new TimerTask() {
             public void run(){
-                if(remainedTime<=0) return;
-                ti.setText(""+remainedTime/1000+"s£¨Ãë£©");
+                if(remainedTime<0) return;
+                ti.setText(""+remainedTime/1000+"sï¼ˆç§’ï¼‰");
                 remainedTime-=500;
                 p0.updateUI();
-                if(remainedTime<=500) {                    
-                    endTimer.cancel();
+                if(remainedTime<=500) {
                     finishbt.doClick(1);
+                    endTimer.cancel();
                 }
             }
         }, 0,500);
     }
 
-    public void getSmallFrame(String title){                             //ĞÂ½¨Ğ¡µÄÌáÊ¾´°¿Ú³õÊ¼»¯
+    public void getSmallFrame(String title){                             //æ–°å»ºå°çš„æç¤ºçª—å£åˆå§‹åŒ–
         if(smallJFrame.isActive()||smallJFrame.isVisible()) return;
         smallJFrame=new JFrame(title);
         smallJFrame.setSize(250,150);
@@ -213,6 +164,52 @@ public class MyWindow {
         smallJFrame.setAlwaysOnTop(true);
         smallJFrame.setLayout(new GridLayout(3,1,10,10));
         smallJFrame.setVisible(true);
-        smallJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {                                    //ç›‘å¬å®ç°æ–¹æ³•
+        if(e.getSource()==nextbt){                                                  //ä¸‹ä¸€é¢˜æŒ‰é’®
+            if(i>=8) {
+                i=8;
+                getSmallFrame("error");
+                smallJFrame.add(new JLabel("æ²¡æœ‰ä¸‹ä¸€é¢˜äº†ï¼"));
+            }else cBox.setSelectedIndex(i);
+        } else if (e.getSource()==lastbt) {                                         //ä¸Šä¸€é¢˜æŒ‰é’®
+            if(i<=1){
+                i=1;
+                getSmallFrame("error");
+                smallJFrame.add(new JLabel("æ²¡æœ‰ä¸Šä¸€é¢˜äº†ï¼"));
+            }else cBox.setSelectedIndex(i-2);
+        } else if (e.getSource()==practiceAgainbt){                                 //é‡æ–°å¼€å§‹æŒ‰é’®
+            endTimer.cancel();
+            cBox.setSelectedIndex(0);
+            startCounting();
+            b=false;
+            t.setText("");
+            q.getNewQuestions();
+            fillQuestion();
+        } else if (e.getSource()==finishbt){                                        //ç»“æŸç­”é¢˜æŒ‰é’®
+            if(b) return;
+            fillMyAnswer();
+            b=true;
+            endTimer.cancel();
+            getSmallFrame("ç»“æŸ");
+            smallJFrame.add(new JLabel("ä½ çš„å¾—åˆ†æ˜¯" + q.getScore()));
+            smallJFrame.add(new JLabel("ä½ å¯ä»¥ä»è¯•å·.txtä¸­æŸ¥çœ‹æœ¬æ¬¡è¯•å·"));
+            smallJFrame.setVisible(true);
+            q.input();                                                  //questionsæˆå‘˜æ–¹æ³•ï¼Œæ‰“å°ç­”é¢˜æƒ…å†µ
+        } else if (e.getSource()==startbt){                                         //å¼€å§‹æŒ‰é’®
+            startCounting();
+            this.remove(startbt);
+            this.setLayout(new GridLayout(7,1,10,10));
+            this.add(p0);
+            this.add(p1);
+            this.add(p2);
+            this.add(pa);
+            this.add(pb);
+            this.add(pc);
+            this.add(p5);
+            fillQuestion();
+        }
     }
 }
