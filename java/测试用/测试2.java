@@ -1,45 +1,44 @@
 package 测试用;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.*;
 import java.io.*;
+import javax.imageio.stream.FileImageInputStream;
+import javax.swing.*;
+import java.nio.Buffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-public class 测试2 {
-    public static void main(String[] args) throws IOException{
-        long start = System.currentTimeMillis();
-        测试2.copy();
-        long end = System.currentTimeMillis();
-        //打印运行时间
-        System.out.println("time :"+(end-start));
+public class 测试2{
 
-    }
-    //字节流复制
-    public static void copy() {
-        //此处在try外创建引用，在try内进行初始化，能避免finally块中对象引用不了的问题；
-        FileInputStream fis = null;
-        FileOutputStream fos = null;
-        BufferedInputStream bis = null;
-        BufferedOutputStream bos = null;
-        try{
-            fis = new FileInputStream("E:\\个人编程\\代码-全\\java\\curriculumDesign\\severSave\\3\\3.png");
-            fos = new FileOutputStream("E:\\个人编程\\代码-全\\java\\curriculumDesign\\severSave\\3\\4.png");
-            bis =  new BufferedInputStream(fis);
-            bos = new BufferedOutputStream(fos);
-            int by = 0;
-            while ((by = bis.read()) != -1){
-                bos.write(by);
-            }
-        }catch (IOException e){
-            System.out.println(e);
-        }finally {
-            try{
-                //此处close()要加判断是因为，初始化可能不成功，所以对fw操作会产生异常，在finally中必须对每个流对象先进行判断再关闭。
-                if (bis != null)
-                    bis.close();
-                if (bos != null)
-                    bos.close();
-            }catch (IOException e){
-                System.out.println(e);
-            }
+    public static void main(String[] args) throws  Exception{
+//        String fileName="E:\\个人编程\\代码-全\\java\\curriculumDesign\\severSave\\3\\3.png";
+//        FileImageInputStream inputStream = new FileImageInputStream(new File(fileName));
+        File file=new File("E:\\个人编程\\代码-全\\java\\curriculumDesign\\severSave\\3\\4.png");
+        File file2=new File("E:\\个人编程\\代码-全\\java\\curriculumDesign\\severSave\\3\\3.png");
+
+        file.createNewFile();
+
+        OutputStream in2 = new FileOutputStream(file);
+        InputStream inputStream=new FileInputStream(file2);
+        int b=0;
+        byte []bytes=new byte[1111111];
+        int i=0;
+        while((b = inputStream.read()) != -1 ){
+//            inputStream.read(b,0,128);
+//            in2.write(b,0,128);
+//            in2.flush();
+            bytes[i]=(byte)b;
+            i++;
         }
+        in2.write(bytes,0,i);
+        in2.flush();
+        System.out.println(file.length());
+        System.out.println(file.getName().substring(0,file.getName().lastIndexOf(".")));
+
     }
 }
-

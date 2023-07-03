@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.*;
 import javax.imageio.stream.FileImageInputStream;
-import javax.imageio.stream.FileImageOutputStream;
 import javax.swing.*;
 import java.nio.Buffer;
 import java.nio.charset.Charset;
@@ -41,21 +40,5 @@ public class 测试3{
         System.out.println(file.length());
         System.out.println(file.getName().substring(0,file.getName().lastIndexOf(".")));
 
-//        inputStream.read(head);
-//
-//        Charset charset=Charset.
-//
-//        String charsetName = "U";//或GB2312，即ANSI
-//        if (head[0] == -1 && head[1] == -2 ) //0xFFFE
-//            charsetName = "UTF-16";
-//        else if (head[0] == -2 && head[1] == -1 ) //0xFEFF
-//            charsetName = "Unicode";//包含两种编码格式：UCS2-Big-Endian和UCS2-Little-Endian
-//        else if(head[0]==-27 && head[1]==-101 && head[2] ==-98)
-//            charsetName = "UTF-8"; //UTF-8(不含BOM)
-//        else if(head[0]==-17 && head[1]==-69 && head[2] ==-65)
-//            charsetName = "UTF-8"; //UTF-8-BOM
-//        System.out.println(charsetName);
-//        System.out.println(head[0]+""+head[1]+""+head[2]);
-//        System.out.println(fileName.substring(fileName.lastIndexOf(".")));
     }
 }
