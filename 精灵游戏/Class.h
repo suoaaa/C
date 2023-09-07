@@ -6,62 +6,62 @@
 #include <math.h>
 #include <stdlib.h>
 
-#define V_user      6       //¶¨ÒåÍæ¼ÒÒÆ¶¯ËÙ¶È£¨Ä¬ÈÏ6£©
-#define V_enemy     5       //¶¨ÒåµĞ¶ÔÒÆ¶¯ËÙ¶È£¨Ä¬ÈÏ5£©
-#define V_remote    15      //¶¨ÒåÔ¶³Ì¹¥»÷µÄÒÆ¶¯ËÙ¶È£¨Ä¬ÈÏ15£©
-#define pica        65      //½ÇÉ«¼°µĞÈËÌùÍ¼¸ßÓë¿í
-#define fire_a      30      //Íæ¼Ò·¢Éä»ğÇòÌùÍ¼µÄ¸ßÓë¿í
-#define arrow_width 48      //µĞÈË2ÀàÉä³ö¹­¼ıÌùÍ¼µÄ¿í
-#define arrow_high  24      //µĞÈË2ÀàÉä³ö¹­¼ıÌùÍ¼µÄ¸ß
-#define n_remote    5       //»ğÇò¼°¼ıµÄ¸÷×Ô×î´óÔÚ³¡ÊıÁ¿£¨Ä¬ÈÏ5£©
-#define CD          30      //ÉèÖÃÍæ¼ÒÔ¶³Ì¹¥»÷cdÎª1.5s£¨0.05sÎªÒ»¸öµ¥Î»Ê±¼ä£©
-#define CD_arrow    80      //ÉèÖÃÃ¿¸öµĞÈË2Ô¶³Ì¹¥»÷cdÎª4s£¨0.05sÎªÒ»¸öµ¥Î»Ê±¼ä£©
-#define CD_skill    120     //ÉèÖÃ½ÇÉ«¼¼ÄÜcdÎª6s£¨0.05sÎªÒ»¸öµ¥Î»Ê±¼ä£©
-#define CD_inskill  30      //ÉèÖÃ½ÇÉ«¼¼ÄÜ³ÖĞøÊ±¼ä1.5s
+#define V_user      6       //å®šä¹‰ç©å®¶ç§»åŠ¨é€Ÿåº¦ï¼ˆé»˜è®¤6ï¼‰
+#define V_enemy     5       //å®šä¹‰æ•Œå¯¹ç§»åŠ¨é€Ÿåº¦ï¼ˆé»˜è®¤5ï¼‰
+#define V_remote    15      //å®šä¹‰è¿œç¨‹æ”»å‡»çš„ç§»åŠ¨é€Ÿåº¦ï¼ˆé»˜è®¤15ï¼‰
+#define pica        65      //è§’è‰²åŠæ•Œäººè´´å›¾é«˜ä¸å®½
+#define fire_a      30      //ç©å®¶å‘å°„ç«çƒè´´å›¾çš„é«˜ä¸å®½
+#define arrow_width 48      //æ•Œäºº2ç±»å°„å‡ºå¼“ç®­è´´å›¾çš„å®½
+#define arrow_high  24      //æ•Œäºº2ç±»å°„å‡ºå¼“ç®­è´´å›¾çš„é«˜
+#define n_remote    5       //ç«çƒåŠç®­çš„å„è‡ªæœ€å¤§åœ¨åœºæ•°é‡ï¼ˆé»˜è®¤5ï¼‰
+#define CD          30      //è®¾ç½®ç©å®¶è¿œç¨‹æ”»å‡»cdä¸º1.5sï¼ˆ0.05sä¸ºä¸€ä¸ªå•ä½æ—¶é—´ï¼‰
+#define CD_arrow    80      //è®¾ç½®æ¯ä¸ªæ•Œäºº2è¿œç¨‹æ”»å‡»cdä¸º4sï¼ˆ0.05sä¸ºä¸€ä¸ªå•ä½æ—¶é—´ï¼‰
+#define CD_skill    120     //è®¾ç½®è§’è‰²æŠ€èƒ½cdä¸º6sï¼ˆ0.05sä¸ºä¸€ä¸ªå•ä½æ—¶é—´ï¼‰
+#define CD_inskill  30      //è®¾ç½®è§’è‰²æŠ€èƒ½æŒç»­æ—¶é—´1.5s
 
 
-class Base;         //½ÇÉ«£¨Íæ¼Ò¼°µĞÈË£©»ù´¡Àà
-class User;         //Íæ¼ÒÀà
-class enemy1;       //µĞÈË1Àà£¨½üÕ½£©
-class enemy2;       //µĞÈË2Àà£¨Ô¶³Ì£©Ïà±ÈµĞÈË1¶àÁËÔ¶³Ì¹¥»÷ÊÖ¶Î
-class enemy3;       //µĞÈË3Àà£¬ÎŞ¹¥»÷ÊÖ¶Î£¬»÷É±»òÕß±»Íæ¼Ò×¥×¡¿É»ñµÃµÃ·Ö
-class remote;       //Íæ¼ÒºÍµĞÈË2ÀàÔ¶³Ì¹¥»÷µÄ»ù´¡Àà
-class fire;         //Íæ¼ÒÔ¶³ÌÊÖ¶Î£º»ğÇò
-class arrow;        //µĞÈË2ÀàÔ¶³ÌÊÖ¶Î£º¹­¼ı
+class Base;         //è§’è‰²ï¼ˆç©å®¶åŠæ•Œäººï¼‰åŸºç¡€ç±»
+class User;         //ç©å®¶ç±»
+class enemy1;       //æ•Œäºº1ç±»ï¼ˆè¿‘æˆ˜ï¼‰
+class enemy2;       //æ•Œäºº2ç±»ï¼ˆè¿œç¨‹ï¼‰ç›¸æ¯”æ•Œäºº1å¤šäº†è¿œç¨‹æ”»å‡»æ‰‹æ®µ
+class enemy3;       //æ•Œäºº3ç±»ï¼Œæ— æ”»å‡»æ‰‹æ®µï¼Œå‡»æ€æˆ–è€…è¢«ç©å®¶æŠ“ä½å¯è·å¾—å¾—åˆ†
+class remote;       //ç©å®¶å’Œæ•Œäºº2ç±»è¿œç¨‹æ”»å‡»çš„åŸºç¡€ç±»
+class fire;         //ç©å®¶è¿œç¨‹æ‰‹æ®µï¼šç«çƒ
+class arrow;        //æ•Œäºº2ç±»è¿œç¨‹æ‰‹æ®µï¼šå¼“ç®­
 
 static int CWinwidth[3]={960,1280,1600};
 static int CWinhigh[3]={540,720,900};
 
-class Base          //½ÇÉ«£¨Íæ¼Ò¼°µĞÈË£©»ù´¡Àà
+class Base          //è§’è‰²ï¼ˆç©å®¶åŠæ•Œäººï¼‰åŸºç¡€ç±»
 {
 protected:
-    int score;      //¶ÔÓÚµĞÈË£º»÷É±»ñµÃ·ÖÊı  ¶ÔÓÚÍæ¼Ò£ºµ±Ç°»ñµÃ·ÖÊı
-    float x,y;      //µ±Ç°Î»ÖÃ
-    float dx,dy;    //½«ÒªÏòÏÂÒ»¸öÎ»ÖÃµÄ²î
+    int score;      //å¯¹äºæ•Œäººï¼šå‡»æ€è·å¾—åˆ†æ•°  å¯¹äºç©å®¶ï¼šå½“å‰è·å¾—åˆ†æ•°
+    float x,y;      //å½“å‰ä½ç½®
+    float dx,dy;    //å°†è¦å‘ä¸‹ä¸€ä¸ªä½ç½®çš„å·®
 public:
-ACL_Image *img;     //Í¼Æ¬Ö¸Õë
-    bool health;    //ÅĞ¶ÏÊÇ·ñËÀÍö£¬ËÀÍöÎª¼Ù£¬´æ»îÎªÕæ
-    remote *(rem[n_remote]);//¶ÔÓÚÍæ¼ÒÀàÎª»ğÇò£¬µĞÈË2ÀàÎª¹­¼ı
+ACL_Image *img;     //å›¾ç‰‡æŒ‡é’ˆ
+    bool health;    //åˆ¤æ–­æ˜¯å¦æ­»äº¡ï¼Œæ­»äº¡ä¸ºå‡ï¼Œå­˜æ´»ä¸ºçœŸ
+    remote *(rem[n_remote]);//å¯¹äºç©å®¶ç±»ä¸ºç«çƒï¼Œæ•Œäºº2ç±»ä¸ºå¼“ç®­
     Base(){};
     ~Base(){};
-    int getscore(){return score;};  //Õ¹Ê¾·ÖÊı                         
-    virtual void collide(User *usr,remote **re){};//Åö×²£¨¹¥»÷ÅĞ¶¨ÒÔ¼°»ñµÃ·ÖÊı£©,ĞèÒª×¢ÒâÖ»ÓĞµĞÈËÀàÒÔ¼°µĞÈËÔ¶³Ì¹¥»÷arrowÀàÓĞÅö×²ÅĞ¶¨
+    int getscore(){return score;};  //å±•ç¤ºåˆ†æ•°                         
+    virtual void collide(User *usr,remote **re){};//ç¢°æ’ï¼ˆæ”»å‡»åˆ¤å®šä»¥åŠè·å¾—åˆ†æ•°ï¼‰,éœ€è¦æ³¨æ„åªæœ‰æ•Œäººç±»ä»¥åŠæ•Œäººè¿œç¨‹æ”»å‡»arrowç±»æœ‰ç¢°æ’åˆ¤å®š
     int getx(){return x;};
     int gety(){return y;};
 };
 
-class User:public Base//Íæ¼ÒÀà
+class User:public Base//ç©å®¶ç±»
 {
 public:
     User(ACL_Image *picture,int *config_code)
         {img=picture;score=0;cd_hit=0;cd_skill=0;x=CWinwidth[config_code[1]]/2;y=CWinhigh[config_code[1]]/2;skill=CD_inskill;health=1;dx=V_user;dy=V_user;for(int i=0;i<n_remote;i++)rem[i]=NULL;};
     ~User(){img=NULL;score=0;cd_hit=0;cd_skill=0;x=0;y=0;dx=0;dy=0;health=0;};
-    int skill;              //¼¼ÄÜ£ºÔİÊ±ÎŞµĞ2s£¬ÃâÒß¹­¼ıÊÖ£¨µĞÈË2£©¼°½üÕ½£¨µĞÈË1£©µÄ¹¥»÷,skillÎªÊ£ÓàÊ±¼ä£¬Îª0±íÊ¾Î´ÔÚ¼¼ÄÜ×´Ì¬    
-    int cd_skill;           //ÈËÎï½ÇÉ«¼¼ÄÜcd    
-    int cd_hit;             //ÈËÎïÔ¶³Ì¹¥»÷¼¼ÄÜcd
-    void hit(int desx,int desy,ACL_Image *fire_img);//¹¥»÷£¬Ô¶³Ì
+    int skill;              //æŠ€èƒ½ï¼šæš‚æ—¶æ— æ•Œ2sï¼Œå…ç–«å¼“ç®­æ‰‹ï¼ˆæ•Œäºº2ï¼‰åŠè¿‘æˆ˜ï¼ˆæ•Œäºº1ï¼‰çš„æ”»å‡»,skillä¸ºå‰©ä½™æ—¶é—´ï¼Œä¸º0è¡¨ç¤ºæœªåœ¨æŠ€èƒ½çŠ¶æ€    
+    int cd_skill;           //äººç‰©è§’è‰²æŠ€èƒ½cd    
+    int cd_hit;             //äººç‰©è¿œç¨‹æ”»å‡»æŠ€èƒ½cd
+    void hit(int desx,int desy,ACL_Image *fire_img);//æ”»å‡»ï¼Œè¿œç¨‹
     void move(int key,int *config_code); 
-    //ÒÔÏÂËÄ¸öÀàĞèÒªÍæ¼ÒÊı¾İÊ¹ÓÃcollide£¨Åö×²£©º¯ÊıÅĞ¶ÏÊÇ·ñ¹¥»÷µ½
+    //ä»¥ä¸‹å››ä¸ªç±»éœ€è¦ç©å®¶æ•°æ®ä½¿ç”¨collideï¼ˆç¢°æ’ï¼‰å‡½æ•°åˆ¤æ–­æ˜¯å¦æ”»å‡»åˆ°
     friend enemy1;
     friend enemy2;
     friend enemy3;
@@ -69,7 +69,7 @@ public:
     friend fire;
 };
 
-class enemy1:public Base//µĞÈË1Àà£¨½üÕ½£©
+class enemy1:public Base//æ•Œäºº1ç±»ï¼ˆè¿‘æˆ˜ï¼‰
 {
 public:
     enemy1(ACL_Image *picture,User *usr,int *config_code)
@@ -93,12 +93,12 @@ public:
     ~enemy1(){img=NULL;score=0;x=0;y=0;dx=0;dy=0;health=0;};
     void move(User *usr,remote **re);
     void collide(User* user,remote **re); 
-    void change(User *usr); //¸Ä±ä·½ÏòÀ´×·×ÙÍæ¼Òµ±Ç°Î»ÖÃ
+    void change(User *usr); //æ”¹å˜æ–¹å‘æ¥è¿½è¸ªç©å®¶å½“å‰ä½ç½®
 };
-class enemy2:public Base    //µĞÈË2Àà£¨Ô¶³Ì£©Ïà±ÈµĞÈË1¶àÁËÔ¶³Ì¹¥»÷ÊÖ¶Î
+class enemy2:public Base    //æ•Œäºº2ç±»ï¼ˆè¿œç¨‹ï¼‰ç›¸æ¯”æ•Œäºº1å¤šäº†è¿œç¨‹æ”»å‡»æ‰‹æ®µ
 {
 protected:
-    int cd_hit;             //¹¥»÷cd
+    int cd_hit;             //æ”»å‡»cd
 public:
     enemy2(ACL_Image *picture,User *usr,int *config_code)
     {   
@@ -123,7 +123,7 @@ public:
     friend fire;
 };
 
-class enemy3:public Base    //µĞÈË3Àà£¬ÎŞ¹¥»÷ÊÖ¶Î£¬»÷É±»òÕß±»Íæ¼Ò×¥×¡¿É»ñµÃµÃ·Ö
+class enemy3:public Base    //æ•Œäºº3ç±»ï¼Œæ— æ”»å‡»æ‰‹æ®µï¼Œå‡»æ€æˆ–è€…è¢«ç©å®¶æŠ“ä½å¯è·å¾—å¾—åˆ†
 {
 public:
     enemy3(ACL_Image *picture,int *config_code)
@@ -141,14 +141,14 @@ public:
     void change(User *usr);
 ;};
 
-class remote//Íæ¼ÒÒÔ¼°enemy2£¨Ô¶³Ì£©µÄÔ¶³Ì¹¥»÷Àà
+class remote//ç©å®¶ä»¥åŠenemy2ï¼ˆè¿œç¨‹ï¼‰çš„è¿œç¨‹æ”»å‡»ç±»
 {
 protected:
-    float x,y;//¹¥»÷µ±Ç°ËùÔÚÎ»ÖÃ
-    float dx,dy;//¹¥»÷ÏÂÒ»Î»ÖÃÓëµ±Ç°Î»ÖÃÖ®²î
+    float x,y;//æ”»å‡»å½“å‰æ‰€åœ¨ä½ç½®
+    float dx,dy;//æ”»å‡»ä¸‹ä¸€ä½ç½®ä¸å½“å‰ä½ç½®ä¹‹å·®
 public:
-    ACL_Image *img;//Ô¶³Ì¹¥»÷Ä£ĞÍ
-    int exist;//ÅĞ¶ÏÊÇ·ñ´æÔÚ£¬´æÔÚÎªÕæ£¨»÷ÖĞÄ¿±ê»òÕß·É³ö´°¿ÚÊÓÎª²»´æÔÚ£©(Íæ¼ÒµÄ»ğÇò¿É»÷°ÜÁ½ÃûµĞÈË)
+    ACL_Image *img;//è¿œç¨‹æ”»å‡»æ¨¡å‹
+    int exist;//åˆ¤æ–­æ˜¯å¦å­˜åœ¨ï¼Œå­˜åœ¨ä¸ºçœŸï¼ˆå‡»ä¸­ç›®æ ‡æˆ–è€…é£å‡ºçª—å£è§†ä¸ºä¸å­˜åœ¨ï¼‰(ç©å®¶çš„ç«çƒå¯å‡»è´¥ä¸¤åæ•Œäºº)
     remote(){};
     ~remote(){img=NULL;};
     int getx(){return x;};

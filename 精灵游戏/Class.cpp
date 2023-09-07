@@ -8,8 +8,8 @@ void User::move(int key,int *config_code)
 	case VK_DOWN:		y += dy;	if (y >(CWinhigh[config_code[1]] - pica)) y = (CWinhigh[config_code[1]] - pica);	break;
 	case VK_LEFT:		x -= dx;	if (x < 0) x = 0;	break;
 	case VK_RIGHT:		x += dx;	if (x >(CWinwidth[config_code[1]] - pica)) x = (CWinwidth[config_code[1]] - pica);	break;
-	case VK_SPACE:		if(cd_skill<=0)	{cd_skill=CD_skill;	skill=CD_inskill;}	break;		//¿Õ¸ñ´¥·¢ÎÞµÐ¼¼ÄÜ		
-	//ÒÔÏÂÎªWSADÊµÏÖ
+	case VK_SPACE:		if(cd_skill<=0)	{cd_skill=CD_skill;	skill=CD_inskill;}	break;		//ç©ºæ ¼è§¦å‘æ— æ•ŒæŠ€èƒ½		
+	//ä»¥ä¸‹ä¸ºWSADå®žçŽ°
 	case 0x57:			y -= dx;	if (y < 0) y = 0;	break;
 	case 0x53:			y += dy;	if (y >(CWinhigh[config_code[1]] - pica)) y = (CWinhigh[config_code[1]] - pica);	break;
 	case 0x41:			x -= dx;	if (x < 0) x = 0;	break;
@@ -17,7 +17,7 @@ void User::move(int key,int *config_code)
 	default:	break;
 	}
 };
-void User::hit(int desx,int desy,ACL_Image *fire_img)//¹¥»÷£¬Ô¶³Ì
+void User::hit(int desx,int desy,ACL_Image *fire_img)//æ”»å‡»ï¼Œè¿œç¨‹
 {	
 	if(cd_hit<=0)
 	{

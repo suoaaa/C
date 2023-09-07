@@ -27,18 +27,18 @@ int Init=0;
 int n_error=0;
 int music_bool=0;
 
-static int initnum=0;									//ÏÂÒ»º¯ÊıĞèÒªµÄ²ÎÊı
-bool initgame();										//¼ÓÔØÍ¼Æ¬Ö¸Õë
-void game_menu();										//¿ªÊ¼²Ëµ¥£¨°üÀ¨¿ªÊ¼ÓÎÏ·£¬ÄÑ¶ÈÑ¡ÔñÓëÍæ·¨½éÉÜ£©
-void Begingame();										//ÓÎÏ·½çÃæ¼°ÊµÏÖ
-void paintgame();										//ÓÎÏ·½çÃæ»æÍ¼
-void config_menu();										//ÉèÖÃ²Ëµ¥½çÃæ
-void config_change(int *config_code);   				//¸ü¸ÄÉèÖÃ
-void play_way();     									//Íæ·¨½éÉÜ
+static int initnum=0;									//ä¸‹ä¸€å‡½æ•°éœ€è¦çš„å‚æ•°
+bool initgame();										//åŠ è½½å›¾ç‰‡æŒ‡é’ˆ
+void game_menu();										//å¼€å§‹èœå•ï¼ˆåŒ…æ‹¬å¼€å§‹æ¸¸æˆï¼Œéš¾åº¦é€‰æ‹©ä¸ç©æ³•ä»‹ç»ï¼‰
+void Begingame();										//æ¸¸æˆç•Œé¢åŠå®ç°
+void paintgame();										//æ¸¸æˆç•Œé¢ç»˜å›¾
+void config_menu();										//è®¾ç½®èœå•ç•Œé¢
+void config_change(int *config_code);   				//æ›´æ”¹è®¾ç½®
+void play_way();     									//ç©æ³•ä»‹ç»
 
-void timerEvent(int id);								//¼ÆÊ±Æ÷
-void keyEvent(int key,int event);						//¼üÅÌÊÂ¼ş
-void mouseEvent(int x, int y, int button, int event);	//Êó±êÊÂ¼ş
+void timerEvent(int id);								//è®¡æ—¶å™¨
+void keyEvent(int key,int event);						//é”®ç›˜äº‹ä»¶
+void mouseEvent(int x, int y, int button, int event);	//é¼ æ ‡äº‹ä»¶
 
 int Setup()
 {
@@ -55,13 +55,13 @@ int Setup()
 
 bool initgame()
 {
-	static int n=0; static char ch[10];//Êµ¼ÊÉÏnÓëchÃ»ÓÃ£¬Ö»ÊÇÓÃÀ´´¢´æconfigÎÄ¼şÖĞ¡°¶àÓà¡±µÄÊı¾İ£¬configÎÄ¼şÎªÁËÒ×¿´¶®£¬ÔÚÄ¬ÈÏÉèÖÃÎÄ¼şÖĞÓĞ¸÷ÏîËµÃ÷
+	static int n=0; static char ch[10];//å®é™…ä¸Šnä¸chæ²¡ç”¨ï¼Œåªæ˜¯ç”¨æ¥å‚¨å­˜configæ–‡ä»¶ä¸­â€œå¤šä½™â€çš„æ•°æ®ï¼Œconfigæ–‡ä»¶ä¸ºäº†æ˜“çœ‹æ‡‚ï¼Œåœ¨é»˜è®¤è®¾ç½®æ–‡ä»¶ä¸­æœ‰å„é¡¹è¯´æ˜
     if(initnum==0)
     {   initnum=1;
-        fpr=fopen("./Ô´×ÊÔ´/config.txt","r");
+        fpr=fopen("./æºèµ„æº/config.txt","r");
         if(!fpr)    
             {   initWindow("The config of Sprite game----made by wangke-2021080909008",DEFAULT/2,DEFAULT/2,480,270);
-                beginPaint(); setTextSize(20);paintText(140,110, "¶ÁÈ¡ÓÎÏ·ÉèÖÃÎÄ¼şÊ§°Ü");endPaint();return 0;}
+                beginPaint(); setTextSize(20);paintText(140,110, "è¯»å–æ¸¸æˆè®¾ç½®æ–‡ä»¶å¤±è´¥");endPaint();return 0;}
         else
         {
             fscanf(fpr,"%s %d",ch,&config_now[0]);
@@ -73,16 +73,16 @@ bool initgame()
 	    srand(time(NULL));
 	    usr_image=new ACL_Image;    enemy1_image=new ACL_Image; enemy2_image=new ACL_Image;
 	    enemy3_image=new ACL_Image; fire_image=new ACL_Image;   arrow_image=new ACL_Image;
-	    back_image=new ACL_Image;   loadImage("./Ô´×ÊÔ´/_usr.bmp", usr_image);  howtoplay=new ACL_Image;
-        loadImage("./Ô´×ÊÔ´/_enemy1.bmp", enemy1_image);    loadImage("./Ô´×ÊÔ´/_enemy2.bmp", enemy2_image);
-	    loadImage("./Ô´×ÊÔ´/_enemy3.bmp", enemy3_image);    loadImage("./Ô´×ÊÔ´/_fire.bmp", fire_image);
-	    loadImage("./Ô´×ÊÔ´/_arrow.bmp", arrow_image);      loadImage("./Ô´×ÊÔ´/_back.bmp",back_image);
-		loadImage("./Ô´×ÊÔ´/_playway.bmp",howtoplay);		loadSound("./Ô´×ÊÔ´/_mymusic.mp3",&mymusic);
+	    back_image=new ACL_Image;   loadImage("./æºèµ„æº/_usr.bmp", usr_image);  howtoplay=new ACL_Image;
+        loadImage("./æºèµ„æº/_enemy1.bmp", enemy1_image);    loadImage("./æºèµ„æº/_enemy2.bmp", enemy2_image);
+	    loadImage("./æºèµ„æº/_enemy3.bmp", enemy3_image);    loadImage("./æºèµ„æº/_fire.bmp", fire_image);
+	    loadImage("./æºèµ„æº/_arrow.bmp", arrow_image);      loadImage("./æºèµ„æº/_back.bmp",back_image);
+		loadImage("./æºèµ„æº/_playway.bmp",howtoplay);		loadSound("./æºèµ„æº/_mymusic.mp3",&mymusic);
     }else{
-		fpr=fopen("./Ô´×ÊÔ´/config.txt","r");
+		fpr=fopen("./æºèµ„æº/config.txt","r");
         if(!fpr)    
             {   initWindow("The Menu of Sprite game----made by wangke-2021080909008",DEFAULT/2,DEFAULT/2,480,270);
-                beginPaint(); setTextSize(20);paintText(140,110, "¶ÁÈ¡ÓÎÏ·ÉèÖÃÎÄ¼şÊ§°Ü");endPaint();return 0;}
+                beginPaint(); setTextSize(20);paintText(140,110, "è¯»å–æ¸¸æˆè®¾ç½®æ–‡ä»¶å¤±è´¥");endPaint();return 0;}
         else
         {
             fscanf(fpr,"%s %d",ch,&config_now[0]);
@@ -92,13 +92,13 @@ bool initgame()
             fclose(fpr);
         }
 	}
-    switch (config_now[0])																						//ÅĞ¶ÏÏÖÔÚµÄÉèÖÃÇé¿ö
+    switch (config_now[0])																						//åˆ¤æ–­ç°åœ¨çš„è®¾ç½®æƒ…å†µ
     {	case 0: config_code[0]=0; break;		case 1: config_code[0]=1; break;	}
     switch (config_now[1])
     {	case 960:   config_code[1]=0; break;	case 1280:  config_code[1]=1; break;	case 1600:  config_code[1]=2; break;}
     switch (config_now[2])
     {	case 3: config_code[2]=0; break;		case 4: config_code[2]=1; break;		case 7: 	config_code[2]=2; break;}
-	if(!usr)	usr=new User(usr_image,config_code);															//£¨ÖØĞÂ£©³õÊ¼»¯Àà
+	if(!usr)	usr=new User(usr_image,config_code);															//ï¼ˆé‡æ–°ï¼‰åˆå§‹åŒ–ç±»
 		else {delete usr;usr=new User(usr_image,config_code);}
 	for(int i=0;i<7;i++)
 		if(!en1[i])	en1[i]=new enemy1(enemy1_image,usr,config_code);
@@ -111,40 +111,40 @@ bool initgame()
 			else {delete en3[i];en3[i]=new enemy3(enemy3_image,config_code);}
 	return 1;
 }
-void game_menu()        //¿ªÊ¼²Ëµ¥
+void game_menu()        //å¼€å§‹èœå•
 {
     beginPaint();
     clearDevice();
     putImageScale(back_image,DEFAULT/2,DEFAULT/2,winwidth[1],winhigh[1]);
 
-    setPenColor(RED);    setPenWidth(10);    setBrushColor(YELLOW);      //ÉèÖÃÖ÷±êÌâ¿ò¸ñÊ½
+    setPenColor(RED);    setPenWidth(10);    setBrushColor(YELLOW);      //è®¾ç½®ä¸»æ ‡é¢˜æ¡†æ ¼å¼
     rectangle(winwidth[1]/16*5, winhigh[1]/9, winwidth[1]/16*11, winhigh[1]/18*5);	
 
-    setPenColor(BLUE);    setPenWidth(5);    setBrushColor(GREEN);      //ÉèÖÃÈı¸ö¸±±êÌâ¿ò¸ñÊ½
+    setPenColor(BLUE);    setPenWidth(5);    setBrushColor(GREEN);      //è®¾ç½®ä¸‰ä¸ªå‰¯æ ‡é¢˜æ¡†æ ¼å¼
     rectangle(winwidth[1]/32*13, winhigh[1]/18*7, winwidth[1]/32*19, winhigh[1]/18*9);
     rectangle(winwidth[1]/32*13, winhigh[1]/18*10, winwidth[1]/32*19, winhigh[1]/18*12);
     rectangle(winwidth[1]/32*13, winhigh[1]/18*13, winwidth[1]/32*19, winhigh[1]/18*15);
 
-    setTextColor(BLACK);	setTextSize(winwidth[1]/16/10*7);    setTextBkColor(EMPTY);           //ÉèÖÃÖ÷±êÌâÎÄ×Ö¸ñÊ½
-    paintText(winwidth[1]/32*13,winhigh[1]/6, "¾«ÁéÓÎÏ·");
+    setTextColor(BLACK);	setTextSize(winwidth[1]/16/10*7);    setTextBkColor(EMPTY);           //è®¾ç½®ä¸»æ ‡é¢˜æ–‡å­—æ ¼å¼
+    paintText(winwidth[1]/32*13,winhigh[1]/6, "ç²¾çµæ¸¸æˆ");
 
-    setTextSize(winwidth[1]/16/10*5);    setTextBkColor(EMPTY);            //ÉèÖÃÈı¸ö¸±±êÌâÎÄ×Ö¸ñÊ½
-    paintText(winwidth[1]/32*14,winhigh[1]/36*15, "¿ªÊ¼ÓÎÏ·");
-    paintText(winwidth[1]/32*14,winhigh[1]/36*21, "¸ü¸ÄÉèÖÃ");
-    paintText(winwidth[1]/32*14,winhigh[1]/36*27, "Íæ·¨ËµÃ÷");
+    setTextSize(winwidth[1]/16/10*5);    setTextBkColor(EMPTY);            //è®¾ç½®ä¸‰ä¸ªå‰¯æ ‡é¢˜æ–‡å­—æ ¼å¼
+    paintText(winwidth[1]/32*14,winhigh[1]/36*15, "å¼€å§‹æ¸¸æˆ");
+    paintText(winwidth[1]/32*14,winhigh[1]/36*21, "æ›´æ”¹è®¾ç½®");
+    paintText(winwidth[1]/32*14,winhigh[1]/36*27, "ç©æ³•è¯´æ˜");
     
     endPaint();
 }
-void Begingame()		//¿ªÊ¼ÓÎÏ·
+void Begingame()		//å¼€å§‹æ¸¸æˆ
 {
 	initWindow("The Sprite Game----made by wangke-2021080909008",DEFAULT/2,DEFAULT,winwidth[config_code[1]],winhigh[config_code[1]]);
 	if(!music[config_code[0]]&&music_bool==1){music_bool=0;	stopSound (mymusic);}
 	startTimer(0,50);
 	startTimer(1,5000);
 }
-void paintgame()		//ÓÎÏ·½çÃæ»æÖÆ
+void paintgame()		//æ¸¸æˆç•Œé¢ç»˜åˆ¶
 {	
-	if(usr->health)			//µ±Íæ¼Ò´æ»î´òÓ¡ÓÎÏ·½çÃæ
+	if(usr->health)			//å½“ç©å®¶å­˜æ´»æ‰“å°æ¸¸æˆç•Œé¢
 	{	
 		beginPaint();
 		clearDevice();
@@ -177,70 +177,70 @@ void paintgame()		//ÓÎÏ·½çÃæ»æÖÆ
 
 		char *Txtofscore=new char[10];
 		sprintf(Txtofscore, "%d", usr->getscore());	
-		paintText(50, 50, "ÄãµÄµÃ·ÖÄ¿Ç°Îª£º   ");
+		paintText(50, 50, "ä½ çš„å¾—åˆ†ç›®å‰ä¸ºï¼š   ");
 		paintText(220, 50, Txtofscore);
 		setPenColor(GREEN);    setPenWidth(0);    setBrushColor(RGB(238,18,137));      
 		rectangle(winwidth[config_code[1]]/32.0*27, winhigh[config_code[1]]/50.0*1.5, winwidth[config_code[1]]/48.0*46, winhigh[config_code[1]]/25.0*2);	
 		setTextSize(winwidth[config_code[1]]/16/10*3);    setTextBkColor(EMPTY); setTextColor(GREEN);
-		paintText(winwidth[config_code[1]]/16*13.5,winhigh[config_code[1]]/25, "·µ»ØÖ÷²Ëµ¥");
+		paintText(winwidth[config_code[1]]/16*13.5,winhigh[config_code[1]]/25, "è¿”å›ä¸»èœå•");
 		endPaint();
 	}
 	else
 	{
-		if(n_error==0)//±£Ö¤Ã¿¾ÖÓÎÏ·Ö»»áµ¯³öÒ»¸öÊ§°Ü´°¿Ú
+		if(n_error==0)//ä¿è¯æ¯å±€æ¸¸æˆåªä¼šå¼¹å‡ºä¸€ä¸ªå¤±è´¥çª—å£
 		{	n_error++;	cancelTimer(0);
 			cancelTimer(1);
  			initWindow("The Sprite game",DEFAULT/2,DEFAULT,480,270);
-        	beginPaint(); setTextSize(20);setTextBkColor(EMPTY); setTextColor(RED);paintText(170,90, "ÓÎÏ·Ê§°Ü");
+        	beginPaint(); setTextSize(20);setTextBkColor(EMPTY); setTextColor(RED);paintText(170,90, "æ¸¸æˆå¤±è´¥");
 			char *txtofscore=new char[10];sprintf(txtofscore,"%d",usr->getscore());
 			setPenColor(RED);	setPenWidth(3);	setBrushColor(YELLOW);
 			rectangle(90,160,210,200);			rectangle(270,160,385,200);
-			paintText(160,120, "ÄãµÄµÃ·ÖÎª£º");	paintText(280,120, txtofscore);
-			paintText(100,170, "·µ»ØÖ÷²Ëµ¥");	paintText(280,170, "ÔÙÀ´Ò»¾Ö");
+			paintText(160,120, "ä½ çš„å¾—åˆ†ä¸ºï¼š");	paintText(280,120, txtofscore);
+			paintText(100,170, "è¿”å›ä¸»èœå•");	paintText(280,170, "å†æ¥ä¸€å±€");
 			endPaint();
 			Init=4;
 		}
 	}
 }
-void config_menu()        //ÏÔÊ¾µ±Ç°ÉèÖÃ
+void config_menu()        //æ˜¾ç¤ºå½“å‰è®¾ç½®
 {
     beginPaint();
     clearDevice();
     putImageScale(back_image,DEFAULT,DEFAULT,winwidth[1],winhigh[1]);
 
-    setPenColor(RGB(128,0,0));    setPenWidth(10);    setBrushColor(RGB(255,165,0));      //ÉèÖÃÖ÷±êÌâ¿ò¸ñÊ½
+    setPenColor(RGB(128,0,0));    setPenWidth(10);    setBrushColor(RGB(255,165,0));      //è®¾ç½®ä¸»æ ‡é¢˜æ¡†æ ¼å¼
     rectangle(winwidth[1]/16*5, winhigh[1]/9, winwidth[1]/16*11, winhigh[1]/18*5);	
 
-    setPenColor(RGB(0,255,127));    setPenWidth(5);    setBrushColor(YELLOW);       //ÉèÖÃÈı¸ö¸±±êÌâ¿ò¸ñÊ½
-    rectangle(winwidth[1]/32*8,    winhigh[1]/18*7, winwidth[1]/32*14, winhigh[1]/18*9);           //µÚÒ»ĞĞ
+    setPenColor(RGB(0,255,127));    setPenWidth(5);    setBrushColor(YELLOW);       //è®¾ç½®ä¸‰ä¸ªå‰¯æ ‡é¢˜æ¡†æ ¼å¼
+    rectangle(winwidth[1]/32*8,    winhigh[1]/18*7, winwidth[1]/32*14, winhigh[1]/18*9);           //ç¬¬ä¸€è¡Œ
     rectangle(winwidth[1]/32*19,   winhigh[1]/18*7, winwidth[1]/32*21, winhigh[1]/18*9);
     rectangle(winwidth[1]/32*22,   winhigh[1]/18*7, winwidth[1]/32*24, winhigh[1]/18*9);
 
-    rectangle(winwidth[1]/32*8,    winhigh[1]/18*10, winwidth[1]/32*14, winhigh[1]/18*12);         //µÚ¶şĞĞ
+    rectangle(winwidth[1]/32*8,    winhigh[1]/18*10, winwidth[1]/32*14, winhigh[1]/18*12);         //ç¬¬äºŒè¡Œ
     rectangle(winwidth[1]/32*17.5, winhigh[1]/18*10, winwidth[1]/32*19.5, winhigh[1]/18*12);
     rectangle(winwidth[1]/32*20.5, winhigh[1]/18*10, winwidth[1]/32*22.5, winhigh[1]/18*12);
     rectangle(winwidth[1]/32*23.5, winhigh[1]/18*10, winwidth[1]/32*25.5, winhigh[1]/18*12);
 
-    rectangle(winwidth[1]/32*8,    winhigh[1]/18*13, winwidth[1]/32*14, winhigh[1]/18*15);         //µÚÈıĞĞ
+    rectangle(winwidth[1]/32*8,    winhigh[1]/18*13, winwidth[1]/32*14, winhigh[1]/18*15);         //ç¬¬ä¸‰è¡Œ
     rectangle(winwidth[1]/32*17.5, winhigh[1]/18*13, winwidth[1]/32*19.5, winhigh[1]/18*15);
     rectangle(winwidth[1]/32*20.5, winhigh[1]/18*13, winwidth[1]/32*22.5, winhigh[1]/18*15);
     rectangle(winwidth[1]/32*23.5, winhigh[1]/18*13, winwidth[1]/32*25.5, winhigh[1]/18*15);
 
-    setTextColor(BLACK);	setTextSize(winwidth[1]/16/10*7);    setTextBkColor(EMPTY); //ÉèÖÃÖ÷±êÌâÎÄ×Ö¸ñÊ½
-    paintText(winwidth[1]/32*13,winhigh[1]/6, "ÓÎÏ·ÉèÖÃ");
+    setTextColor(BLACK);	setTextSize(winwidth[1]/16/10*7);    setTextBkColor(EMPTY); //è®¾ç½®ä¸»æ ‡é¢˜æ–‡å­—æ ¼å¼
+    paintText(winwidth[1]/32*13,winhigh[1]/6, "æ¸¸æˆè®¾ç½®");
 
-    setTextSize(winwidth[1]/16/10*5);    setTextBkColor(EMPTY);            //ÉèÖÃÈı¸ö¸±±êÌâÎÄ×Ö¸ñÊ½
-    paintText(  winwidth[1]/32*9,  winhigh[1]/36*15, "±³¾°ÒôÀÖ");                 //µÚÒ»ĞĞ
-    paintText(  winwidth[1]/32*19.5,winhigh[1]/36*15, "¹Ø");                 
-    paintText(  winwidth[1]/32*22.5,winhigh[1]/36*15, "¿ª");
-    paintText(  winwidth[1]/32*9,  winhigh[1]/36*21, "´°¿Ú´óĞ¡");                 //µÚ¶şĞĞ
-    paintText(  winwidth[1]/32*18, winhigh[1]/36*21, "Ğ¡");
-    paintText(  winwidth[1]/32*21, winhigh[1]/36*21, "ÖĞ");
-    paintText(  winwidth[1]/32*24, winhigh[1]/36*21, "´ó");
-    paintText(  winwidth[1]/32*9,  winhigh[1]/36*27, "ÄÑ¶ÈÑ¡Ôñ");                 //µÚÈıĞĞ
-    paintText(  winwidth[1]/32*18, winhigh[1]/36*27, "Ò×");
-    paintText(  winwidth[1]/32*21, winhigh[1]/36*27, "ÖĞ");
-    paintText(  winwidth[1]/32*24, winhigh[1]/36*27, "ÄÑ");
+    setTextSize(winwidth[1]/16/10*5);    setTextBkColor(EMPTY);            //è®¾ç½®ä¸‰ä¸ªå‰¯æ ‡é¢˜æ–‡å­—æ ¼å¼
+    paintText(  winwidth[1]/32*9,  winhigh[1]/36*15, "èƒŒæ™¯éŸ³ä¹");                 //ç¬¬ä¸€è¡Œ
+    paintText(  winwidth[1]/32*19.5,winhigh[1]/36*15, "å…³");                 
+    paintText(  winwidth[1]/32*22.5,winhigh[1]/36*15, "å¼€");
+    paintText(  winwidth[1]/32*9,  winhigh[1]/36*21, "çª—å£å¤§å°");                 //ç¬¬äºŒè¡Œ
+    paintText(  winwidth[1]/32*18, winhigh[1]/36*21, "å°");
+    paintText(  winwidth[1]/32*21, winhigh[1]/36*21, "ä¸­");
+    paintText(  winwidth[1]/32*24, winhigh[1]/36*21, "å¤§");
+    paintText(  winwidth[1]/32*9,  winhigh[1]/36*27, "éš¾åº¦é€‰æ‹©");                 //ç¬¬ä¸‰è¡Œ
+    paintText(  winwidth[1]/32*18, winhigh[1]/36*27, "æ˜“");
+    paintText(  winwidth[1]/32*21, winhigh[1]/36*27, "ä¸­");
+    paintText(  winwidth[1]/32*24, winhigh[1]/36*27, "éš¾");
 
     setPenColor(RGB(255,0,255));    setPenWidth(5);    setBrushColor(EMPTY);
     switch (config_now[0])
@@ -263,15 +263,15 @@ void config_menu()        //ÏÔÊ¾µ±Ç°ÉèÖÃ
 	setPenColor(GREEN);    setPenWidth(0);    setBrushColor(RGB(238,18,137));      
 	rectangle(winwidth[1]/32.0*27, winhigh[1]/50.0*1.5, winwidth[1]/48.0*46, winhigh[1]/25.0*2);	
 	setTextSize(winwidth[1]/16/10*3);    setTextBkColor(EMPTY); setTextColor(GREEN);
-	paintText(winwidth[1]/16*13.5,winhigh[1]/25, "·µ»ØÖ÷²Ëµ¥");
+	paintText(winwidth[1]/16*13.5,winhigh[1]/25, "è¿”å›ä¸»èœå•");
     endPaint();
 }
-void config_change(int *config_code)   //ÊµÏÖ¸ü¸ÄÉèÖÃ
+void config_change(int *config_code)   //å®ç°æ›´æ”¹è®¾ç½®
 {
-	fpw=fopen("./Ô´×ÊÔ´/config.txt","w");
+	fpw=fopen("./æºèµ„æº/config.txt","w");
 	if(!fpw)    
         {   initWindow("error",DEFAULT/2,DEFAULT/2,480,270);
-            beginPaint(); setTextSize(20);paintText(140,110, "¸ü¸ÄÓÎÏ·ÉèÖÃÎÄ¼şÊ§°Ü");endPaint();return ;}
+            beginPaint(); setTextSize(20);paintText(140,110, "æ›´æ”¹æ¸¸æˆè®¾ç½®æ–‡ä»¶å¤±è´¥");endPaint();return ;}
         else
         {
             fprintf(fpr,"MUSIC %d\n",config_code[0]);
@@ -283,7 +283,7 @@ void config_change(int *config_code)   //ÊµÏÖ¸ü¸ÄÉèÖÃ
         }
 		fclose(fpw);
 }
-void play_way()     //Íæ·¨½éÉÜ
+void play_way()     //ç©æ³•ä»‹ç»
 {
 	beginPaint();
 	clearDevice();
@@ -292,10 +292,10 @@ void play_way()     //Íæ·¨½éÉÜ
 	setPenColor(GREEN);    setPenWidth(0);    setBrushColor(RGB(238,18,137));      
 	rectangle(winwidth[1]/32.0*27, winhigh[1]*3/100, winwidth[1]/24.0*23, winhigh[1]/12.5);	
 	setTextSize(winwidth[1]*3/160);    setTextBkColor(EMPTY); setTextColor(GREEN);
-	paintText(winwidth[1]*27/32,winhigh[1]/25, "·µ»ØÖ÷²Ëµ¥");
+	paintText(winwidth[1]*27/32,winhigh[1]/25, "è¿”å›ä¸»èœå•");
 	endPaint();
 }
-void mouseEvent(int x, int y, int button, int event)	//Êó±êÊÂ¼ş
+void mouseEvent(int x, int y, int button, int event)	//é¼ æ ‡äº‹ä»¶
 {
 	switch (Init)
 	{
@@ -371,12 +371,12 @@ void mouseEvent(int x, int y, int button, int event)	//Êó±êÊÂ¼ş
 	}
 }
 
-void timerEvent(int id)           	 //¼ÆÊ±Æ÷
-{	//	id=0£ºËùÓĞµ¥Î»ÒÆ¶¯²¢ÅĞ¶ÏÅö×²£¬¼õÉÙ¹¥»÷¼°¼¼ÄÜcd£¬¼ä¸ô0.05s
-	//	id=1£º²¹³ä±»»÷°ÜµÄµĞ¶Ôµ¥Î»£¬¼ä¸ô5s
+void timerEvent(int id)           	 //è®¡æ—¶å™¨
+{	//	id=0ï¼šæ‰€æœ‰å•ä½ç§»åŠ¨å¹¶åˆ¤æ–­ç¢°æ’ï¼Œå‡å°‘æ”»å‡»åŠæŠ€èƒ½cdï¼Œé—´éš”0.05s
+	//	id=1ï¼šè¡¥å……è¢«å‡»è´¥çš„æ•Œå¯¹å•ä½ï¼Œé—´éš”5s
 	switch (id)
 	{
-	case 0:														//½øĞĞÒÆ¶¯
+	case 0:														//è¿›è¡Œç§»åŠ¨
 		for(int i=0;i<n_ene1[config_code[2]];i++)
 			if(en1[i]!=NULL&&en1[i]->health)	
 				{en1[i]->move(usr,usr->rem );
@@ -418,7 +418,7 @@ void timerEvent(int id)           	 //¼ÆÊ±Æ÷
 		break;
 	}
 }
-void keyEvent(int key,int event)						//¼üÅÌÊÂ¼ş
+void keyEvent(int key,int event)						//é”®ç›˜äº‹ä»¶
 {
 	switch (Init)
 	{

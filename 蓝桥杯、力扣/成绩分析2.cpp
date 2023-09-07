@@ -1,4 +1,4 @@
-/*n个成绩，最大，最小，平均*/
+/*n涓垚缁╋紝鏈�澶э紝鏈�灏忥紝骞冲潎*/
 #include <iostream>
 using namespace std;
 int main(){
