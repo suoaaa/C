@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include<stdbool.h>
 #include<stdlib.h>
-#include <linux/list.h>
+#include "linux/list.h"
 
 // 定义进程结构体
 struct process {
