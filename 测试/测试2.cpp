@@ -2,47 +2,26 @@
 
 （如果从字符串 T 中删除一些字符（也可能不删除，并且选出的这些字符可以位于 T 中的?任意位置），可以得到字符串 S，那么?S 就是?T 的子序列）*/
 #include<stdio.h>
+#include<bits/stdc++.h>
+#include<stdlib.h>
 #include<iostream>
-#include<string.h>
-#include<vector>
 using namespace std;
-class Solution {
-public:
-    string shortestCommonSupersequence(string str1, string str2) {
-        int m=str1.length(),n=str2.length();
-        string ret;
-        vector<bool> b1(m,false),b2(n,false);
-        int i,j,temp;
-        for(i=0,j=0;i<m;i++){
-            for(temp=j;temp<n&&j<n;temp++){
-                if(str1[i]==str2[temp]) {
-                    j=temp;
-                    b1[i]=true;
-                    b2[temp]=true;
-                    j+=1;
-                    break;
-                }
-            }
-        }
-        vector<string> str(2);
-        str[0]=str1;
-        str[1]=str2;
-        m=str[0].length();n=str[1].length();
-        i=0;j=0;
-        int num=0;
-        ret+=str1;
-        for(int i=0;i<n;i++){
-            if(b2[i]!=true) ret+=str[1][i];
-        }
-        return ret;
-    }
-};
-int main()
-{
-    string str1="aabbabaa";     //"aabb         a  baa"
-    string str2="aabbbbbbaa";   //"aabb  bbb   baa"
-    Solution s;
-    string str=s.shortestCommonSupersequence(str1,str2);//"bbbaaababbb"
-    cout<<str<<endl<<"aabbabbbbaa";
-    return 0;
+
+
+int cmd(int a,int b){
+	return a>b;
+}
+int main(){
+	int num[6]={1,2,4,7,15,34}; 
+	sort(num,num+6);                           //按从小到大排序 
+	int pos1=lower_bound(num,num+6,7)-num;    //返回数组中第一个大于或等于被查数的值 
+	int pos2=upper_bound(num,num+6,7)-num;    //返回数组中第一个大于被查数的值
+	cout<<pos1<<" "<<num[pos1]<<endl;
+	cout<<pos2<<" "<<num[pos2]<<endl;
+	sort(num,num+6,cmd);                      //按从大到小排序
+	int pos3=lower_bound(num,num+6,7,greater<int>())-num;  //返回数组中第一个小于或等于被查数的值 
+	int pos4=upper_bound(num,num+6,7,greater<int>())-num;  //返回数组中第一个小于被查数的值 
+	cout<<pos3<<" "<<num[pos3]<<endl;
+	cout<<pos4<<" "<<num[pos4]<<endl;
+	return 0;	
 }
