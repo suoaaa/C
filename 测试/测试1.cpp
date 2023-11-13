@@ -1,5 +1,12 @@
+
 #include<stdio.h>
-int main(){
-    printf("hello world");
+void return_input(){
+    char array[30];
+    gets(array);
+    printf("%s\n",array);
+}
+int main()
+{
+    return_input();
     return 0;
 }
