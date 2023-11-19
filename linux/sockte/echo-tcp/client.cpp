@@ -4,11 +4,29 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <cstring>
+#include <thread>
+#include <signal.h>
 
 #define DEST_IP "172.27.173.124"
 #define DEST_PORT 7008
 //47.109.46.251
+
+int clientSocket=0;
+void quit(int no,siginfo_t *info,void *context){
+    if(clientSocket!=0)
+        close(clientSocket);
+    printf("客户端退出\n");
+    exit(0);
+}
+
 int main(){
+    //增加对信号量的监控，用户按下ctrl+z,c或者’/‘后程序退出避免僵尸进程
+    struct sigaction act;
+	act.sa_sigaction=quit;
+	act.sa_flags=0;
+    sigaction(SIGINT,&act,NULL);
+    sigaction(SIGQUIT,&act,NULL);
+
 
     //初始化一个远程地址，方便连接服务器
     struct sockaddr_in dest_addr; 
@@ -18,7 +36,7 @@ int main(){
     inet_pton(AF_INET, DEST_IP, &dest_addr.sin_addr.s_addr); 
 
     //创建套接字，使用tcp连接
-    int clientSocket=socket(AF_INET,SOCK_STREAM,0);
+    clientSocket=socket(AF_INET,SOCK_STREAM,0);
     if (clientSocket==-1){printf("套接字创建失败\n");return -1;}
 
     //连接服务器
@@ -29,8 +47,7 @@ int main(){
     char buf[128];
     char buff1[128];
     int ret=0;
-
-    printf("%d\n",getpid());
+    int count=0;
 
     while(1){
 
