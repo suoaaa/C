@@ -6,7 +6,7 @@
 #include <cstring>
 #include <thread>
 #include <signal.h>
-
+using namespace std;
 #define DEST_IP "172.27.173.124"
 #define DEST_PORT 7008
 //47.109.46.251
@@ -17,6 +17,28 @@ void quit(int no,siginfo_t *info,void *context){
         close(clientSocket);
     printf("客户端退出\n");
     exit(0);
+}
+
+void heart_check(int s){
+    sleep(10);
+    char buf[128];
+    int count=0,ret;
+    while(1){
+        printf("alive1\n");
+        count++;
+        memset(buf,'\0',128);
+        printf("alive2\n");
+        ret=recv(s, buf, 128,0);
+        if(string(buf).find("exit")!=string::npos) ret=-1;
+        if(ret==0) count++;
+        else if(ret>0) count=0;
+        if(count>10||ret<0){
+            printf("服务器下线或网络问题，客户端关闭\n");
+            close(s);
+            exit(0);
+        }
+        sleep(10);
+    }
 }
 
 int main(){
@@ -48,6 +70,9 @@ int main(){
     char buff1[128];
     int ret=0;
     int count=0;
+    thread t(heart_check,clientSocket);
+    t.detach();
+    sleep(1);
 
     while(1){
 

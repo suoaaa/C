@@ -22,12 +22,15 @@ void zombie_cleaning(pid_t pid){
 
 void heart_check(int s,char * ip,int *count){
     while(1){
-        sleep(1);
-        count++;
-        if(count>300){
-            printf("客户端端口号：%d监听下线\n",getpid());
+        *count++;
+        write(s,"alive\0",strlen("alive\0"));
+        if(*count>100){
+            write(s,"exit\0",strlen("exit\0"));
+            printf("%s长时间未发送信息，服务器端口%d监听下线\n",ip,getpid());
+            close(s);
             exit(0);
         }
+        sleep(5);
     }
 }
 
@@ -73,9 +76,6 @@ int main(int argc, char *argv[]) {
         pid_t pid = fork();
         if(pid<0){  write(STDOUT_FILENO,"服务器出错，客户端连接失败",39);   }
         if(pid==0){
-            struct tcp_info info; 
-            socklen_t len=sizeof(info); 
-            getsockopt(a, IPPROTO_TCP, TCP_NODELAY, &info, &len); 
 
             close(s);
             char buf[128], ip[64],client[128];
@@ -85,10 +85,10 @@ int main(int argc, char *argv[]) {
             write(STDOUT_FILENO,client,strlen(client));
             sprintf(client,"客户端%s/%d%c",ip,port,'\0');
 
-            int ret = 0;
-            thread t(heart_check,a,client,info);
+            int ret = 0,count=0;
+            thread t(heart_check,a,client,&count);
             t.detach();
-            usleep(1);
+            sleep(1);
 
             while (1) {
                 memset(buf,'\0',sizeof(buf));
@@ -99,6 +99,7 @@ int main(int argc, char *argv[]) {
                     exit(0);
                 }else if(ret > 0 ){
                     printf("%s发送:%s\n",client,buf);
+                    count=0;
                 }
             } 
         }else{
