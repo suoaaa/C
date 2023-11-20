@@ -22,15 +22,15 @@ void zombie_cleaning(pid_t pid){
 
 void heart_check(int s,char * ip,int *count){
     while(1){
-        (*count)++;
+        *count++;
         write(s,"alive\0",strlen("alive\0"));
-        if(*count>20){
+        if(*count>200){
             write(s,"exit\0",strlen("exit\0"));
             printf("%s长时间未发送信息，服务器端口%d监听下线\n",ip,getpid());
             close(s);
             exit(0);
         }
-        sleep(1);
+        sleep(5);
     }
 }
 
@@ -40,6 +40,7 @@ void quit(int no,siginfo_t* info, void* context){
 }
 
 int main(int argc, char *argv[]) {
+    //增加对信号量的监控，用户按下ctrl+c或者’/‘后程序退出
     struct sigaction act;
 	act.sa_sigaction=quit;
 	act.sa_flags=0;
