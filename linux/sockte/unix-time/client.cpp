@@ -57,14 +57,10 @@ int main(){
     int ret=0;
     time_t now;
     while(true){
-     
-
         ret = sendto(clientSocket,"I want to know time",20,0,(struct sockaddr*)&dest_addr, sizeof(dest_addr));
-
         if(ret<=0){
             printf("服务器连接失败\n");
         }else{
- 
             memset((char*)&now,'\0',sizeof(now));
             ret = read(clientSocket, (char*)&now, sizeof(now));  //接收数据（时间）
             if (ret > 0){
@@ -76,10 +72,6 @@ int main(){
             }
         }
         sleep(1);
-    
-
-
     }
-    
     return 0;
 }
