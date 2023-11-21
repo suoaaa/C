@@ -13,7 +13,7 @@
 #include <signal.h>
 using namespace std;
 
-#define DEST_PORT 7008
+#define DEST_PORT 13
 
 void zombie_cleaning(pid_t pid){
     waitpid(pid,NULL,0);
@@ -21,16 +21,21 @@ void zombie_cleaning(pid_t pid){
 }
 
 void heart_check(int s,char * ip,int *count){
+    char buf[128];
+    int ret=0;
     while(1){
-        *count++;
-        write(s,"alive\0",strlen("alive\0"));
-        if(*count>200){
+        memset(buf,'\0',128);
+        ret = recv(s, buf, 128,0);
+        if(string(buf).find("exit")!=string::npos) ret=-1;
+        if(ret==0) (*count)++;
+        else if(ret>0) (*count)=0;
+        if((*count)>10||ret<0){
+            printf("服务器下线或网络问题，客户端关闭\n");
             write(s,"exit\0",strlen("exit\0"));
-            printf("%s长时间未发送信息，服务器端口%d监听下线\n",ip,getpid());
             close(s);
             exit(0);
         }
-        sleep(5);
+        sleep(1);
     }
 }
 
@@ -67,17 +72,28 @@ int main(int argc, char *argv[]) {
     }
 
     listen(s, 128);
+    char msg[128];
+    int ret;
     while(true){
         // accept
         struct sockaddr_in client_addr;
         socklen_t addrlen = sizeof(client_addr);
-        
-        a = accept(s, (struct sockaddr *)&client_addr, &addrlen);
+        printf("1%d\n",getpid());
 
+
+        memset(msg,'\0',128);
+        ret = recvfrom(s,msg,128,0,NULL,NULL);
+        if(ret <= 0){
+            continue;
+        }
+        if(strcmp(msg,"I want to know time")==0){
+            
+        }
         pid_t pid = fork();
         if(pid<0){  write(STDOUT_FILENO,"服务器出错，客户端连接失败",39);   }
         if(pid==0){
-
+            write(STDOUT_FILENO,"123\0",strlen("123\0"));
+            printf("%d\n",getpid());
             close(s);
             char buf[128], ip[64],client[128];
             inet_ntop(AF_INET, &client_addr.sin_addr.s_addr,ip,sizeof(ip));
@@ -86,22 +102,24 @@ int main(int argc, char *argv[]) {
             write(STDOUT_FILENO,client,strlen(client));
             sprintf(client,"客户端%s/%d%c",ip,port,'\0');
 
-            int ret = 0,count=0;
+            time_t now;
+            int ret , count=0;
             thread t(heart_check,a,client,&count);
             t.detach();
             sleep(1);
 
             while (1) {
-                memset(buf,'\0',sizeof(buf));
-                ret = read(a, buf, sizeof(buf));
-                if(ret<0||strcmp(buf,"exit")==0){
-                    printf("%s连接中断\n",client);
+                time (&now);
+                ret=0;
+                
+                //发送数据,接收返回值
+                ret=send(a, (char *)&now, sizeof(now), 0);
+                if(ret <= 0){
+                    printf("连接中断，发送信息失败\n");
                     close(a);
-                    exit(0);
-                }else if(ret > 0 ){
-                    printf("%s发送:%s\n",client,buf);
-                    count=0;
+                    break;
                 }
+                sleep(1);
             } 
         }else{
             thread t(zombie_cleaning,pid);

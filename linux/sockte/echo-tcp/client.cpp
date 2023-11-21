@@ -12,6 +12,7 @@ using namespace std;
 //47.109.46.251
 
 int clientSocket=0;
+
 void quit(int no,siginfo_t *info,void *context){
     if(clientSocket!=0)
         close(clientSocket);
@@ -25,12 +26,13 @@ void heart_check(){
     int count=0,ret;
     while(1){
         memset(buf,'\0',128);
-        ret=recv(clientSocket, buf, 128,0);
+        ret = recv(clientSocket, buf, 128,0);
         if(string(buf).find("exit")!=string::npos) ret=-1;
         if(ret==0) count++;
         else if(ret>0) count=0;
         if(count>10||ret<0){
             printf("服务器下线或网络问题，客户端关闭\n");
+            write(clientSocket,"exit\0",strlen("exit\0"));
             close(clientSocket);
             exit(0);
         }
@@ -64,9 +66,7 @@ int main(){
 
     //连接成功后，开始传输
     char buf[128];
-    char buff1[128];
-    int ret=0;
-    int count=0;
+    int ret,count=0;
     thread t(heart_check);
     t.detach();
     sleep(1);

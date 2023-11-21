@@ -25,8 +25,8 @@ void heart_check(int s,char * ip,int *count){
         (*count)++;
         write(s,"alive\0",strlen("alive\0"));
         if(*count>20){
-            write(s,"exit\0",strlen("exit\0"));
             printf("%s长时间未发送信息，服务器端口%d监听下线\n",ip,getpid());
+            write(s,"exit\0",strlen("exit\0"));
             close(s);
             exit(0);
         }
