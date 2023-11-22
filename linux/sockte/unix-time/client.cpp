@@ -66,7 +66,7 @@ int main(){
             if (ret > 0){
                 count=0;
                 now = ntohl((unsigned long)now);  //网络字节顺序转主机字节顺序
-                printf("%s", ctime(&now));  //打印接收到的数据（时间）
+                printf("msg from %s : %s", DEST_IP,ctime(&now));  //打印接收到的数据（时间）
             }else{
                 printf("接收服务端信息失败\n");
             }

@@ -10,13 +10,32 @@
 #include <unistd.h>
 #include <string.h>
 #include <signal.h>
+#include <thread>
 
 using namespace std;
 #define DEST_PORT 13
-
+int s=0;
 void quit(int no,siginfo_t* info, void* context){
-    printf("端口号：%d监听下线\n",getpid());
+    printf("端口号：%d的服务器下线\n",getpid());
+    close(0);
     exit(0);
+}
+
+void send_time(int s,sockaddr_in client_addr,socklen_t addrlen){
+    time_t now;
+    time (&now);
+    now = htonl((unsigned long)now);
+    //发送数据,接收返回值
+
+    if(sendto(s, (char *)&now, sizeof(now), 0 ,(sockaddr *)&client_addr,addrlen) <= 0){
+        perror("连接中断，发送信息失败");
+        return ;
+    }
+    now = ntohl((unsigned long)now);
+    char ip[64];
+    inet_ntop(AF_INET, &client_addr.sin_addr.s_addr,ip,sizeof(ip));
+    int port=ntohs(client_addr.sin_port);
+    printf("sent to %s/%d msg : %s",ip,port,ctime(&now));
 }
 
 int main(int argc, char *argv[]) {
@@ -28,12 +47,11 @@ int main(int argc, char *argv[]) {
     sigaction(SIGQUIT,&act,NULL);
 
     printf("%d\n",getpid());
-    int s = socket(AF_INET, SOCK_DGRAM, 0);
+    s = socket(AF_INET, SOCK_DGRAM, 0);
     struct sockaddr_in server_addr,client_addr;
-    socklen_t addrlen;
+    socklen_t addrlen = sizeof(server_addr);
     char msg[128];
-    int ret;
-    time_t now;
+
 
     if (s == -1) {
         write(STDOUT_FILENO,"创建套接字失败\n",22);
@@ -44,35 +62,20 @@ int main(int argc, char *argv[]) {
     server_addr.sin_port = htons(DEST_PORT);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     
-    if ((bind(s, (const struct sockaddr *)&server_addr, sizeof(server_addr))) == -1) {
+    if ((bind(s, (const struct sockaddr *)&server_addr, addrlen)) == -1) {
         write(STDOUT_FILENO,"监听套接字失败\n",22);
         return 0;
     }
     listen(s, 128);
     
     while(true){
-        // accept
         bzero(&client_addr,sizeof(client_addr));
         memset(msg,'\0',128);
-        ret = recvfrom(s,msg,128,0,(sockaddr *)&client_addr,&addrlen);
-        if(ret <= 0){
+        if(recvfrom(s,msg,128,0,(sockaddr *)&client_addr,&addrlen) <= 0){
             continue;
-        }
-        
-        if(strcmp(msg,"I want to know time")==0){
-           
-            time (&now);
-            now = htonl((unsigned long)now);
-            //发送数据,接收返回值
-            ret=sendto(s, (char *)&now, sizeof(now), 0 ,(sockaddr *)&client_addr,addrlen);
-            if(ret <= 0){
-                perror("连接中断，发送信息失败");
-            }
-            now = ntohl((unsigned long)now);
-            char ip[64];
-            inet_ntop(AF_INET, &client_addr.sin_addr.s_addr,ip,sizeof(ip));
-            int port=ntohs(client_addr.sin_port);
-            printf("发送给客户端%s/%d时间:%s",ip,port,ctime(&now));
+        }else if(strcmp(msg,"I want to know time")==0){
+            thread t(send_time,s,client_addr,addrlen);
+            t.detach();
         }
     }
     return 0;
