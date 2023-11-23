@@ -1,24 +1,22 @@
 #include <unistd.h>
-#include <sys/types.h>
 #include <winsock2.h>  
-// #include <arpa/inet.h>
 #include <iostream>
-#include <cstring>
+#include <string.h>
 #include <thread>
-#include <signal.h>
-using namespace std;
 
+using namespace std;
 #define DEST_IP "47.109.46.251"
 #define DEST_PORT 8002
 
 char ip[64];
 int clientSocket=0;
-
+string GbkToUtf8(char *src_str);
 void heart_check(){
-    sleep(5);
+   
     char buf[128];
     int count=0,ret;
     while(1){
+         printf("alive\n");
         memset(buf,'\0',128);
         ret = recv(clientSocket, buf, sizeof(buf) ,0);
         if(ret == 0) count++;
@@ -29,7 +27,7 @@ void heart_check(){
                 printf("msg from %s ：%s\n",ip,buf);
             }
         }
-        if(count>30||ret<0){
+        if(count<-10||ret<0){
             printf("服务器下线或网络问题，客户端关闭\n");
             write(clientSocket,"exit",sizeof("exit"));
             close(clientSocket);
@@ -48,7 +46,9 @@ int main(){
 	{
 		return 0;
 	}
-
+    int e=0;
+scanf("%s",&e);
+printf("%s\n",e);
     //初始化一个远程地址，方便连接服务器
     struct sockaddr_in dest_addr; 
     memset(&dest_addr,'\0',sizeof(dest_addr));
@@ -67,9 +67,9 @@ int main(){
     else {printf("等待另一客户端连接至服务器\n");}
 
     //连接成功后，开始传输
-    char buf[128];
+    const char *buf;
+    char *bu2;
     int ret,count=0;
-    memset(buf,'\0',sizeof(buf));
     memset(ip,'\0',sizeof(ip));
     if(recv(clientSocket,ip,sizeof(ip),0)>0){
         printf("%s已上线\n",ip);
@@ -82,20 +82,23 @@ int main(){
     }
 
     thread t(heart_check);
-    t.detach();
-
+    t.join();
+int i=0;
+ printf("%d\n",i++);
     while(1){
 
         ret=0;
         //接收终端输入，最大字符128
-        memset(buf,'\0',sizeof(buf));
-	    scanf("%s",buf);
-
+        memset(bu2,'\0',sizeof(bu2));
+        write(STDOUT_FILENO,"1\n",3);
+	    scanf("%s",bu2);
+        buf = GbkToUtf8(bu2).c_str();
+        printf("my msg:%s\n",buf);
         //发送数据,接收返回值
         ret=send(clientSocket, buf, strlen(buf), 0);
         if(ret <= 0){
             printf("连接中断，发送信息失败\n");
-             //关闭套接字
+            //关闭套接字
             closesocket(clientSocket);
             //终止使用 DLL
             WSACleanup();
@@ -112,4 +115,20 @@ int main(){
         }
     }
     return 0;
+}
+
+string GbkToUtf8(char *src_str)
+{
+	int len = MultiByteToWideChar(CP_ACP, 0, src_str, -1, NULL, 0);
+	wchar_t* wstr = new wchar_t[len + 1];
+	memset(wstr, 0, len + 1);
+	MultiByteToWideChar(CP_ACP, 0, src_str, -1, wstr, len);
+	len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
+	char* str = new char[len + 1];
+	memset(str, 0, len + 1);
+	WideCharToMultiByte(CP_UTF8, 0, wstr, -1, str, len, NULL, NULL);
+	string strTemp = str;
+	if (wstr) delete[] wstr;
+	if (str) delete[] str;
+	return strTemp;
 }
