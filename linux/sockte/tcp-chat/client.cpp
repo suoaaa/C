@@ -8,7 +8,7 @@
 #include <signal.h>
 using namespace std;
 
-#define DEST_IP "172.27.173.124"
+#define DEST_IP "47.109.46.251"
 #define DEST_PORT 8002
 //47.109.46.251
 char ip[64];
