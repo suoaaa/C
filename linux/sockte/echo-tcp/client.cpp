@@ -8,7 +8,7 @@
 #include <signal.h>
 using namespace std;
 #define DEST_IP "172.27.173.124"
-#define DEST_PORT 7008
+#define DEST_PORT 8000
 //47.109.46.251
 
 int clientSocket=0;

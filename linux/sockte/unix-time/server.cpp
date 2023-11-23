@@ -13,7 +13,7 @@
 #include <thread>
 
 using namespace std;
-#define DEST_PORT 13
+#define DEST_PORT 8001
 int s=0;
 void quit(int no,siginfo_t* info, void* context){
     printf("端口号：%d的服务器下线\n",getpid());

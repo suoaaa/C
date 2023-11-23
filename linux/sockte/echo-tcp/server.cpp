@@ -13,7 +13,7 @@
 #include <signal.h>
 using namespace std;
 
-#define DEST_PORT 7008
+#define DEST_PORT 8000
 
 void zombie_cleaning(pid_t pid){
     waitpid(pid,NULL,0);
