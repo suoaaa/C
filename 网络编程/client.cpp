@@ -43,9 +43,8 @@ int main(){
     //增加对信号量的监控，用户按下ctrl+z,c或者’/‘后程序退出并通知服务器避免僵尸进程
 
     printf("进程pid为%d\n",getpid());
-    WORD sockVersion = MAKEWORD(2, 2);
 	WSADATA data;
-	if(WSAStartup(sockVersion, &data)!=0)
+	if(WSAStartup(MAKEWORD(2, 2), &data)!=0)
 	{
 		return 0;
 	}
@@ -76,7 +75,9 @@ int main(){
         printf("%s已上线\n",ip);
     }else{
         printf("网络问题连接失败\n");
-        close(clientSocket);
+        closesocket(clientSocket);
+        //终止使用 DLL
+        WSACleanup();
         exit(0);
     }
 
@@ -94,13 +95,19 @@ int main(){
         ret=send(clientSocket, buf, strlen(buf), 0);
         if(ret <= 0){
             printf("连接中断，发送信息失败\n");
-            close(clientSocket);
+             //关闭套接字
+            closesocket(clientSocket);
+            //终止使用 DLL
+            WSACleanup();
+
             break;
         }
 
         //接收到exit指令后，停止连接
 	    if(strcmp(buf,"exit") == 0) {
-            close(clientSocket);
+            closesocket(clientSocket); 
+            //终止使用 DLL
+            WSACleanup();
             break;
         }
     }
