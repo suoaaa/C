@@ -1,4 +1,3 @@
-
 #include<stdio.h>
 void return_input(){
     char array[30];
