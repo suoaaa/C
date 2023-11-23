@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     sigaction(SIGQUIT,&act,NULL);
 
     printf("进程pid为%d\n",getpid());
-    int s = socket(AF_INET, SOCK_STREAM, 0);
+    int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     struct sockaddr_in server_addr;
     socklen_t addrlen = sizeof(server_addr);
 

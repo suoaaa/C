@@ -65,7 +65,7 @@ int main(){
     inet_pton(AF_INET, DEST_IP, &dest_addr.sin_addr.s_addr); 
 
     //创建套接字，使用tcp连接
-    clientSocket=socket(AF_INET,SOCK_STREAM,0);
+    clientSocket=socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
     if (clientSocket==-1){printf("套接字创建失败\n");return -1;}
 
     //连接服务器
