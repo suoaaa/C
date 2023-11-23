@@ -14,29 +14,14 @@
 
 using namespace std;
 #define DEST_PORT 8001
+
 int s=0;
 void quit(int no,siginfo_t* info, void* context){
     printf("端口号：%d的服务器下线\n",getpid());
     close(0);
     exit(0);
 }
-
-void send_time(int s,sockaddr_in client_addr,socklen_t addrlen){
-    time_t now;
-    time (&now);
-    now = htonl((unsigned long)now);
-    //发送数据,接收返回值
-
-    if(sendto(s, (char *)&now, sizeof(now), 0 ,(sockaddr *)&client_addr,addrlen) <= 0){
-        perror("连接中断，发送信息失败");
-        return ;
-    }
-    now = ntohl((unsigned long)now);
-    char ip[64];
-    inet_ntop(AF_INET, &client_addr.sin_addr.s_addr,ip,sizeof(ip));
-    int port=ntohs(client_addr.sin_port);
-    printf("sent to %s/%d msg : %s",ip,port,ctime(&now));
-}
+void send_time(int s,sockaddr_in client_addr,socklen_t addrlen);
 
 int main(int argc, char *argv[]) {
     //增加对信号量的监控，用户按下ctrl+c或者’/‘后程序退出
@@ -79,4 +64,20 @@ int main(int argc, char *argv[]) {
         }
     }
     return 0;
+}
+void send_time(int s,sockaddr_in client_addr,socklen_t addrlen){
+    time_t now;
+    time (&now);
+    now = htonl((unsigned long)now);
+    //发送数据,接收返回值
+
+    if(sendto(s, (char *)&now, sizeof(now), 0 ,(sockaddr *)&client_addr,addrlen) <= 0){
+        perror("连接中断，发送信息失败");
+        return ;
+    }
+    now = ntohl((unsigned long)now);
+    char ip[64];
+    inet_ntop(AF_INET, &client_addr.sin_addr.s_addr,ip,sizeof(ip));
+    int port=ntohs(client_addr.sin_port);
+    printf("sent to %s/%d msg : %s",ip,port,ctime(&now));
 }

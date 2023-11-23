@@ -9,9 +9,8 @@
 #include <time.h>
 using namespace std;
 
-#define DEST_IP "172.27.173.124"
+#define DEST_IP "47.109.46.251"
 #define DEST_PORT 8001
-//47.109.46.251
 
 int clientSocket=0;
 int count=0;
@@ -62,11 +61,11 @@ int main(){
             printf("服务器连接失败\n");
         }else{
             memset((char*)&now,'\0',sizeof(now));
-            ret = read(clientSocket, (char*)&now, sizeof(now));  //接收数据（时间）
+            ret = read(clientSocket, (char*)&now, sizeof(now)); 
             if (ret > 0){
                 count=0;
-                now = ntohl((unsigned long)now);  //网络字节顺序转主机字节顺序
-                printf("msg from %s : %s", DEST_IP,ctime(&now));  //打印接收到的数据（时间）
+                now = ntohl((unsigned long)now);  
+                printf("msg from %s : %s", DEST_IP,ctime(&now)); 
             }else{
                 printf("接收服务端信息失败\n");
             }

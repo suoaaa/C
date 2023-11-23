@@ -6,10 +6,10 @@
 #include <cstring>
 #include <thread>
 #include <signal.h>
+
 using namespace std;
-#define DEST_IP "172.27.173.124"
+#define DEST_IP "47.109.46.251"
 #define DEST_PORT 8000
-//47.109.46.251
 
 int clientSocket=0;
 
@@ -20,25 +20,7 @@ void quit(int no,siginfo_t *info,void *context){
     exit(0);
 }
 
-void heart_check(){
-    sleep(5);
-    char buf[128];
-    int count=0,ret;
-    while(1){
-        memset(buf,'\0',128);
-        ret = recv(clientSocket, buf, 128,0);
-        if(string(buf).find("exit")!=string::npos) ret=-1;
-        if(ret==0) count++;
-        else if(ret>0) count=0;
-        if(count>10||ret<0){
-            printf("服务器下线或网络问题，客户端关闭\n");
-            write(clientSocket,"exit\0",strlen("exit\0"));
-            close(clientSocket);
-            exit(0);
-        }
-        sleep(1);
-    }
-}
+void heart_check();
 
 int main(){
     //增加对信号量的监控，用户按下ctrl+z,c或者’/‘后程序退出避免僵尸进程
@@ -47,8 +29,8 @@ int main(){
 	act.sa_flags=0;
     sigaction(SIGINT,&act,NULL);
     sigaction(SIGQUIT,&act,NULL);
+    printf("进程为pid：%d\n",getpid());
 
-    printf("进程端口号为%d\n",getpid());
     //初始化一个远程地址，方便连接服务器
     struct sockaddr_in dest_addr; 
     bzero(&dest_addr,sizeof(dest_addr));
@@ -64,12 +46,12 @@ int main(){
     int c = connect(clientSocket, (struct sockaddr*)&dest_addr, sizeof(dest_addr));
     if(c!=0){printf("服务器连接出错\n");close(c);close(clientSocket);return 0;}
 
+    //创建线程，检测服务器存活状态
+    thread t(heart_check);
+    t.detach();
     //连接成功后，开始传输
     char buf[128];
     int ret,count=0;
-    thread t(heart_check);
-    t.detach();
-    sleep(1);
 
     while(1){
 
@@ -93,4 +75,24 @@ int main(){
         }
     }
     return 0;
+}
+
+void heart_check(){
+    sleep(5);
+    char buf[128];
+    int count=0,ret;
+    while(1){
+        memset(buf,'\0',128);
+        ret = recv(clientSocket, buf, 128,0);
+        if(string(buf).find("exit")!=string::npos) ret=-1;
+        if(ret==0) count++;
+        else if(ret>0) count=0;
+        if(count>10||ret<0){
+            printf("服务器下线或网络问题，客户端关闭\n");
+            write(clientSocket,"exit\0",strlen("exit\0"));
+            close(clientSocket);
+            exit(0);
+        }
+        sleep(1);
+    }
 }
