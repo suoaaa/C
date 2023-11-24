@@ -18,10 +18,8 @@ int main(int argc,char *argv[]){
         fd=fd*10+argv[1][i];
     }
     printf("%s connected \n", ip);  
-
     thread t(heart_check,fd,ip,&count);
     t.detach();
-
     while (1) {
         memset(buf,'\0',sizeof(buf));
         ret = read(fd, buf, sizeof(buf));

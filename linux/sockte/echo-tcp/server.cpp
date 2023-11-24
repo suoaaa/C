@@ -65,6 +65,7 @@ void quit(int no,siginfo_t* info, void* context){
     printf("Pid:%d cleaned\n",getpid());
     exit(0);
 }
+
 void monitor(){
     struct sigaction act;
 	act.sa_sigaction=quit;
@@ -72,6 +73,7 @@ void monitor(){
     sigaction(SIGINT,&act,NULL);
     sigaction(SIGQUIT,&act,NULL);
 }
+
 int init(){
     //创建套接字，使用tcp连接
     int s = socket(AF_INET, SOCK_STREAM, 0);
