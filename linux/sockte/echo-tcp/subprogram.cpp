@@ -15,7 +15,7 @@ int main(int argc,char *argv[]){
     int fd=0,ret = 0,count=0;
     char buf[128];
     for(int i=0;i<strlen(argv[1]);i++){
-        fd=fd*10+argv[1][i]-'0';
+        fd=fd*10+argv[1][i];
     }
     printf("%s connected \n", ip);  
 
@@ -25,13 +25,19 @@ int main(int argc,char *argv[]){
     while (1) {
         memset(buf,'\0',sizeof(buf));
         ret = read(fd, buf, sizeof(buf));
-        if(ret<0||strcmp(buf,"exit")==0){
+        if(ret < 0||strcmp(buf,"exit")==0){
             printf("%s disconnected:",ip);
             perror("");
             close(fd);
             exit(0);
         }else if(ret > 0 ){
             printf("msg from %s : %s\n",ip,buf);
+            ret = send(fd, buf , strlen(buf), 0);
+            if(ret < 0 ){
+                perror("");
+                close(fd);
+                exit(0);
+            }
             count=0;
         }
     }

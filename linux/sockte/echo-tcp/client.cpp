@@ -33,10 +33,18 @@ int main(){
         ret=0;
         ret=send(clientSocket, buf, strlen(buf), 0);
         if(ret <= 0){
-            perror("Fail to send msg:");
+            perror("Fail to send msg");
             close(clientSocket);
             break;
         }
+        memset(buf,'\0',sizeof(buf));
+        ret = read(clientSocket, buf, sizeof(buf));
+        if(ret <= 0){
+            perror("Fail to recv msg");
+            close(clientSocket);
+            break;
+        }
+        printf("msg from %s : %s\n",DEST_IP,buf);
         //接收到exit指令后，停止连接
 	    if(strcmp(buf,"exit") == 0) {
             close(clientSocket);
@@ -56,7 +64,7 @@ void heart_check(){
         if(ret==0) count++;
         else if(ret>0) count=0;
         if(count>15||ret<0){
-            perror("Client shutdown:");
+            perror("Client shutdown");
             write(clientSocket,"exit\0",strlen("exit\0"));
             close(clientSocket);
             exit(0);
@@ -68,7 +76,7 @@ void heart_check(){
 void quit(int no,siginfo_t *info,void *context){
     if(clientSocket!=0)
         close(clientSocket);
-    perror("Client shutdown:");
+    perror("Client shutdown");
     exit(0);
 }
 
@@ -83,7 +91,7 @@ void monitor(){
 int  myConnect(){
     //创建套接字，使用tcp连接
     int s=socket(AF_INET,SOCK_STREAM,0);
-    if (s==-1){perror("Failed to create the socket:");exit(0);}
+    if (s==-1){perror("Failed to create the socket");exit(0);}
     //初始化一个远程地址，方便连接服务器
     struct sockaddr_in dest_addr; 
     memset(&dest_addr,'\0',sizeof(dest_addr));
@@ -94,7 +102,7 @@ int  myConnect(){
     
     //连接服务器
     int c = connect(s, (struct sockaddr*)&dest_addr, sizeof(dest_addr));
-    if(c!=0){perror("Server connection error:");close(s);exit(0);}
+    if(c!=0){perror("Server connection error");close(s);exit(0);}
     else{printf("Connect success\n");}
     return s;
 }
