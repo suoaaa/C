@@ -15,11 +15,52 @@ using namespace std;
 int clientSocket=0;
 int count=0;
 
+void heart_check();     //心跳包机制，监控进程
+void monitor();         //增加对信号量的监控，用户按下ctrl+z,c或者’/‘后程序退出避免僵尸进程
+void quit(int no,siginfo_t *info,void *context);//退出调用，断开连接
+sockaddr_in init();
+
+int main(){
+    monitor();
+    clientSocket=socket(AF_INET,SOCK_DGRAM,0);
+    if (clientSocket<0){perror("Failed to create the socket");exit(0);}
+    sockaddr_in dest_addr = init();
+    socklen_t addrlen=sizeof(dest_addr);
+    thread t(heart_check);
+    t.detach();
+    time_t now;
+    while(true){
+        if(sendto(clientSocket,"I want to know time",strlen("I want to know time"),0,(sockaddr *)&dest_addr, addrlen)<=0){
+            perror("Send failed request");
+        }else{
+            memset((char*)&now,'\0',sizeof(now)); 
+            if(recvfrom(clientSocket,&now,sizeof(now),0,(sockaddr *)&dest_addr,&addrlen) > 0){
+                count=0;
+                now = ntohl((unsigned long)now);  
+                printf("The time now is : %s", ctime(&now)); 
+            }else{
+                perror("Data receiving failure");
+            }
+        }
+        sleep(1);
+    }
+    return 0;
+}
+
+
 void quit(int no,siginfo_t *info,void *context){
     if(clientSocket!=0)
         close(clientSocket);
-    printf("客户端退出\n");
+    printf("Client shutdown\n");
     exit(0);
+}
+
+void monitor(){
+    struct sigaction act;
+	act.sa_sigaction=quit;
+	act.sa_flags=0;
+    sigaction(SIGINT,&act,NULL);
+    sigaction(SIGQUIT,&act,NULL);
 }
 
 void heart_check(){
@@ -27,50 +68,17 @@ void heart_check(){
         sleep(1);
         count++;
         if(count>5){
-            printf("无法连接至服务器，程序退出\n");
+            perror("Unable to connect to server");
             exit(0);
         }
     }
 }
 
-int main(){
-    //增加对信号量的监控，用户按下ctrl+z,c或者’/‘后程序退出
-    struct sigaction act;
-	act.sa_sigaction=quit;
-	act.sa_flags=0;
-    sigaction(SIGINT,&act,NULL);
-    sigaction(SIGQUIT,&act,NULL);
-
-    printf("%d\n",getpid());
-    //初始化一个远程地址，方便连接服务器
+sockaddr_in init(){
     struct sockaddr_in dest_addr; 
-    bzero(&dest_addr,sizeof(dest_addr));
+    memset(&dest_addr,'\0',sizeof(sockaddr_in));
     dest_addr.sin_family = AF_INET; 
     dest_addr.sin_port = htons(DEST_PORT); 
     inet_pton(AF_INET, DEST_IP, &dest_addr.sin_addr.s_addr); 
-
-    //创建套接字，使用UDP连接
-    clientSocket=socket(AF_INET,SOCK_DGRAM,0);
-    if (clientSocket==-1){printf("套接字创建失败\n");return -1;}
-    thread t(heart_check);
-    int ret=0;
-    time_t now;
-    while(true){
-        ret = sendto(clientSocket,"I want to know time",20,0,(struct sockaddr*)&dest_addr, sizeof(dest_addr));
-        if(ret<=0){
-            printf("服务器连接失败\n");
-        }else{
-            memset((char*)&now,'\0',sizeof(now));
-            ret = read(clientSocket, (char*)&now, sizeof(now)); 
-            if (ret > 0){
-                count=0;
-                now = ntohl((unsigned long)now);  
-                printf("msg from %s : %s", DEST_IP,ctime(&now)); 
-            }else{
-                printf("接收服务端信息失败\n");
-            }
-        }
-        sleep(1);
-    }
-    return 0;
+    return dest_addr;
 }

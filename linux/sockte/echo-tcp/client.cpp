@@ -13,61 +13,30 @@ using namespace std;
 
 int clientSocket=0;
 
-void quit(int no,siginfo_t *info,void *context){
-    if(clientSocket!=0)
-        close(clientSocket);
-    printf("客户端退出\n");
-    exit(0);
-}
-
-void heart_check();
-
+int  myConnect();       //连接服务器，返回socket的fd文件描述符
+void heart_check();     //心跳包机制，监控进程
+void monitor();         //增加对信号量的监控，用户按下ctrl+z,c或者’/‘后程序退出避免僵尸进程
+void quit(int no,siginfo_t *info,void *context);//退出调用，断开连接
 int main(){
-    //增加对信号量的监控，用户按下ctrl+z,c或者’/‘后程序退出避免僵尸进程
-    struct sigaction act;
-	act.sa_sigaction=quit;
-	act.sa_flags=0;
-    sigaction(SIGINT,&act,NULL);
-    sigaction(SIGQUIT,&act,NULL);
-    printf("进程为pid：%d\n",getpid());
-
-    //初始化一个远程地址，方便连接服务器
-    struct sockaddr_in dest_addr; 
-    bzero(&dest_addr,sizeof(dest_addr));
-    dest_addr.sin_family = AF_INET; 
-    dest_addr.sin_port = htons(DEST_PORT); 
-    inet_pton(AF_INET, DEST_IP, &dest_addr.sin_addr.s_addr); 
-
-    //创建套接字，使用tcp连接
-    clientSocket=socket(AF_INET,SOCK_STREAM,0);
-    if (clientSocket==-1){printf("套接字创建失败\n");return -1;}
-
-    //连接服务器
-    int c = connect(clientSocket, (struct sockaddr*)&dest_addr, sizeof(dest_addr));
-    if(c!=0){printf("服务器连接出错\n");close(c);close(clientSocket);return 0;}
-
-    //创建线程，检测服务器存活状态
-    thread t(heart_check);
+    monitor();          //监控
+    clientSocket=myConnect();//连接服务器
+    thread t(heart_check);//创建线程，检测服务器存活状态
     t.detach();
-    //连接成功后，开始传输
+
     char buf[128];
-    int ret,count=0;
-
-    while(1){
-
-        ret=0;
+    int ret;
+    while(1){   
         //接收终端输入，最大字符128
         memset(buf,'\0',sizeof(buf));
 	    scanf("%s",buf);
-
         //发送数据,接收返回值
+        ret=0;
         ret=send(clientSocket, buf, strlen(buf), 0);
         if(ret <= 0){
-            printf("连接中断，发送信息失败\n");
+            perror("Fail to send msg:");
             close(clientSocket);
             break;
         }
-
         //接收到exit指令后，停止连接
 	    if(strcmp(buf,"exit") == 0) {
             close(clientSocket);
@@ -78,7 +47,6 @@ int main(){
 }
 
 void heart_check(){
-    sleep(5);
     char buf[128];
     int count=0,ret;
     while(1){
@@ -87,12 +55,46 @@ void heart_check(){
         if(string(buf).find("exit")!=string::npos) ret=-1;
         if(ret==0) count++;
         else if(ret>0) count=0;
-        if(count>10||ret<0){
-            printf("服务器下线或网络问题，客户端关闭\n");
+        if(count>15||ret<0){
+            perror("Client shutdown:");
             write(clientSocket,"exit\0",strlen("exit\0"));
             close(clientSocket);
             exit(0);
         }
         sleep(1);
     }
+}
+
+void quit(int no,siginfo_t *info,void *context){
+    if(clientSocket!=0)
+        close(clientSocket);
+    perror("Client shutdown:");
+    exit(0);
+}
+
+void monitor(){
+    struct sigaction act;
+	act.sa_sigaction=quit;
+	act.sa_flags=0;
+    sigaction(SIGINT,&act,NULL);
+    sigaction(SIGQUIT,&act,NULL);
+}
+
+int  myConnect(){
+    //创建套接字，使用tcp连接
+    int s=socket(AF_INET,SOCK_STREAM,0);
+    if (s==-1){perror("Failed to create the socket:");exit(0);}
+    //初始化一个远程地址，方便连接服务器
+    struct sockaddr_in dest_addr; 
+    memset(&dest_addr,'\0',sizeof(dest_addr));
+    dest_addr.sin_family = AF_INET; 
+    dest_addr.sin_port = htons(DEST_PORT); 
+    inet_pton(AF_INET, DEST_IP, &dest_addr.sin_addr.s_addr); 
+    
+    
+    //连接服务器
+    int c = connect(s, (struct sockaddr*)&dest_addr, sizeof(dest_addr));
+    if(c!=0){perror("Server connection error:");close(s);exit(0);}
+    else{printf("Connect success\n");}
+    return s;
 }

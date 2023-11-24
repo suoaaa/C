@@ -17,62 +17,43 @@ using namespace std;
 int client_1,client_2;
 
 char *getIp(sockaddr_in addr);
-void chat(int s1,int s2,char* ip);
-void quit(int no,siginfo_t* info, void* context){
-    printf("服务器pid：%d下线\n",getpid());
-    if(client_1!=0){
-        write(client_1,"exit",sizeof("exit"));
-        close(client_1);
-    }
-    if(client_2!=0){
-        write(client_2,"exit",sizeof("exit"));
-        close(client_2);
-    }
-    exit(0);
-}
+void zombie_cleaning(pid_t pid);
+void quit(int no,siginfo_t* info, void* context);
+void monitor();         //增加对信号量的监控，用户按下ctrl+z,c或者’/‘后程序退出避免僵尸进程
+int init();             //初始化服务器，对端口进行监听
 
 int main(int argc, char *argv[]) {
-    struct sigaction act;
-	act.sa_sigaction=quit;
-	act.sa_flags=0;
-    sigaction(SIGINT,&act,NULL);
-    sigaction(SIGQUIT,&act,NULL);
+    monitor();
+    int clientSocket=init();
 
-    printf("进程pid为%d\n",getpid());
-    int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    struct sockaddr_in server_addr;
-    socklen_t addrlen = sizeof(server_addr);
 
-    if (s == -1) {
-        write(STDOUT_FILENO,"创建套接字失败\n",22);
-        return 0;
+      
+    while(true){
+        struct sockaddr_in client_addr_1,client_addr_2;
+        socklen_t addrlen=sizeof(client_addr_1);
+        memset(&client_addr_1,'\0',addrlen);
+        memset(&client_addr_2,'\0',addrlen);
+
+        //等待客户链接
+        client_1 = accept(clientSocket, (struct sockaddr *)&client_addr_1, &addrlen);
+        client_2 = accept(clientSocket, (struct sockaddr *)&client_addr_2, &addrlen);
+        
+       
+        pid_t pid=fork();
+        if(pid<0){  perror("Failed to create the child process");   }
+        if(pid==0){
+            char *ip_1 = getIp(client_addr_1);
+            char *ip_2 = getIp(client_addr_2);
+            write(client_1,ip_2,strlen(ip_2));
+            write(client_2,ip_1,strlen(ip_1));
+            printf("%d :: %d\n",client_1,client_2);
+            execl("./subprogram",ip_1,ip_2,&client_1,&client_2,NULL);
+            
+        }else{
+            thread t(zombie_cleaning,pid);
+            t.detach();
+        }
     }
-
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(DEST_PORT);
-    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    
-    if ((bind(s, (const struct sockaddr *)&server_addr, addrlen)) == -1) {
-        write(STDOUT_FILENO,"监听套接字失败\n",22);
-        return 0;
-    }
-
-    listen(s, 128);
-    struct sockaddr_in client_addr_1,client_addr_2;
-    bzero(&client_addr_1,addrlen);
-    bzero(&client_addr_2,addrlen);
-
-    //等待客户链接
-    client_1 = accept(s, (struct sockaddr *)&client_addr_1, &addrlen);
-    char *ip_1 = getIp(client_addr_1);
-    client_2 = accept(s, (struct sockaddr *)&client_addr_2, &addrlen);
-    char *ip_2 = getIp(client_addr_2);
-    write(client_1,ip_2,strlen(ip_2));
-    write(client_2,ip_1,strlen(ip_1));
-    thread t1(chat,client_1,client_2,ip_1);
-    thread t2(chat,client_2,client_1,ip_2);
-    t1.join();
-    t2.join();
     return 0;
 }
 
@@ -87,21 +68,42 @@ char *getIp(sockaddr_in addr){
     return ip;
 }
 
-void chat(int s1,int s2,char* ip){
-    char buf[128];
-    while(1){
-        memset(buf,'\0',128);
-        if(recv(s1, buf, 128,MSG_DONTWAIT)>0){ 
-            if(send(s2,buf,strlen(buf),0)>0){ 
-                if(!strcmp(buf,"exit")){
-                    close(s1);
-                    close(s2);
-                    printf("客户端下线\n");
-                    exit(0);
-                }else{
-                    printf("msg from %s : %s\n",ip,buf);
-                }
-            }
-        }
+void quit(int no,siginfo_t* info, void* context){
+    printf("Pid:%d cleaned\n",getpid());
+    if(client_1!=0){
+        write(client_1,"exit",sizeof("exit"));
+        close(client_1);
     }
+    if(client_2!=0){
+        write(client_2,"exit",sizeof("exit"));
+        close(client_2);
+    }
+    exit(0);
+}
+
+int init(){
+    int s = socket(AF_INET, SOCK_STREAM, 0);
+    if (s == -1){perror("Failed to create the socket");exit(0);}
+    struct sockaddr_in server_addr;
+    socklen_t addrlen = sizeof(server_addr);
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(DEST_PORT);
+    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    int c = bind (s, (const struct sockaddr *)&server_addr, sizeof(server_addr));
+    if (c == -1) {perror("Listening socket failed");exit(0);}
+    listen(s, 64);
+    return s;
+}
+
+void zombie_cleaning(pid_t pid){
+    waitpid(pid,NULL,0);
+    printf("pid:%d cleaned\n",pid);
+}
+
+void monitor(){
+    struct sigaction act;
+	act.sa_sigaction=quit;
+	act.sa_flags=0;
+    sigaction(SIGINT,&act,NULL);
+    sigaction(SIGQUIT,&act,NULL);
 }
