@@ -1,3 +1,4 @@
+//g++ -o a .\client.cpp -lwsock32  -finput-charset=GBK -fexec-charset=GBK
 #include <iostream>
 #include <string.h>
 #include <thread>
