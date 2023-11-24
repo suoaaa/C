@@ -24,7 +24,6 @@ void quit(int no,siginfo_t *info,void *context){
 }
 
 void heart_check(){
-    sleep(5);
     char buf[128];
     int count=0,ret;
     while(1){
