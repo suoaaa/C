@@ -62,7 +62,7 @@ void heart_check(){
             count=0;
             if(string(buf).find("exit")!=string::npos) ret=-1;
             else if(strcmp(buf,"alive")){
-                printf("msg from %s ：%s\n",ip,buf);
+                printf("msg from %s : %s\n",ip,buf);
             }
         }
         if(count>30||ret<0){
