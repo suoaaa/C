@@ -25,9 +25,6 @@ int init();             //初始化服务器，对端口进行监听
 int main(int argc, char *argv[]) {
     monitor();
     int clientSocket=init();
-
-
-      
     while(true){
         struct sockaddr_in client_addr_1,client_addr_2;
         socklen_t addrlen=sizeof(client_addr_1);
@@ -38,7 +35,6 @@ int main(int argc, char *argv[]) {
         client_1 = accept(clientSocket, (struct sockaddr *)&client_addr_1, &addrlen);
         client_2 = accept(clientSocket, (struct sockaddr *)&client_addr_2, &addrlen);
         
-       
         pid_t pid=fork();
         if(pid<0){  perror("Failed to create the child process");   }
         if(pid==0){
@@ -46,7 +42,6 @@ int main(int argc, char *argv[]) {
             char *ip_2 = getIp(client_addr_2);
             write(client_1,ip_2,strlen(ip_2));
             write(client_2,ip_1,strlen(ip_1));
-            printf("%d :: %d\n",client_1,client_2);
             execl("./subprogram",ip_1,ip_2,&client_1,&client_2,NULL);
             
         }else{

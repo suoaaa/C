@@ -5,7 +5,6 @@
 #include <string.h>
 #include <thread>
 using namespace std;
-
 void chat(int s1,int s2,char* ip);
 int main(int argc,char *argv[]){
 
