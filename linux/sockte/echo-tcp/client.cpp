@@ -99,7 +99,6 @@ int  myConnect(){
     dest_addr.sin_port = htons(DEST_PORT); 
     inet_pton(AF_INET, DEST_IP, &dest_addr.sin_addr.s_addr); 
     
-    
     //连接服务器
     int c = connect(s, (struct sockaddr*)&dest_addr, sizeof(dest_addr));
     if(c!=0){perror("Server connection error");close(s);exit(0);}
