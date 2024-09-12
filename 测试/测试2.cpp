@@ -1,6 +1,6 @@
 #include <iostream>
 #include <ibpp.h>
-using namespace std; 4.
+using namespace std;
 //数据库名，根据你的情况更改。
 const char* g_szDBName = "d:\\test.fdb";
 //服务器名，针对服务器版本。对于嵌入式，它应该是""
